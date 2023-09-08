@@ -10,6 +10,8 @@ A Discord Bot for mldkyt's Discord server (**SFW**).
 - `/chatpoints` gets the amount of ChatPoints
 - `/catpoints` gets the amount of CatPoints
 - Updates status every 10 minute
+- Every day sends an activity report to a general channel
+- Every year sends a new year message to a general channel
 
 ## Set up
 1. Clone

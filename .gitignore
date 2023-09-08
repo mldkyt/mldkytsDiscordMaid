@@ -154,3 +154,5 @@ cython_debug/
 constants.py
 dailymsg.json
 yearlymsg.json
+catpoints.json
+chatpoints.json
