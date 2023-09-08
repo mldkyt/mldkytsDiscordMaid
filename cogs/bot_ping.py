@@ -1,18 +1,20 @@
 import discord
 
+import constants
+
 initial_message = '''# Hello there, %s!
-I am a bot created by <@575536897141637120> to help with the server.
+I am a bot created by [Astolph0](https://github.com/Astolph0/) to help with his server.
 Use the buttons below to navigate through the pages.'''
 
-chat_points_message = '''# ChatPoints
+chat_points_message = f'''# ChatPoints
 ChatPoints are points given to everyone for chatting in the server.
 You get 1 ChatPoint for every letter you send in a message.
-You can check your balance with `/chatpoints` in <#1106092370509955163>.'''
+You can check your balance with `/chatpoints` in <#{constants.commands_channel}>.'''
 
-cat_points_message = '''# CatPoints
+cat_points_message = f'''# CatPoints
 CatPoints are points given to everyone when they use :3 in a message.
 You get 1 CatPoint for every :3 you send in a message.
-You can check your balance with `/catpoints` in <#1106092370509955163>.'''
+You can check your balance with `/catpoints` in <#{constants.commands_channel}>.'''
 
 
 class ChatPointsView(discord.ui.View):
@@ -52,5 +54,5 @@ class BotPing(discord.Cog):
 
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):
-        if '<@1123879175703502858>' in msg.content:
+        if f'<@{constants.bot_id}>' in msg.content:
             await msg.channel.send(initial_message % msg.author.mention, view=InitialView())

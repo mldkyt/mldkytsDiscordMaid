@@ -1,5 +1,7 @@
 import discord
 
+import constants
+
 
 class ChatLimit(discord.Cog):
     def __init__(self, bot: discord.Bot):
@@ -10,6 +12,9 @@ class ChatLimit(discord.Cog):
     async def on_message(self, message: discord.Message):
         if message.author.bot:
             return
+
+        if message.channel.id != constants.general_channel:
+            return  # only apply to general channel
         # warn user that their message is about to hit the limit above 800
         if len(message.content) > 800:
             msg = await message.reply(f'{message.author.mention} your message is about to hit length {len(message.content)}/1000')

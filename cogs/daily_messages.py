@@ -4,6 +4,8 @@ import json
 import discord
 from discord.ext import tasks
 
+import constants
+
 
 def init_messages():
     """Create dailymsg.json if it doesn't exist"""
@@ -33,7 +35,7 @@ def add_message(user: int):
 
 def get_messages():
     """Get all messages and sort them by messages sent"""
-    with open('dailymsg.json', 'r') as f:
+    with open('dailymsg.json') as f:
         data: list = json.load(f)
     return sorted(data, key=lambda x: x['messages'], reverse=True)
 
@@ -86,5 +88,5 @@ class DailyMessages(discord.Cog):
             if i == 4:
                 break
 
-        await self.bot.get_channel(1147557081721872474).send(msg)
+        await self.bot.get_channel(constants.general_channel).send(msg)
         clear_messages()

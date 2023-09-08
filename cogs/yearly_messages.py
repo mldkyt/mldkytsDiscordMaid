@@ -4,6 +4,8 @@ import json
 import discord
 from discord.ext import tasks
 
+import constants
+
 
 def init_messages():
     """Create dailymsg.json if it doesn't exist"""
@@ -63,7 +65,7 @@ class YearlyMessages(discord.Cog):
 
     @tasks.loop(minutes=1)
     async def clear_messages(self):
-        """Check if it's new year, if so, send top 10 YEARLY talkers and clear the list"""
+        """Check if it's a new year, if so, send top 10 YEARLY talkers and clear the list"""
         time = datetime.datetime.now()
         if time.hour != 0 or time.minute != 0 or time.day != 1 or time.month != 1:
             return
@@ -88,5 +90,5 @@ class YearlyMessages(discord.Cog):
 
         msg += f'# HAPPY NEW YEAR {time.year} EVERYONE!! :3'
 
-        await self.bot.get_channel(1147557081721872474).send(msg)
+        await self.bot.get_channel(constants.general_channel).send(msg)
         clear_messages()

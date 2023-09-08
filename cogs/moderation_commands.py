@@ -2,6 +2,8 @@ import datetime
 
 import discord
 
+import constants
+
 
 class ModerationCommands(discord.Cog):
     def __init__(self, bot: discord.Bot):
@@ -13,7 +15,7 @@ class ModerationCommands(discord.Cog):
                     author: discord.Member = None, not_author: discord.Member = None,
                     starts_with: str = None, ends_with: str = None, contains: str = None,
                     manual_delete: bool = False):
-        if ctx.user.id != 575536897141637120:
+        if ctx.user.id != constants.bot_maintainer:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
@@ -48,7 +50,7 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command()
     async def kick(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None):
-        if ctx.user.id != 575536897141637120:
+        if ctx.user.id != constants.bot_maintainer:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
@@ -65,7 +67,7 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command()
     async def ban(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None):
-        if ctx.user.id != 575536897141637120:
+        if ctx.user.id != constants.bot_maintainer:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
@@ -81,7 +83,7 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command()
     async def timeout(self, ctx: discord.ApplicationContext, member: discord.Member, for_hours: int, for_days: int = 0, for_minutes: int = 0, for_seconds: int = 0, reason: str = None):
-        if ctx.user.id != 575536897141637120:
+        if ctx.user.id != constants.bot_maintainer:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
