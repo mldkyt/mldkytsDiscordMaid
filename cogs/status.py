@@ -1,6 +1,8 @@
 import discord
 from discord.ext import tasks
 
+import constants
+
 
 class Status(discord.Cog):
     def __init__(self, bot: discord.Bot):
@@ -13,5 +15,5 @@ class Status(discord.Cog):
 
     @tasks.loop(minutes=30)
     async def update_status(self):
-        guild = self.bot.get_guild(768885442799861821)
+        guild = self.bot.get_guild(constants.guild_id)
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f'with {guild.member_count} members :3'))

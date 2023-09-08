@@ -33,15 +33,15 @@ async def on_ready():
     bot.add_view(RoleSelectView(timeout=None))
 
 
-@bot.slash_command(guild_ids=[768885442799861821])
+@bot.slash_command(guild_ids=[constants.guild_id])
 async def send_roles_msg(ctx: discord.ApplicationContext):
-    if ctx.user.id != 575536897141637120:
+    if ctx.user.id != constants.bot_maintainer:
         return await ctx.respond('You are not allowed to use this command!', ephemeral=True)
     await ctx.channel.send('# Ping Roles\nThese roles will let you get pinged', view=RoleSelectView())
     await ctx.respond('Sent roles message!', ephemeral=True)
 
 
-@bot.slash_command(guild_ids=[768885442799861821])
+@bot.slash_command(guild_ids=[constants.guild_id])
 async def version(ctx: discord.ApplicationContext):
     # base the update date from the modification date of the bot's folder
     await ctx.respond(f'**Version:** 1.0.0', ephemeral=True)

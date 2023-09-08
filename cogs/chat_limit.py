@@ -14,7 +14,7 @@ class ChatLimit(discord.Cog):
             return
 
         if message.channel.id != constants.general_channel:
-            return  # only apply to general channel
+            return  # only apply to a general channel
         # warn user that their message is about to hit the limit above 800
         if len(message.content) > 800:
             msg = await message.reply(f'{message.author.mention} your message is about to hit length {len(message.content)}/1000')

@@ -15,8 +15,5 @@ A Discord Bot for mldkyt's Discord server (**SFW**).
 
 ## Set up
 1. Clone
-2. Create `constants.py` and put in
-    ```
-    token = '<bot token>'
-    ```
+2. Copy `constants.example.py` to `constants.py` and fill in the values
 3. Run `main.py`

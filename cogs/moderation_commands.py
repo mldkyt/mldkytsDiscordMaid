@@ -23,7 +23,7 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You can only delete 100 messages at a time', ephemeral=True)
             return
 
-        # get amount of messages and bulk delete them
+        # get number of messages and bulk delete them
         messages = await ctx.channel.history(limit=search_past).flatten()
         # filter messages older than 2 weeks
         messages = [message for message in messages if message.created_at > discord.utils.utcnow() - datetime.timedelta(weeks=2)]

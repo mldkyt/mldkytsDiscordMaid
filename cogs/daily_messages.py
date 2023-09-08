@@ -10,7 +10,7 @@ import constants
 def init_messages():
     """Create dailymsg.json if it doesn't exist"""
     try:
-        with open('dailymsg.json', 'r') as f:
+        with open('dailymsg.json') as f:
             pass
     except FileNotFoundError:
         with open('dailymsg.json', 'w') as f:
@@ -18,7 +18,7 @@ def init_messages():
 
 
 def add_message(user: int):
-    with open('dailymsg.json', 'r') as f:
+    with open('dailymsg.json') as f:
         data: list = json.load(f)
 
     # list of {user_id: int, messages: int}
