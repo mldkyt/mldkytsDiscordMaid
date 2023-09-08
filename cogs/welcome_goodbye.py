@@ -1,5 +1,4 @@
 import discord
-import constants
 
 
 class WelcomeGoodbye(discord.Cog):
