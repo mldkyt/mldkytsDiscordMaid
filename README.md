@@ -1,6 +1,6 @@
 # mldkytCompanion
 
-A Discord Bot for mldkyt's Discord server (**SFW**).
+A Discord Bot for [mldkyt's Discord server](https://mldkyt.com/discord) (**SFW**).
 
 ## Features
 - Responds to mention with a help message
