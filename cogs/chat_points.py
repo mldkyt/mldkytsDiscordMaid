@@ -40,6 +40,19 @@ def get_chatpoints(userid: int) -> int:
         return 0
 
 
+def calculate_level(points: int) -> (int, int):
+    level = 1
+    next_level = 500
+    while True:
+        if points > next_level:
+            level += 1
+            next_level *= 2
+        else:
+            break
+
+    return level, next_level
+
+
 class ChatPoints(discord.Cog):
     def __init__(self, bot: discord.Bot):
         self.bot = bot
@@ -56,4 +69,6 @@ class ChatPoints(discord.Cog):
     @discord.slash_command()
     async def chatpoints(self, ctx: discord.ApplicationContext):
         """Get your ChatPoints amount"""
-        await ctx.respond(f'You have {get_chatpoints(ctx.user.id)} ChatPoints')
+        chatpoints = get_chatpoints(ctx.user.id)
+        level, next_level_xp = calculate_level(chatpoints)
+        await ctx.respond(f'You have {chatpoints} ChatPoints (level {level}, {chatpoints}/{next_level_xp} till next level)')
