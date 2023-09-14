@@ -40,6 +40,13 @@ def get_chatpoints(userid: int) -> int:
         return 0
 
 
+def get_chatpoints_leaderboard() -> list:
+    with open('chatpoints.json') as f:
+        data = json.load(f)
+
+    # array of {user_id: int, chatpoints: int}
+    return sorted(data, key=lambda x: x['chatpoints'], reverse=True)
+
 def calculate_level(points: int) -> (int, int):
     level = 1
     next_level = 500
@@ -72,3 +79,16 @@ class ChatPoints(discord.Cog):
         chatpoints = get_chatpoints(ctx.user.id)
         level, next_level_xp = calculate_level(chatpoints)
         await ctx.respond(f'You have {chatpoints} ChatPoints (level {level}, {chatpoints}/{next_level_xp} till next level)')
+
+    @discord.slash_command()
+    async def chatpoint_leaderboard(self, ctx: discord.ApplicationContext):
+        chatpoints = get_chatpoints_leaderboard()
+        # show 10 top users
+        msg = "# ChatPoints Leaderboard\n"
+        for i, user in enumerate(chatpoints[:10]):
+            user_obj = await self.bot.fetch_user(user['user_id'])
+            msg += f"{i + 1}. {user_obj.mention} - {user['chatpoints']} ChatPoints\n"
+            if i == 9:
+                break
+
+        await ctx.respond(msg)

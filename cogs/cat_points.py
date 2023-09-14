@@ -40,6 +40,14 @@ def get_catpoints(userid: int) -> int:
         return 0
 
 
+def get_catpoints_leaderboard() -> list:
+    with open('catpoints.json') as f:
+        data = json.load(f)
+
+    # array of {user_id: int, catpoints: int}
+    return sorted(data, key=lambda x: x['catpoints'], reverse=True)
+
+
 class CatPoints(discord.Cog):
 
     def __init__(self, bot: discord.Bot):
@@ -67,3 +75,16 @@ class CatPoints(discord.Cog):
         # if there is at least one :3, reply to the message with how many catpoints they got
         if catpoints > 0:
             await message.reply(f'+{catpoints_total} CatPoints :3', mention_author=False)
+
+    @discord.slash_command()
+    async def catpoints_leaderboard(self, ctx: discord.ApplicationContext):
+        """Get the CatPoints leaderboard"""
+        leaderboard = get_catpoints_leaderboard()
+        msg = "# CatPoints Leaderboard\n"
+        for i, user_data in enumerate(leaderboard):
+            user = await self.bot.fetch_user(user_data['user_id'])
+            msg += f"{i + 1}. {user.display_name} has {user_data['catpoints']} CatPoints\n"
+            if i == 9:
+                break
+
+        await ctx.respond(msg)
