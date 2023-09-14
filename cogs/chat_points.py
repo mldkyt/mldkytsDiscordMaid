@@ -87,7 +87,7 @@ class ChatPoints(discord.Cog):
         msg = "# ChatPoints Leaderboard\n"
         for i, user in enumerate(chatpoints[:10]):
             user_obj = await self.bot.fetch_user(user['user_id'])
-            msg += f"{i + 1}. {user_obj.mention} - {user['chatpoints']} ChatPoints\n"
+            msg += f"{i + 1}. {user_obj.display_name} has {user['chatpoints']} ChatPoints\n"
             if i == 9:
                 break
 
