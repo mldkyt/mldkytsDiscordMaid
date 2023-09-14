@@ -7,3 +7,7 @@ welcome_channel = 0
 guild_id = 0
 
 bot_maintainer = 0
+
+member_banlist = [
+    123456789012345678
+]

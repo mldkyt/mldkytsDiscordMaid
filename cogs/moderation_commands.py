@@ -14,7 +14,7 @@ class ModerationCommands(discord.Cog):
     async def clear(self, ctx: discord.ApplicationContext, search_past: int,
                     author: discord.Member = None, not_author: discord.Member = None,
                     starts_with: str = None, ends_with: str = None, contains: str = None,
-                    manual_delete: bool = False):
+                    manual_delete: bool = False, send_public: bool = False):
         if ctx.user.id != constants.bot_maintainer:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
@@ -40,62 +40,71 @@ class ModerationCommands(discord.Cog):
         if contains is not None:
             messages = [message for message in messages if contains in message.content]
         if manual_delete:
-            await ctx.defer(ephemeral=True)
+            await ctx.defer(ephemeral=not send_public)
             for message in messages:
                 await message.delete()
-            await ctx.followup.send(f'Deleted {len(messages)} messages', ephemeral=True)
+            await ctx.followup.send(f'Deleted {len(messages)} messages', ephemeral=not send_public)
         else:
             await ctx.channel.delete_messages(messages)
-            await ctx.respond(f'Deleted {len(messages)} messages', ephemeral=True)
+            await ctx.respond(f'Deleted {len(messages)} messages', ephemeral=not send_public)
 
     @discord.slash_command()
-    async def kick(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None):
+    async def kick(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None, send_public: bool = False, send_dm=True):
         if ctx.user.id != constants.bot_maintainer:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
+        await ctx.defer(ephemeral=not send_public)
+
         # dm user embed with reason and give him an invitation back to the server
-        embed = discord.Embed(title='You have been kicked from mldkyt', description=f'Reason: {reason}', color=discord.Color.yellow())
-        embed.add_field(name='Get back', value='https://discord.gg/JgFNmSwYME')
-        try:
-            await member.send(embed=embed)
-        except discord.Forbidden:
-            pass
+        if send_dm:
+            embed = discord.Embed(title='You have been kicked from mldkyt', description=f'Reason: {reason}', color=discord.Color.yellow())
+            embed.add_field(name='Get back', value='https://discord.gg/JgFNmSwYME')
+            try:
+                await member.send(embed=embed)
+            except discord.Forbidden:
+                pass
 
         await member.kick(reason=reason)
-        await ctx.respond(f'Kicked {member.mention}', ephemeral=True)
+        await ctx.followup.send(f'Kicked {member.mention}', ephemeral=True)
 
     @discord.slash_command()
-    async def ban(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None):
+    async def ban(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None, send_public: bool = False, send_dm=True):
         if ctx.user.id != constants.bot_maintainer:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
+
+        await ctx.defer(ephemeral=not send_public)
 
         # dm user embed with reason and give him an invitation back to the server
-        embed = discord.Embed(title='You have been banned from mldkyt', description=f'Reason: {reason}', color=discord.Color.red())
-        try:
-            await member.send(embed=embed)
-        except discord.Forbidden:
-            pass
+        if send_dm:
+            embed = discord.Embed(title='You have been banned from mldkyt', description=f'Reason: {reason}', color=discord.Color.red())
+            try:
+                await member.send(embed=embed)
+            except discord.Forbidden:
+                pass
 
         await member.ban(reason=reason)
-        await ctx.respond(f'Banned {member.mention}', ephemeral=True)
+        await ctx.followup.send(f'Banned {member.mention}', ephemeral=True)
 
     @discord.slash_command()
-    async def timeout(self, ctx: discord.ApplicationContext, member: discord.Member, for_hours: int, for_days: int = 0, for_minutes: int = 0, for_seconds: int = 0, reason: str = None):
+    async def timeout(self, ctx: discord.ApplicationContext, member: discord.Member, for_hours: int, for_days: int = 0, for_minutes: int = 0, for_seconds: int = 0, reason: str = None, send_public: bool = False, send_dm=True):
         if ctx.user.id != constants.bot_maintainer:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        # dm user embed with reason
-        embed = discord.Embed(title='You have been timed out from mldkyt', description=f'Reason: {reason}', color=discord.Color.orange())
-        try:
-            await member.send(embed=embed)
-        except discord.Forbidden:
-            pass
+        await ctx.defer(ephemeral=not send_public)
 
         if for_days == 0 and for_hours == 0 and for_minutes == 0 and for_seconds == 0:
-            await ctx.respond('You have to specify a time', ephemeral=True)
+            await ctx.followup.send('You have to specify a time', ephemeral=True)
             return
+        # dm user embed with reason
+        if send_dm:
+            embed = discord.Embed(title='You have been timed out from mldkyt', description=f'Reason: {reason}', color=discord.Color.orange())
+            try:
+                await member.send(embed=embed)
+            except discord.Forbidden:
+                pass
+
         await member.timeout_for(datetime.timedelta(days=for_days, hours=for_hours, seconds=for_seconds, minutes=for_minutes), reason=reason)
-        await ctx.respond(f'Timed out {member.mention}', ephemeral=True)
+        await ctx.followup.send(f'Timed out {member.mention}', ephemeral=True)
