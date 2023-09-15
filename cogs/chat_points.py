@@ -47,6 +47,7 @@ def get_chatpoints_leaderboard() -> list:
     # array of {user_id: int, chatpoints: int}
     return sorted(data, key=lambda x: x['chatpoints'], reverse=True)
 
+
 def calculate_level(points: int) -> (int, int):
     level = 1
     next_level = 500

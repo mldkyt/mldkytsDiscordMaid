@@ -10,11 +10,12 @@ from cogs.chat_points import ChatPoints
 from cogs.daily_messages import DailyMessages
 from cogs.moderation_commands import ModerationCommands
 from cogs.status import Status
+from cogs.website_sync import WebsiteSync
 from cogs.welcome_goodbye import WelcomeGoodbye
 from cogs.yearly_messages import YearlyMessages
 from views.roles import RoleSelectView
 
-bot = discord.Bot(intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members)
+bot = discord.Bot(intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
 
 bot.add_cog(AutoAnswer(bot))
 bot.add_cog(WelcomeGoodbye(bot))
@@ -25,6 +26,7 @@ bot.add_cog(BotPing(bot))
 bot.add_cog(CatPoints(bot))
 bot.add_cog(ChatPoints(bot))
 bot.add_cog(ModerationCommands(bot))
+bot.add_cog(WebsiteSync(bot))
 
 
 @bot.event
