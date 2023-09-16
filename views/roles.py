@@ -64,3 +64,33 @@ class FemboyRoleSelectView(discord.ui.View):
         else:
             await interaction.user.remove_roles(femboy_pings_role, reason='Femboy role deselected')
             await interaction.response.send_message('Removed femboy role', ephemeral=True)
+
+
+class NsfwRoleSelectView(discord.ui.View):
+    @discord.ui.button(label='NSFW role', custom_id='role_nsfw', style=discord.ButtonStyle.danger)
+    async def toggle_nsfw_role(self, button: discord.ui.Button, interaction: discord.Interaction):
+        guild = interaction.guild
+        nsfw_role = guild.get_role(1152684011748077619)
+
+        if nsfw_role not in interaction.user.roles:
+            await interaction.response.send_message('''# Hold on
+With accepting this role, you agree that you're 18+ and if you are under 18, you will be banned if we find out.''', view=NsfwRoleConfirmView(timeout=10))
+        else:
+            await interaction.user.remove_roles(nsfw_role, reason='NSFW role deselected')
+            await interaction.response.send_message('Removed NSFW role', ephemeral=True)
+
+
+class NsfwRoleConfirmView(discord.ui.View):
+    @discord.ui.button(label='Confirm', style=discord.ButtonStyle.danger)
+    async def confirm_nsfw_role(self, button: discord.ui.Button, interaction: discord.Interaction):
+        guild = interaction.guild
+        nsfw_role = guild.get_role(1152684011748077619)
+
+        if nsfw_role not in interaction.user.roles:
+            await interaction.user.add_roles(nsfw_role, reason='NSFW role selected')
+            await interaction.response.send_message('Added NSFW role', ephemeral=True)
+
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.blurple)
+    async def cancel_nsfw_role(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.message.delete()
+        await interaction.response.send_message('Cancelled NSFW role', ephemeral=True)
