@@ -8,6 +8,7 @@ from cogs.bot_ping import BotPing
 from cogs.cat_points import CatPoints
 from cogs.chat_points import ChatPoints
 from cogs.daily_messages import DailyMessages
+from cogs.dev_commands import DevCommands
 from cogs.moderation_commands import ModerationCommands
 from cogs.status import Status
 from cogs.website_sync import WebsiteSync
@@ -27,6 +28,7 @@ bot.add_cog(CatPoints(bot))
 bot.add_cog(ChatPoints(bot))
 bot.add_cog(ModerationCommands(bot))
 bot.add_cog(WebsiteSync(bot))
+bot.add_cog(DevCommands(bot))
 
 
 @bot.event
@@ -36,17 +38,9 @@ async def on_ready():
 
 
 @bot.slash_command(guild_ids=[constants.guild_id])
-async def send_roles_msg(ctx: discord.ApplicationContext):
-    if ctx.user.id != constants.bot_maintainer:
-        return await ctx.respond('You are not allowed to use this command!', ephemeral=True)
-    await ctx.channel.send('# Ping Roles\nThese roles will let you get pinged', view=RoleSelectView())
-    await ctx.respond('Sent roles message!', ephemeral=True)
-
-
-@bot.slash_command(guild_ids=[constants.guild_id])
 async def version(ctx: discord.ApplicationContext):
     # base the update date from the modification date of the bot's folder
-    await ctx.respond(f'**Version:** 1.0.0', ephemeral=True)
+    await ctx.respond(f'**Version:** 1.1.1', ephemeral=True)
 
 
 bot.run(constants.token)
