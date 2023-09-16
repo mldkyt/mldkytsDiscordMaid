@@ -74,7 +74,8 @@ class CatPoints(discord.Cog):
         add_catpoints(message.author.id, catpoints)
         # if there is at least one :3, reply to the message with how many catpoints they got
         if catpoints > 0:
-            await message.reply(f'+{catpoints_total} CatPoints :3', mention_author=False)
+            msg = await message.reply(f'+{catpoints_total} CatPoints :3', mention_author=False)
+            await msg.delete(delay=3, reason='Delete it\'s own response to make chat clearer')
 
     @discord.slash_command()
     async def catpoints_leaderboard(self, ctx: discord.ApplicationContext):
