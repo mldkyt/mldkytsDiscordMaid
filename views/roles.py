@@ -74,7 +74,7 @@ class NsfwRoleSelectView(discord.ui.View):
 
         if nsfw_role not in interaction.user.roles:
             await interaction.response.send_message('''# Hold on
-With taking this role, you agree that you're 18+ and if you are under 18, you will be banned if we find out.
+With taking this role, you agree that you're 18+ and I'm not responsible if you get caught by your parents or something.
 *Discard the message using the blue Discard button below the message.*''', view=NsfwRoleConfirmView(timeout=10), ephemeral=True)
         else:
             await interaction.user.remove_roles(nsfw_role, reason='NSFW role deselected')
