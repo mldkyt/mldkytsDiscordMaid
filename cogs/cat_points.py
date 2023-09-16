@@ -69,7 +69,9 @@ class CatPoints(discord.Cog):
         catpoints = message.content.count('>:3') * 2
         catpoints_total = catpoints
         add_catpoints(message.author.id, catpoints)
-        catpoints = message.content.replace('>:3', '').count(':3')
+        catpoints += message.content.replace('>:3', '').count(':3')
+        catpoints += message.content.count(':#')
+        catpoints += message.content.count(';3')
         catpoints_total += catpoints
         add_catpoints(message.author.id, catpoints)
         # if there is at least one :3, reply to the message with how many catpoints they got
