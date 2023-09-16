@@ -24,7 +24,7 @@ class WebsiteSync(discord.Cog):
     @tasks.loop(minutes=1)
     async def after_femboy(self):
         date = datetime.datetime.now()
-        if date.hour == 12 and date.minute == 0 and date.weekday() == 6:
+        if date.hour == 18 and date.minute == 0 and date.weekday() == 5:
             data = requests.get('https://mldkyt-s-website-default-rtdb.europe-west1.firebasedatabase.app/ff/votes.json').json()
             # array of { ip: string } (ip is the hashed ip address of the voter)
             channel = self.bot.get_channel(constants.private_channel)
