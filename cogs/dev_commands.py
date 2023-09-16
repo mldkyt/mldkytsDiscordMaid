@@ -30,5 +30,6 @@ Selecting this role will hoist you and make you a femboy ❤️❤️''', view=v
         elif template == 'roles_nsfw':
             await ctx.channel.send('''# NSFW role
 Selecting this role will give you access to NSFW channels, you have to be 18+ to select this role.''', view=views.roles.NsfwRoleSelectView(timeout=None))
+            await ctx.respond('Send the message successfully', ephemeral=True)
         else:
             await ctx.respond('Invalid template', ephemeral=True)

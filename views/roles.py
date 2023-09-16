@@ -74,7 +74,7 @@ class NsfwRoleSelectView(discord.ui.View):
 
         if nsfw_role not in interaction.user.roles:
             await interaction.response.send_message('''# Hold on
-With accepting this role, you agree that you're 18+ and if you are under 18, you will be banned if we find out.''', view=NsfwRoleConfirmView(timeout=10))
+With taking this role, you agree that you're 18+ and if you are under 18, you will be banned if we find out.''', view=NsfwRoleConfirmView(timeout=10), ephemeral=True)
         else:
             await interaction.user.remove_roles(nsfw_role, reason='NSFW role deselected')
             await interaction.response.send_message('Removed NSFW role', ephemeral=True)
@@ -89,8 +89,9 @@ class NsfwRoleConfirmView(discord.ui.View):
         if nsfw_role not in interaction.user.roles:
             await interaction.user.add_roles(nsfw_role, reason='NSFW role selected')
             await interaction.response.send_message('Added NSFW role', ephemeral=True)
+        
+        await interaction.message.delete()
 
     @discord.ui.button(label='Cancel', style=discord.ButtonStyle.blurple)
     async def cancel_nsfw_role(self, button: discord.ui.Button, interaction: discord.Interaction):
         await interaction.message.delete()
-        await interaction.response.send_message('Cancelled NSFW role', ephemeral=True)
