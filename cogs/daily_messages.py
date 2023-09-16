@@ -65,7 +65,7 @@ class DailyMessages(discord.Cog):
 
     @tasks.loop(minutes=1)
     async def clear_messages(self):
-        """Check if it's midnight, if so, send top 5 talkers and clear the list"""
+        """Check if it's midnight, if so, send top 5 chatters and clear the list"""
         time = datetime.datetime.now()
         if time.hour != 0 or time.minute != 0:
             return
@@ -75,7 +75,7 @@ class DailyMessages(discord.Cog):
         if len(messages) < 5:
             msg = f'# Top {len(messages)} Talkers\n'
         else:
-            msg = f'# Top 5 Talkers\n'
+            msg = f'# Top 5 Chatters\n'
 
         for i, user_data in enumerate(messages):
             # try to find the user by id, show their display_name if found, else mention

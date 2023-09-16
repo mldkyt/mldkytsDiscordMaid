@@ -17,5 +17,5 @@ class AutoAnswer(discord.Cog):
             await msg.channel.send(embed=embed)
 
         if 'next' in msg.content and 'video' in msg.content:
-            embed = discord.Embed(title='Auto Answer > YouTube > Next Video', description='The next video will be released when it is done.')
+            embed = discord.Embed(title='Auto Answer > YouTube/TikTok > Next Video', description='The next video will be released when it is done.')
             await msg.channel.send(embed=embed)

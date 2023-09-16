@@ -25,7 +25,7 @@ Select the roles you want to be pinged for below. You can select multiple roles.
             await ctx.respond('Send the message successfully', ephemeral=True)
         elif template == 'roles_femboy':
             await ctx.channel.send('''# The one and only FEMBOY role
-Selecting this role will hoist you and make you a femboy ❤️❤️''', view=views.roles.FemboyRoleSelectView(timeout=None))
+Selecting this role will hoist you and make you a femboy 💖🥰''', view=views.roles.FemboyRoleSelectView(timeout=None))
             await ctx.respond('Send the message successfully', ephemeral=True)
         elif template == 'roles_nsfw':
             await ctx.channel.send('''# NSFW role

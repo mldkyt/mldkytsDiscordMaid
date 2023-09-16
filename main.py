@@ -42,7 +42,7 @@ async def on_ready():
 @bot.slash_command(guild_ids=[constants.guild_id])
 async def version(ctx: discord.ApplicationContext):
     # base the update date from the modification date of the bot's folder
-    await ctx.respond(f'**Version:** 1.1.1', ephemeral=True)
+    await ctx.respond(f'**Version:** 1.2.0 - Added NSFW role into role selection', ephemeral=True)
 
 
 bot.run(constants.token)
