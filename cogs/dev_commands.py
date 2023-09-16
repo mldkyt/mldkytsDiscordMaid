@@ -1,11 +1,12 @@
 import discord
+
 import views.roles
+
 
 class DevCommands(discord.Cog):
     def __init__(self, bot: discord.Bot):
         self.bot = bot
         super().__init__()
-
 
     @discord.slash_command()
     @discord.option(name='template', description='The template to send', type=discord.SlashCommandOptionType.string, required=True, choices=[
@@ -13,7 +14,7 @@ class DevCommands(discord.Cog):
         "roles_femboy"
     ])
     async def send_template_msg(self, ctx: discord.ApplicationContext, template: str):
-        if ctx.user.id != 575536897141637120 or ctx.user.id != 1149748649446883358:
+        if ctx.user.id != 575536897141637120 and ctx.user.id != 1149748649446883358:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
