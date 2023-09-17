@@ -1,3 +1,5 @@
+**I have taken this repository's code private**
+
 # mldkytCompanion
 
 A Discord Bot for [mldkyt's Discord server](https://mldkyt.com/discord) (**SFW**).
