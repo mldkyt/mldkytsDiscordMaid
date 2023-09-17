@@ -101,6 +101,11 @@ class ModerationCommands(discord.Cog):
             await ctx.followup.send('You have to specify a time', ephemeral=True)
             return
 
+        total_duration = for_days * 86400 + for_hours * 3600 + for_minutes * 60 + for_seconds
+        if total_duration > 604800:
+            await ctx.followup.send(f'The maximum timeout duration is 604800s', ephemeral=True)
+            return
+        
         duration = f'{for_days}d {for_hours}h {for_minutes}m {for_seconds}s'
         # dm user embed with reason
         if send_dm:
@@ -110,6 +115,7 @@ class ModerationCommands(discord.Cog):
             except discord.Forbidden:
                 pass
 
-        await member.timeout_for(datetime.timedelta(days=for_days, hours=for_hours, seconds=for_seconds, minutes=for_minutes), reason=reason)
+
+        await member.timeout_for(datetime.timedelta(seconds=total_duration), reason=reason)
         mod_embed = discord.Embed(title=f'✅ Timed out {member}', description=f'Reason: {reason}\nTimed out by: {ctx.user.display_name}\nDuration: {duration}', color=discord.Color.yellow())
         await ctx.followup.send(embed=mod_embed, ephemeral=True)
