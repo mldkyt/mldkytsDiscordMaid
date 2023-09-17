@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import discord
+from cogs.auto_goodmorning_goodnight import AutoGoodMorningGoodNight
 
 import constants
 from cogs.auto_answer import AutoAnswer
@@ -29,6 +30,7 @@ bot.add_cog(ChatPoints(bot))
 bot.add_cog(ModerationCommands(bot))
 bot.add_cog(WebsiteSync(bot))
 bot.add_cog(DevCommands(bot))
+bot.add_cog(AutoGoodMorningGoodNight(bot))
 
 
 @bot.event

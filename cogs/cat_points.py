@@ -5,15 +5,15 @@ import discord
 
 def init():
     try:
-        with open('catpoints.json') as f:
+        with open('data/catpoints.json') as f:
             pass
     except FileNotFoundError:
-        with open('catpoints.json', 'w') as f:
+        with open('data/catpoints.json', 'w') as f:
             json.dump([], f)
 
 
 def add_catpoints(userid: int, catpoints: int):
-    with open('catpoints.json') as f:
+    with open('data/catpoints.json') as f:
         data = json.load(f)
 
     # array of {user_id: int, catpoints: int}
@@ -24,12 +24,12 @@ def add_catpoints(userid: int, catpoints: int):
     else:
         data.append({'user_id': userid, 'catpoints': catpoints})
 
-    with open('catpoints.json', 'w') as f:
+    with open('data/catpoints.json', 'w') as f:
         json.dump(data, f)
 
 
 def get_catpoints(userid: int) -> int:
-    with open('catpoints.json') as f:
+    with open('data/catpoints.json') as f:
         data = json.load(f)
 
     # array of {user_id: int, catpoints: int}
@@ -41,7 +41,7 @@ def get_catpoints(userid: int) -> int:
 
 
 def get_catpoints_leaderboard() -> list:
-    with open('catpoints.json') as f:
+    with open('data/catpoints.json') as f:
         data = json.load(f)
 
     # array of {user_id: int, catpoints: int}
@@ -74,10 +74,6 @@ class CatPoints(discord.Cog):
         catpoints += message.content.count(';3')
         catpoints_total += catpoints
         add_catpoints(message.author.id, catpoints)
-        # if there is at least one :3, reply to the message with how many catpoints they got
-        if catpoints > 0:
-            msg = await message.reply(f'+{catpoints_total} CatPoints :3', mention_author=False)
-            await msg.delete(delay=3, reason='Delete it\'s own response to make chat clearer')
 
     @discord.slash_command()
     async def catpoints_leaderboard(self, ctx: discord.ApplicationContext):

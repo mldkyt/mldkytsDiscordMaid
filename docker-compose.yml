@@ -1,0 +1,6 @@
+services:
+  mldkyt-companion:
+    build: .
+    volumes:
+      - ./bot_data:/bot/data
+    

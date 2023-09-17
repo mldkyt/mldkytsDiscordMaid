@@ -10,15 +10,15 @@ import constants
 def init_messages():
     """Create dailymsg.json if it doesn't exist"""
     try:
-        with open('yearlymsg.json', 'r') as f:
+        with open('data/yearlymsg.json', 'r') as f:
             pass
     except FileNotFoundError:
-        with open('yearlymsg.json', 'w') as f:
+        with open('data/yearlymsg.json', 'w') as f:
             json.dump([], f)
 
 
 def add_message(user: int):
-    with open('yearlymsg.json', 'r') as f:
+    with open('data/yearlymsg.json', 'r') as f:
         data: list = json.load(f)
 
     # list of {user_id: int, messages: int}
@@ -29,19 +29,19 @@ def add_message(user: int):
     else:
         data.append({'user_id': user, 'messages': 1})
 
-    with open('yearlymsg.json', 'w') as f:
+    with open('data/yearlymsg.json', 'w') as f:
         json.dump(data, f)
 
 
 def get_messages():
     """Get all messages and sort them by messages sent"""
-    with open('yearlymsg.json', 'r') as f:
+    with open('data/yearlymsg.json', 'r') as f:
         data: list = json.load(f)
     return sorted(data, key=lambda x: x['messages'], reverse=True)
 
 
 def clear_messages():
-    with open('yearlymsg.json', 'w') as f:
+    with open('data/yearlymsg.json', 'w') as f:
         json.dump([], f)
 
 

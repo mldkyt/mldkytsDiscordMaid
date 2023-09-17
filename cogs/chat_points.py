@@ -5,15 +5,15 @@ import discord
 
 def init():
     try:
-        with open('catpoints.json') as f:
+        with open('data/chatpoints.json') as f:
             pass
     except FileNotFoundError:
-        with open('catpoints.json', 'w') as f:
+        with open('data/chatpoints.json', 'w') as f:
             json.dump([], f)
 
 
 def add_chatpoints(userid: int, chatpoints: int):
-    with open('chatpoints.json') as f:
+    with open('data/chatpoints.json') as f:
         data = json.load(f)
 
     # array of {user_id: int, chatpoints: int}
@@ -24,12 +24,12 @@ def add_chatpoints(userid: int, chatpoints: int):
     else:
         data.append({'user_id': userid, 'chatpoints': chatpoints})
 
-    with open('chatpoints.json', 'w') as f:
+    with open('data/chatpoints.json', 'w') as f:
         json.dump(data, f)
 
 
 def get_chatpoints(userid: int) -> int:
-    with open('chatpoints.json') as f:
+    with open('data/chatpoints.json') as f:
         data = json.load(f)
 
     # array of {user_id: int, chatpoints: int}
@@ -41,7 +41,7 @@ def get_chatpoints(userid: int) -> int:
 
 
 def get_chatpoints_leaderboard() -> list:
-    with open('chatpoints.json') as f:
+    with open('data/chatpoints.json') as f:
         data = json.load(f)
 
     # array of {user_id: int, chatpoints: int}
