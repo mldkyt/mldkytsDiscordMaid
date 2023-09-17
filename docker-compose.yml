@@ -1,6 +1,6 @@
 services:
   mldkyt-companion:
     build: .
+    restart: always
     volumes:
       - ./bot_data:/bot/data
-    
