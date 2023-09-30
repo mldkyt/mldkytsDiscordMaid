@@ -28,7 +28,7 @@ class WebsiteSync(discord.Cog):
         if date.hour == 18 and date.minute == 0 and date.weekday() == 5:
             data = requests.get(f'https://{constants.firebase_url}/ff/votes.json').json()
             channel = self.bot.get_channel(constants.private_channel)
-            await channel.send(f'{len(data)} headpats for mldkyt on femboy friday! :3')
+            await channel.send(f'{len(data)} headpats for Programmer Astolfo on femboy friday! :3')
 
     def sync_members(self):
         data = {

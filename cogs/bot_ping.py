@@ -3,7 +3,7 @@ import discord
 import constants
 
 initial_message = '''# Hello there, %s!
-I am a bot created by [Astolph0](https://github.com/Astolph0/mldkytCompanion) to help with his server.
+I am a bot created by [Astolph0](https://github.com/ProgrammerAstolfo/ProgrammerAstolfoBot) to help with his server.
 Use the buttons below to navigate through the pages.'''
 
 chat_points_message = f'''# ChatPoints

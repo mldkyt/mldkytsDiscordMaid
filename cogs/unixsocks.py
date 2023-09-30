@@ -7,6 +7,11 @@ import constants
 import discord.ext.tasks
 
 
+def get_version():
+    with open('changelog.md') as f:
+        return f.read().split('\n')[0].split(' ')[2]
+    
+
 class UnixSocks(discord.Cog):
 
     def __init__(self, bot: discord.Bot) -> None:
@@ -23,12 +28,12 @@ class UnixSocks(discord.Cog):
         await ctx.defer()
         
         response = requests.get('https://reddit.com/r/unixsocks/random.json', headers={
-            'User-Agent': 'mldkytCompanion/1.2'
+            'User-Agent': f'ProgrammerAstolfoBot/{get_version()}'
         }).json()
         first_post = response[0]['data']['children'][0]['data']
         # download the image and send it as attachment
         image = requests.get(first_post['url'], headers={
-            'User-Agent': 'mldkytCompanion/1.2',
+            'User-Agent': f'ProgrammerAstolfoBot/{get_version()}',
             'Accept': 'image/png'
         }).content
         
@@ -40,12 +45,12 @@ class UnixSocks(discord.Cog):
     @discord.ext.tasks.loop(hours=1)
     async def auto_unixsocks(self):
         response = requests.get('https://reddit.com/r/unixsocks/random.json', headers={
-            'User-Agent': 'mldkytCompanion/1.2'
+            'User-Agent': f'ProgrammerAstolfoBot/{get_version()}'
         }).json()
         first_post = response[0]['data']['children'][0]['data']
         # download the image and send it as attachment
         image = requests.get(first_post['url'], headers={
-            'User-Agent': 'mldkytCompanion/1.2',
+            'User-Agent': f'ProgrammerAstolfoBot/{get_version()}',
             'Accept': 'image/png'
         }).content
         
