@@ -249,6 +249,41 @@ class ModerationCommands(discord.Cog):
         
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
+        
+    @discord.slash_command(guild_ids=[constants.guild_id])
+    async def lang_timeout(self, ctx: discord.ApplicationContext, member: discord.Member, send_dm: bool = True):
+        if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            await ctx.respond('You are not allowed to use this command', ephemeral=True)
+            return
+
+        await ctx.defer()
+        log_embed = discord.Embed(
+            title='Moderation Command Used',
+            description='The command /lang_timeout was used.',
+            fields=[
+                discord.EmbedField('User', ctx.user.display_name, True),
+                discord.EmbedField('Target', member.display_name, True),
+                discord.EmbedField('Send the user a DM', 'Yes' if send_dm else 'No', False)
+            ]
+        )
+
+        duration = f'0d 1h 0m 0s'
+        # dm user embed with reason
+        if send_dm:
+            embed = discord.Embed(title=f'You have been timed out from {ctx.guild.name}',
+                                  description=f'Reason: Non-English in <#1147557081721872474>, there\'s <#1157938801952428052> for other languages\nDuration: {duration}', color=discord.Color.orange())
+            try:
+                await member.send(embed=embed)
+            except discord.Forbidden:
+                pass
+
+        await member.timeout_for(datetime.timedelta(seconds=3600), reason='Reason: Non-English in <#1147557081721872474>, there\'s <#1157938801952428052> for other languages')
+        mod_embed = discord.Embed(
+            title=f'✅ Timed out {member}', description=f'Reason: Non-English in <#1147557081721872474>, there\'s <#1157938801952428052> for other languages\nTimed out by: {ctx.user.display_name}\nDuration: {duration}', color=discord.Color.yellow())
+        await ctx.followup.send(embed=mod_embed, ephemeral=True)
+        
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def remove_timeout(self, ctx: discord.ApplicationContext, target: discord.Member, reason: str):
