@@ -20,6 +20,7 @@ from cogs.website_sync import WebsiteSync
 from cogs.yearly_messages import YearlyMessages
 from cogs.bot_commands_reminder import BotCommandsReminder
 from cogs.ideas import Ideas, MainIdeas
+from cogs.linux_uptime import Uptime
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, TransSelect
 
 bot = discord.Bot(intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
@@ -39,6 +40,7 @@ bot.add_cog(UnixSocks(bot))
 bot.add_cog(TimeCommand(bot))
 bot.add_cog(BotCommandsReminder(bot))
 bot.add_cog(Ideas(bot))
+bot.add_cog(Uptime(bot))
 
 @bot.event
 async def on_ready():
