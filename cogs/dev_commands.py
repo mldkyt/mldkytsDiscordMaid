@@ -2,6 +2,7 @@ import json
 import discord
 
 import views.roles
+import cogs.ideas
 import constants
 
 def cleanup_data(user: int):
@@ -66,7 +67,8 @@ class DevCommands(discord.Cog):
         "roles_nsfw",
         "roles_pronouns",
         "roles_trans",
-        "roles_topbottom"
+        "roles_topbottom",
+        'ideas'
     ])
     async def send_template_msg(self, ctx: discord.ApplicationContext, template: str):
         if ctx.user.id != 575536897141637120 and ctx.user.id != 1149748649446883358:
@@ -104,6 +106,10 @@ If you\'re trans, select it here :3''', view=views.roles.TransSelect())
         elif template == 'roles_topbottom':
             await ctx.channel.send('''# Top/Switch/Bottom role
 Select your Top/Switch/Bottom role here :3''', view=views.roles.TopBottomSelect())
+            await ctx.respond('Send the message successfully', ephemeral=True)
+        elif template == 'ideas':
+            await ctx.channel.send('''# Ideas
+Submit ideas by clicking the button below :3''', view=cogs.ideas.MainIdeas())
             await ctx.respond('Send the message successfully', ephemeral=True)
         else:
             await ctx.respond('Invalid template', ephemeral=True)

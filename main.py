@@ -17,14 +17,13 @@ from cogs.status import Status
 from cogs.time_command import TimeCommand
 from cogs.unixsocks import UnixSocks
 from cogs.website_sync import WebsiteSync
-from cogs.welcome_goodbye import WelcomeGoodbye
 from cogs.yearly_messages import YearlyMessages
 from cogs.bot_commands_reminder import BotCommandsReminder
+from cogs.ideas import Ideas, MainIdeas
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, TransSelect
 
 bot = discord.Bot(intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
 
-bot.add_cog(WelcomeGoodbye(bot))
 bot.add_cog(Status(bot))
 bot.add_cog(DailyMessages(bot))
 bot.add_cog(YearlyMessages(bot))
@@ -39,6 +38,7 @@ bot.add_cog(EventLogger(bot))
 bot.add_cog(UnixSocks(bot))
 bot.add_cog(TimeCommand(bot))
 bot.add_cog(BotCommandsReminder(bot))
+bot.add_cog(Ideas(bot))
 
 @bot.event
 async def on_ready():
@@ -49,6 +49,7 @@ async def on_ready():
     bot.add_view(PronounSelect())
     bot.add_view(TransSelect())
     bot.add_view(TopBottomSelect())
+    bot.add_view(MainIdeas())
 
 
 @bot.slash_command(guild_ids=[constants.guild_id])
