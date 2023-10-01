@@ -20,7 +20,6 @@ def update_message_time() -> bool:
         
     time = datetime.datetime.strptime(time, '%Y-%m-%d %H:%M:%S.%f')
     now = datetime.datetime.now()
-    print('time difference', (now - time).total_seconds())
     if now - time > datetime.timedelta(hours=1):
         with open('data/bot_commands_time.txt', 'w') as f:
             f.write(now.strftime('%Y-%m-%d %H:%M:%S.%f'))
