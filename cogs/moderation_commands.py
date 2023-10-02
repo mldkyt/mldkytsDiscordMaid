@@ -73,6 +73,18 @@ class ModerationCommands(discord.Cog):
                     author: discord.Member = None, not_author: discord.Member = None,
                     starts_with: str = None, ends_with: str = None, contains: str = None,
                     manual_delete: bool = False):
+        """Delete messages in bulk.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            search_past (int): Search how many messages in the past
+            author (discord.Member, optional): Filter by author. Defaults to None.
+            not_author (discord.Member, optional): Filter not by author. Defaults to None.
+            starts_with (str, optional): Filter by starting with. Defaults to None.
+            ends_with (str, optional): Filter by ending with. Defaults to None.
+            contains (str, optional): Filter by containing. Defaults to None.
+            manual_delete (bool, optional): Manually delete instead of bulk. Defaults to False.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
@@ -132,12 +144,22 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def kick(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None, send_dm: bool = True):
+        """Kick a member from the server.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            member (discord.Member): The member to kick
+            reason (str, optional): The kick reason. Defaults to None.
+            send_dm (bool, optional): Send a DM. Defaults to True.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        await ctx.defer()
+        if reason is None:
+            reason = 'No reason provided'
         
+        await ctx.defer()
         log_embed = discord.Embed(
             title='Moderation Command Used',
             description='The command /kick was used.',
@@ -170,9 +192,20 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def ban(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None, send_dm: bool = True):
+        """Ban a member from the server.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            member (discord.Member): The member to ban
+            reason (str, optional): The ban reason. Defaults to None.
+            send_dm (bool, optional): Send a DM. Defaults to True.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
+        
+        if reason is None:
+            reason = 'No reason provided'
 
         await ctx.defer()
         log_embed = discord.Embed(
@@ -204,12 +237,90 @@ class ModerationCommands(discord.Cog):
         
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
-
+        
+    async def unban_autocomplete(self: discord.AutocompleteContext):
+        options = []
+        
+        guild = self.bot.get_guild(constants.guild_id)
+        iter = 0
+        async for i in guild.bans():
+            if i.user.display_name.lower().startswith(self.value.lower()):
+                options.append(i.user.display_name)
+                iter += 1
+            if iter > 9:
+                break
+            
+        return options
+        
+        
+        
     @discord.slash_command(guild_ids=[constants.guild_id])
-    async def timeout(self, ctx: discord.ApplicationContext, member: discord.Member, for_hours: int, for_days: int = 0, for_minutes: int = 0, for_seconds: int = 0, reason: str = None, send_dm: bool = True):
+    @discord.option('target', autocomplete=unban_autocomplete)
+    async def unban(self, ctx: discord.ApplicationContext, target: str, reason: str = None):
+        """Unban a member.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            target (str): The target user to unban, searches in bans
+            reason (str, optional): Optional reason. Defaults to None.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
+        
+        if reason is None:
+            reason = 'No reason provided'
+        
+        
+        await ctx.defer()
+        
+        user: discord.User = None
+        async for i in ctx.guild.bans():
+            if i.user.display_name.lower() == target.lower():
+                user = i.user
+                break
+        
+        if user is None:
+            await ctx.followup.send('User not found', ephemeral=True)
+            return
+        
+        await ctx.guild.unban(user, reason=reason)
+        mod_embed = discord.Embed(
+            title=f'✅ Unbanned {target}', description=f'Reason: {reason}\nUnbanned by: {ctx.user.display_name}', color=discord.Color.green())
+        await ctx.followup.send(embed=mod_embed)
+        
+        log_embed = discord.Embed(
+            title='Moderation Command Used',
+            description='The command /unban was used.',
+            fields=[
+                discord.EmbedField('User', ctx.user.display_name, True),
+                discord.EmbedField('Target', target.display_name, True),
+                discord.EmbedField('Reason', reason, True)
+            ]
+        )
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
+
+    @discord.slash_command(guild_ids=[constants.guild_id])
+    async def timeout(self, ctx: discord.ApplicationContext, member: discord.Member, for_hours: int, for_days: int = 0, for_minutes: int = 0, for_seconds: int = 0, reason: str = None, send_dm: bool = True):
+        """Time out a member.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            member (discord.Member): The member to time out
+            for_hours (int): For how many hours. Adds up with other time arguments
+            for_days (int, optional): For how many days. Adds up with other time arguments. Defaults to 0.
+            for_minutes (int, optional): For how many minutes. Adds up with other time arguments. Defaults to 0.
+            for_seconds (int, optional): For how many seconds. Adds up with other time arguments. Defaults to 0.
+            reason (str, optional): The reason for time out. Defaults to None.
+            send_dm (bool, optional): Send a DM. Defaults to True.
+        """
+        if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            await ctx.respond('You are not allowed to use this command', ephemeral=True)
+            return
+        
+        if reason is None:
+            reason = 'No reason provided'
 
         await ctx.defer()
         log_embed = discord.Embed(
@@ -252,6 +363,13 @@ class ModerationCommands(discord.Cog):
         
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def lang_timeout(self, ctx: discord.ApplicationContext, member: discord.Member, send_dm: bool = True):
+        """Timeout someone for violating the language rule
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            member (discord.Member): The member to timeout
+            send_dm (bool, optional): If it should send a DM. Defaults to True.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
@@ -267,7 +385,7 @@ class ModerationCommands(discord.Cog):
             ]
         )
 
-        duration = f'0d 1h 0m 0s'
+        duration = '0d 1h 0m 0s'
         # dm user embed with reason
         if send_dm:
             embed = discord.Embed(title=f'You have been timed out from {ctx.guild.name}',
@@ -287,8 +405,20 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def remove_timeout(self, ctx: discord.ApplicationContext, target: discord.Member, reason: str):
+        """Remove time out from a member.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            target (discord.Member): The user to remove time out from
+            reason (str): Reason for time out removal
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
+            return
+        
+        # check if user is timed out
+        if target.communication_disabled_until is None:
+            await ctx.respond(f'{target} is not timed out', ephemeral=True)
             return
 
         await ctx.defer()
@@ -312,6 +442,14 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def warn(self, ctx: discord.ApplicationContext, target: discord.Member, reason: str, send_dm: bool = True):
+        """Add a warning to a member.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            target (discord.Member): The member to warn.
+            reason (str): Reason for warning.
+            send_dm (bool, optional): Send a DM. Defaults to True.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
@@ -335,6 +473,12 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def warnings(self, ctx: discord.ApplicationContext, target: discord.Member):
+        """View the warnings for a member.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            target (discord.Member): The member to view warnings for.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
@@ -364,6 +508,12 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def nsfw_ban(self, ctx: discord.ApplicationContext, target: discord.Member):
+        """Ban someone from accessing NSFW channels.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            target (discord.Member): The member to ban from NSFW.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
@@ -393,6 +543,12 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def remove_nsfw_ban(self, ctx: discord.ApplicationContext, target: discord.Member):
+        """Unban someone from accessing NSFW channels.
+
+        Args:
+            ctx (discord.ApplicationContext): _description_
+            target (discord.Member): The member to unban from NSFW.
+        """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
