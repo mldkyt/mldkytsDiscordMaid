@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 
 import discord
 
@@ -64,9 +65,11 @@ def remove_nsfw_ban(user: discord.Member):
 
 class ModerationCommands(discord.Cog):
     def __init__(self, bot: discord.Bot):
+        self.logger = logging.getLogger('astolfo/ModerationCommands')
         self.bot = bot
         init()
         super().__init__()
+        self.logger.info('Initialization successful')
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def clear(self, ctx: discord.ApplicationContext, search_past: int,
@@ -86,6 +89,7 @@ class ModerationCommands(discord.Cog):
             manual_delete (bool, optional): Manually delete instead of bulk. Defaults to False.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the clear command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         
@@ -100,6 +104,7 @@ class ModerationCommands(discord.Cog):
         )
 
         if search_past > 100:
+            self.logger.info(f'{ctx.user.id} tried to delete more than 100 messages')
             await ctx.respond('You can only delete 100 messages at a time', ephemeral=True)
             return
 
@@ -108,34 +113,42 @@ class ModerationCommands(discord.Cog):
         # filter messages older than 2 weeks
         messages = [message for message in messages if message.created_at >
                     discord.utils.utcnow() - datetime.timedelta(weeks=2)]
+        self.logger.info(f'Found {len(messages)} messages')
         # filter messages from author if author is specified
         if author is not None:
+            self.logger.info(f'Filtering messages from {author}')
             messages = [
                 message for message in messages if message.author == author]
             embed.add_field(name='Author filter', value=author.display_name, inline=True)
         if not_author is not None:
+            self.logger.info(f'Filtering messages not from {not_author}')
             messages = [
                 message for message in messages if message.author != not_author]
             embed.add_field(name='Author NOT filter', value=not_author.display_name, inline=True)
 
         if starts_with is not None:
+            self.logger.info(f'Filtering messages starting with {starts_with}')
             messages = [
                 message for message in messages if message.content.startswith(starts_with)]
             embed.add_field(name='Starts with filter', value=starts_with, inline=True)
         if ends_with is not None:
+            self.logger.info(f'Filtering messages ending with {ends_with}')
             messages = [
                 message for message in messages if message.content.endswith(ends_with)]
             embed.add_field(name='Ends with filter', value=ends_with, inline=True)
         if contains is not None:
+            self.logger.info(f'Filtering messages containing {contains}')
             messages = [
                 message for message in messages if contains in message.content]
             embed.add_field(name='Contains filter', value=contains, inline=True)
         if manual_delete:
             await ctx.defer()
             for message in messages:
+                self.logger.info(f'Manually deleting message {message.id}')
                 await message.delete()
             await ctx.followup.send(f'Deleted {len(messages)} messages')
         else:
+            self.logger.info(f'Bulk deleting {len(messages)} messages')
             await ctx.channel.delete_messages(messages)
             await ctx.respond(f'Deleted {len(messages)} messages')
             
@@ -153,10 +166,12 @@ class ModerationCommands(discord.Cog):
             send_dm (bool, optional): Send a DM. Defaults to True.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the kick command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
         if reason is None:
+            self.logger.info('Defaulting reason to "No reason provided"')
             reason = 'No reason provided'
         
         await ctx.defer()
@@ -173,6 +188,7 @@ class ModerationCommands(discord.Cog):
 
         # dm user embed with reason and give him an invitation back to the server
         if send_dm:
+            self.logger.info(f'Sending DM to {member}')
             embed = discord.Embed(title=f'You have been kicked from {ctx.guild.name}',
                                   description=f'Reason: {reason}', color=discord.Color.yellow())
             embed.add_field(name='Get back',
@@ -180,8 +196,10 @@ class ModerationCommands(discord.Cog):
             try:
                 await member.send(embed=embed)
             except discord.Forbidden:
+                self.logger.info(f'Could not send DM to {member}, skipping')
                 pass
 
+        self.logger.info(f'Kicking {member}')
         await member.kick(reason=reason)
         mod_embed = discord.Embed(
             title=f'✅ Kicked {member}', description=f'Reason: {reason}\nKicked by: {ctx.user.display_name}', color=discord.Color.yellow())
@@ -201,10 +219,12 @@ class ModerationCommands(discord.Cog):
             send_dm (bool, optional): Send a DM. Defaults to True.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the ban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         
         if reason is None:
+            self.logger.info('Defaulting reason to "No reason provided"')
             reason = 'No reason provided'
 
         await ctx.defer()
@@ -221,11 +241,13 @@ class ModerationCommands(discord.Cog):
 
         # dm user embed with reason and give him an invitation back to the server
         if send_dm:
+            self.logger.info(f'Sending DM to {member}')
             embed = discord.Embed(title=f'You have been banned from {ctx.guild.name}',
                                   description=f'Reason: {reason}', color=discord.Color.red())
             try:
                 await member.send(embed=embed)
             except discord.Forbidden:
+                self.logger.info(f'Could not send DM to {member}, skipping')
                 pass
 
         await member.ban(reason=reason)
@@ -238,7 +260,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
         
-    async def unban_autocomplete(self: discord.AutocompleteContext):
+    async def unban_autocomplete(self: discord.AutocompleteContext):        
         options = []
         
         guild = self.bot.get_guild(constants.guild_id)
@@ -265,10 +287,12 @@ class ModerationCommands(discord.Cog):
             reason (str, optional): Optional reason. Defaults to None.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the unban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         
         if reason is None:
+            self.logger.info('Defaulting reason to "No reason provided"')
             reason = 'No reason provided'
         
         
@@ -316,10 +340,12 @@ class ModerationCommands(discord.Cog):
             send_dm (bool, optional): Send a DM. Defaults to True.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the timeout command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         
         if reason is None:
+            self.logger.info('Defaulting reason to "No reason provided"')
             reason = 'No reason provided'
 
         await ctx.defer()
@@ -335,22 +361,26 @@ class ModerationCommands(discord.Cog):
         )
 
         if for_days == 0 and for_hours == 0 and for_minutes == 0 and for_seconds == 0:
+            self.logger.info('No time specified')
             await ctx.followup.send('You have to specify a time', ephemeral=True)
             return
 
         total_duration = for_days * 86400 + for_hours * 3600 + for_minutes * 60 + for_seconds
         if total_duration > 604800:
+            self.logger.info('Time specified is too long')
             await ctx.followup.send(f'The maximum timeout duration is 604800s', ephemeral=True)
             return
 
         duration = f'{for_days}d {for_hours}h {for_minutes}m {for_seconds}s'
         # dm user embed with reason
         if send_dm:
+            self.logger.info(f'Sending DM to {member}')
             embed = discord.Embed(title=f'You have been timed out from {ctx.guild.name}',
                                   description=f'Reason: {reason}\nDuration: {duration}', color=discord.Color.orange())
             try:
                 await member.send(embed=embed)
             except discord.Forbidden:
+                self.logger.info(f'Could not send DM to {member}, skipping')
                 pass
 
         await member.timeout_for(datetime.timedelta(seconds=total_duration), reason=reason)
@@ -371,6 +401,7 @@ class ModerationCommands(discord.Cog):
             send_dm (bool, optional): If it should send a DM. Defaults to True.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the language timeout command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
@@ -388,11 +419,13 @@ class ModerationCommands(discord.Cog):
         duration = '0d 1h 0m 0s'
         # dm user embed with reason
         if send_dm:
+            self.logger.info(f'Sending DM to {member}')
             embed = discord.Embed(title=f'You have been timed out from {ctx.guild.name}',
                                   description=f'Reason: Non-English in <#1147557081721872474>, there\'s <#1157938801952428052> for other languages\nDuration: {duration}', color=discord.Color.orange())
             try:
                 await member.send(embed=embed)
             except discord.Forbidden:
+                self.logger.info(f'Could not send DM to {member}, skipping')
                 pass
 
         await member.timeout_for(datetime.timedelta(seconds=3600), reason='Reason: Non-English in <#1147557081721872474>, there\'s <#1157938801952428052> for other languages')
@@ -413,11 +446,13 @@ class ModerationCommands(discord.Cog):
             reason (str): Reason for time out removal
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the remove timeout command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         
         # check if user is timed out
         if target.communication_disabled_until is None:
+            self.logger.info('Target is not timed out')
             await ctx.respond(f'{target} is not timed out', ephemeral=True)
             return
 
@@ -451,17 +486,20 @@ class ModerationCommands(discord.Cog):
             send_dm (bool, optional): Send a DM. Defaults to True.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the warn command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
         await ctx.defer()
 
         if send_dm:
+            self.logger.info(f'Sending DM to {target}')
             embed = discord.Embed(title=f'You have been warned in {ctx.guild.name}',
                                   description=f'Reason: {reason}\nBy: {ctx.user.display_name}', color=discord.Color.orange())
             try:
                 await target.send(embed=embed)
             except discord.Forbidden:
+                self.logger.info(f'Could not send DM to {target}, skipping')
                 pass
 
         add_warning(target, reason, ctx.user)
@@ -480,6 +518,7 @@ class ModerationCommands(discord.Cog):
             target (discord.Member): The member to view warnings for.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the warnings command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         
@@ -494,11 +533,13 @@ class ModerationCommands(discord.Cog):
 
         warnings = get_warnings(target)
         if len(warnings) == 0:
+            self.logger.info(f'{target} has no warnings')
             await ctx.respond(f'{target} has no warnings')
             return
 
         embed = discord.Embed(title=f'Warnings for {target}', color=discord.Color.orange())
         for warning in warnings:
+            self.logger.info(f'Adding warning {warnings.index(warning) + 1}')
             moderator = self.bot.get_user(warning['moderator'])
             embed.add_field(name=f'Warning {warnings.index(warning) + 1}', value=f'Reason: {warning["reason"]}\nModerator: {moderator.mention}', inline=warnings.index(warning) % 3 != 0)
         await ctx.respond(embed=embed)
@@ -515,6 +556,7 @@ class ModerationCommands(discord.Cog):
             target (discord.Member): The member to ban from NSFW.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the NSFW ban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         
@@ -530,9 +572,11 @@ class ModerationCommands(discord.Cog):
         
         await ctx.defer()
         add_nsfw_ban(target)
+        self.logger.info(f'Banned {target} from NSFW')
 
         nsfw_role = self.bot.get_guild(constants.guild_id).get_role(1152684011748077619)
         if nsfw_role in target.roles:
+            self.logger.info(f'Removing NSFW role from {target}')
             await target.remove_roles(nsfw_role, reason='NSFW ban')
 
         embed = discord.Embed(title=f'✅ Banned {target} from NSFW', color=discord.Color.red())
@@ -550,6 +594,7 @@ class ModerationCommands(discord.Cog):
             target (discord.Member): The member to unban from NSFW.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(f'{ctx.user.id} tried to use the NSFW unban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         
@@ -564,6 +609,7 @@ class ModerationCommands(discord.Cog):
 
         await ctx.defer()
         remove_nsfw_ban(target)
+        self.logger.info(f'Removed NSFW ban for {target}')
 
         embed = discord.Embed(title=f'✅ Removed NSFW ban for {target}', color=discord.Color.green())
         await ctx.followup.send(embed=embed)

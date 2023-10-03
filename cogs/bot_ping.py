@@ -1,3 +1,4 @@
+import logging
 import discord
 
 import constants
@@ -21,6 +22,8 @@ class ChatPointsView(discord.ui.View):
 
     @discord.ui.button(label='Back to main page', style=discord.ButtonStyle.primary)
     async def chat_ponts(self, button: discord.ui.Button, interaction: discord.Interaction):
+        logger = logging.getLogger('astolfo/BotPing/ChatPointsView')
+        logger.info('Back to main page button pressed')
         await interaction.message.edit(content=(initial_message % interaction.user.mention), view=InitialView())
         await interaction.response.defer()
 
@@ -29,6 +32,8 @@ class CatPointsView(discord.ui.View):
 
     @discord.ui.button(label='Back to main page', style=discord.ButtonStyle.primary)
     async def chat_ponts(self, button: discord.ui.Button, interaction: discord.Interaction):
+        logger = logging.getLogger('astolfo/BotPing/CatPointsView')
+        logger.info('Back to main page button pressed')
         await interaction.message.edit(content=(initial_message % interaction.user.mention), view=InitialView())
         await interaction.response.defer()
 
@@ -37,11 +42,15 @@ class InitialView(discord.ui.View):
 
     @discord.ui.button(label='What are ChatPoints?', style=discord.ButtonStyle.primary)
     async def chat_ponts(self, button: discord.ui.Button, interaction: discord.Interaction):
+        logger = logging.getLogger('astolfo/BotPing/InitialView')
+        logger.info('What are ChatPoints button pressed')
         await interaction.message.edit(content=chat_points_message, view=ChatPointsView())
         await interaction.response.defer()
 
     @discord.ui.button(label='What are CatPoints?', style=discord.ButtonStyle.primary)
     async def cat_ponts(self, button: discord.ui.Button, interaction: discord.Interaction):
+        logger = logging.getLogger('astolfo/BotPing/InitialView')
+        logger.info('What are CatPoints button pressed')
         await interaction.message.edit(content=cat_points_message, view=CatPointsView())
         await interaction.response.defer()
 
@@ -49,10 +58,13 @@ class InitialView(discord.ui.View):
 class BotPing(discord.Cog):
 
     def __init__(self, bot: discord.Bot):
+        self.logger = logging.getLogger('astolfo/BotPing')
         self.bot = bot
         super().__init__()
+        self.logger.info('Initialization successful')
 
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):
         if f'<@{constants.bot_id}>' in msg.content:
+            self.logger.info('Bot was pinged, sending message')
             await msg.channel.send(initial_message % msg.author.mention, view=InitialView())

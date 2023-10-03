@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 
 import discord
 from discord.ext import tasks
@@ -47,12 +48,15 @@ def clear_messages():
 
 class DailyMessages(discord.Cog):
     def __init__(self, bot: discord.Bot):
+        self.logger = logging.getLogger('astolfo/DailyMessages')
         self.bot = bot
         super().__init__()
+        self.logger.info('Initialization successful')
 
     @discord.Cog.listener()
     async def on_ready(self):
         init_messages()
+        self.logger.info('Starting clear_messages loop')
         self.clear_messages.start()
         pass
 
@@ -69,6 +73,8 @@ class DailyMessages(discord.Cog):
         time = datetime.datetime.now()
         if time.hour != 0 or time.minute != 0:
             return
+        
+        self.logger.info('Clearing messages and sending top 5 chatters')
 
         messages = get_messages()
         # show top n talkers or top 5 talkers when there are less than 5 talkers
@@ -85,6 +91,7 @@ class DailyMessages(discord.Cog):
             else:
                 username = user.display_name
             msg += f'{i + 1}. {username}: {user_data["messages"]} messages\n'
+            self.logger.info(f'Adding {username} with {user_data["messages"]} messages to top 5 chatters')
             if i == 4:
                 break
 

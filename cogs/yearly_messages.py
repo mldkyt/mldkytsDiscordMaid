@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 
 import discord
 from discord.ext import tasks
@@ -47,12 +48,15 @@ def clear_messages():
 
 class YearlyMessages(discord.Cog):
     def __init__(self, bot: discord.Bot):
+        self.logger = logging.getLogger('astolfo/YearlyMessages')
         self.bot = bot
         super().__init__()
+        self.logger.info('Initialization successful')
 
     @discord.Cog.listener()
     async def on_ready(self):
         init_messages()
+        self.logger.info('Starting clear_messages loop')
         self.clear_messages.start()
         pass
 
@@ -69,6 +73,8 @@ class YearlyMessages(discord.Cog):
         time = datetime.datetime.now()
         if time.hour != 0 or time.minute != 0 or time.day != 1 or time.month != 1:
             return
+        
+        self.logger.info('Sending yearly messages')
 
         messages = get_messages()
         # show top n talkers or top 5 talkers when there are less than 5 talkers
@@ -78,6 +84,7 @@ class YearlyMessages(discord.Cog):
             msg = f'# Top 10 YEARLY Chatters\n'
 
         for i, user_data in enumerate(messages):
+            self.logger.info(f'User {user_data["user_id"]} has {user_data["messages"]} messages')
             # try to find the user by id, show their display_name if found, else mention
             user = self.bot.get_user(int(user_data['user_id']))
             if user is None:
@@ -90,5 +97,6 @@ class YearlyMessages(discord.Cog):
 
         msg += f'# HAPPY NEW YEAR {time.year} EVERYONE!! :3'
 
+        self.logger.info('Sending yearly messages')
         await self.bot.get_channel(constants.general_channel).send(msg)
         clear_messages()

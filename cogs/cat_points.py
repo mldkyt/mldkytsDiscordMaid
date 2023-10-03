@@ -1,4 +1,5 @@
 import json
+import logging
 
 import discord
 
@@ -9,6 +10,8 @@ def init():
             pass
     except FileNotFoundError:
         with open('data/catpoints.json', 'w') as f:
+            logger = logging.getLogger('astolfo/CatPoints')
+            logger.info('Creating data/catpoints.json')
             json.dump([], f)
 
 
@@ -51,9 +54,11 @@ def get_catpoints_leaderboard() -> list:
 class CatPoints(discord.Cog):
 
     def __init__(self, bot: discord.Bot):
+        self.logger = logging.getLogger('astolfo/CatPoints')
         self.bot = bot
         init()
         super().__init__()
+        self.logger.info('Initialization successful')
 
     @discord.slash_command()
     async def catpoints(self, ctx: discord.ApplicationContext):
@@ -67,8 +72,6 @@ class CatPoints(discord.Cog):
             return
 
         catpoints = message.content.count('>:3') * 2
-        catpoints_total = catpoints
-        add_catpoints(message.author.id, catpoints)
         catpoints += message.content.replace('>:3', '').count(':3')
         catpoints += message.content.count(':#')
         catpoints += message.content.count(';3')
@@ -77,16 +80,19 @@ class CatPoints(discord.Cog):
         catpoints += message.content.count('meow')
         catpoints += message.content.count('mrow')
         catpoints += message.content.count('mrrr')
-        catpoints_total += catpoints
+        if catpoints > 0:
+            self.logger.info(f'Adding {catpoints} CatPoints to {message.author}')
         add_catpoints(message.author.id, catpoints)
 
     @discord.slash_command()
     async def catpoints_leaderboard(self, ctx: discord.ApplicationContext):
         """Get the CatPoints leaderboard"""
+        self.logger.info('Getting CatPoints leaderboard')
         leaderboard = get_catpoints_leaderboard()
         msg = "# CatPoints Leaderboard\n"
         for i, user_data in enumerate(leaderboard):
             user = await self.bot.fetch_user(user_data['user_id'])
+            self.logger.info(f'Adding {user.display_name} with {user_data["catpoints"]} CatPoints to leaderboard')
             msg += f"{i + 1}. {user.display_name} has {user_data['catpoints']} CatPoints\n"
             if i == 9:
                 break

@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import discord
 import constants
@@ -30,9 +31,11 @@ def update_message_time() -> bool:
 
 class BotCommandsReminder(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
+        self.logger = logging.getLogger('astolfo/BotCommandsReminder')
         self.bot = bot
         init()
         super().__init__()
+        self.logger.info('Initialization successful')
         
     @discord.Cog.listener()
     async def on_message(self, message: discord.Message) -> None:
@@ -43,8 +46,10 @@ class BotCommandsReminder(discord.Cog):
             return
         
         if not update_message_time():
+            self.logger.info('Message received in commands channel, but time difference is less than 1 hour')
             return
         
+        self.logger.info('Sending message to commands channel')
         await message.channel.send('''**Here are some commands that you can use here:**
                                        
 owo hug @user - Give a hug to a user

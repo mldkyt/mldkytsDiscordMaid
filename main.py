@@ -1,11 +1,12 @@
 import os
 
+import logging
+
 import discord
 from discord import Color, Embed
 from discord.ext.commands import CommandOnCooldown
 
 import constants
-from cogs.auto_goodmorning_goodnight import AutoGoodMorningGoodNight
 from cogs.bot_ping import BotPing
 from cogs.cat_points import CatPoints
 from cogs.chat_points import ChatPoints
@@ -24,29 +25,54 @@ from cogs.linux_uptime import Uptime
 from cogs.welcome_goodbye import WelcomeGoodbye
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, TransSelect
 
+logging.basicConfig(level=logging.INFO)
+# add file handler
+logger = logging.getLogger()
+handler = logging.FileHandler(filename='logs.log', encoding='utf-8')
+# print to console
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(name)s %(message)s'))
+
+main_logger = logging.getLogger('astolfo')
+
 bot = discord.Bot(intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
 
+main_logger.info('Loading module: Status')
 bot.add_cog(Status(bot))
+main_logger.info('Loading module: Daily Messages')
 bot.add_cog(DailyMessages(bot))
+main_logger.info('Loading module: Yearly messages')
 bot.add_cog(YearlyMessages(bot))
+main_logger.info('Loading module: Bot ping')
 bot.add_cog(BotPing(bot))
+main_logger.info('Loading module: CatPoints')
 bot.add_cog(CatPoints(bot))
+main_logger.info('Loading module: ChatPoints')
 bot.add_cog(ChatPoints(bot))
+main_logger.info('Loading module: Moderation Commands')
 bot.add_cog(ModerationCommands(bot))
+main_logger.info('Loading module: Website Synchronization')
 bot.add_cog(WebsiteSync(bot))
+main_logger.info('Loading module: Developer Commands')
 bot.add_cog(DevCommands(bot))
-bot.add_cog(AutoGoodMorningGoodNight(bot))
+main_logger.info('Loading module: Event Logger')
 bot.add_cog(EventLogger(bot))
+main_logger.info('Loading module: r/UnixSocks')
 bot.add_cog(UnixSocks(bot))
+main_logger.info('Loading module: Time')
 bot.add_cog(TimeCommand(bot))
+main_logger.info('Loading module: Bot Commands Reminder')
 bot.add_cog(BotCommandsReminder(bot))
+main_logger.info('Loading module: Ideas')
 bot.add_cog(Ideas(bot))
+main_logger.info('Loading module: Uptime')
 bot.add_cog(Uptime(bot))
+main_logger.info('Loading module: Welcome & Goodbye')
 bot.add_cog(WelcomeGoodbye(bot))
 
 @bot.event
 async def on_ready():
-    print('Ready!')
+    main_logger.info('Logged in and ready to go!')
     bot.add_view(RoleSelectView())
     bot.add_view(FemboyRoleSelectView())
     bot.add_view(NsfwRoleSelectView())
