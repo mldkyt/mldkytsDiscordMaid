@@ -232,7 +232,7 @@ class PronounSelect(discord.ui.View):
     async def she_her(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)
-        role = guild.get_role()
+        role = guild.get_role(constants.she_her_role)
         if role not in member.roles:
             for i in constants.pronoun_roles:
                 if i in [r.id for r in member.roles]:
