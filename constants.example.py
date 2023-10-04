@@ -9,6 +9,7 @@ private_channel = 0
 log_channel = 0
 selfrole_channel = 0
 femboy_media_channel = 0
+nya_channel = 0
 
 femboy_stage_0_role = 0
 femboy_stage_1_role = 0
