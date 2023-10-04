@@ -23,6 +23,7 @@ from cogs.bot_commands_reminder import BotCommandsReminder
 from cogs.ideas import Ideas, MainIdeas
 from cogs.linux_uptime import Uptime
 from cogs.welcome_goodbye import WelcomeGoodbye
+from cogs.ghost_pings import GhostPings
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, TransSelect
 
 logging.basicConfig(level=logging.INFO)
@@ -69,6 +70,8 @@ main_logger.info('Loading module: Uptime')
 bot.add_cog(Uptime(bot))
 main_logger.info('Loading module: Welcome & Goodbye')
 bot.add_cog(WelcomeGoodbye(bot))
+main_logger.info('Loading module: Ghost pings')
+bot.add_cog(GhostPings(bot))
 
 @bot.event
 async def on_ready():

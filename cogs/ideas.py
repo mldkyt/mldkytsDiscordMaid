@@ -62,7 +62,7 @@ class Ideas(discord.Cog):
         with open('temp.md', 'w') as f:
             f.write(msg)
             
-        await ctx.respond('Here you go:', file=discord.File('temp.md', filename='ideas.md'), ephemeral=True)
+        await ctx.respond('Here ya go :3', file=discord.File('temp.md', filename='ideas.md'), ephemeral=True)
         os.remove('temp.md')
     
 
