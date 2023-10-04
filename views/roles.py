@@ -268,7 +268,7 @@ class PronounSelect(discord.ui.View):
         member = guild.get_member(interaction.user.id)
         role = guild.get_role(constants.any_pronouns_role)
         if role not in member.roles:
-            for i in constants.pr:
+            for i in constants.pronoun_roles:
                 if i in [r.id for r in member.roles]:
                     await interaction.response.send_message('You can\'t have multiple pronoun roles', ephemeral=True)
                     return

@@ -77,7 +77,6 @@ class MainIdeas(discord.ui.View):
     async def submit_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('Submit an idea button pressed')
         await interaction.response.send_message('Select a category below and then fill out the form:', view=IdeasCategory(), ephemeral=True)
-        self.stop()
         
 
 class BotIdeaModal(discord.ui.Modal):
@@ -144,32 +143,23 @@ class IdeasCategory(discord.ui.View):
         self.logger = logging.getLogger('astolfo/Ideas/IdeasCategory')
         super().__init__(timeout=120)
         self.logger.info('IdeasCategory was initialized')
-        
     
     @discord.ui.button(label='Bot idea', style=discord.ButtonStyle.primary)
     async def bot_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('Bot idea button pressed')
         await interaction.response.send_modal(BotIdeaModal())
-        self.disable_all_items()
-        self.stop()
     
     @discord.ui.button(label='Server idea', style=discord.ButtonStyle.primary)
     async def server_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('Server idea button pressed')
         await interaction.response.send_modal(ServerIdeaModal())
-        self.disable_all_items()
-        self.stop()
         
     @discord.ui.button(label='YouTube idea', style=discord.ButtonStyle.primary)
     async def youtube_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('YouTube idea button pressed')
         await interaction.response.send_modal(YouTubeIdeasModal())
-        self.disable_all_items()
-        self.stop()
         
     @discord.ui.button(label='TikTok idea', style=discord.ButtonStyle.primary)
     async def tiktok_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('TikTok idea button pressed')
         await interaction.response.send_modal(TikTokIdeasModal())
-        self.disable_all_items()
-        self.stop()
