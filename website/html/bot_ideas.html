@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Bot Ideas</title>
+    <style>
+        .idea {
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/">
+        <button>Back</button>
+    </a>
+    <h1>Bot Ideas</h1>
+    <script type="text/javascript">
+        $.getJSON('/api/botideas', function(data) {
+            for (let i in data) {
+                const el = data[i];
+                const body = $('body');
+                const root = $('<div></div>').appendTo(body);
+                root.addClass('idea');
+                root.append('<h2>By user ID ' + el.user_id + '</h2>');
+                root.append('<p>' + el.idea + '</p>');
+                const delA = $('<a></a>').appendTo(root);
+                delA.prop('href', '/botideas/' + i + '/delete');
+                const delBtn = $('<button>Delete</button>').appendTo(delA);
+            }
+        })
+    </script>
+</body>
+</html>

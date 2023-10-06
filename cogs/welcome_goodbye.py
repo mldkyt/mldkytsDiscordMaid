@@ -144,7 +144,7 @@ class WelcomeGoodbye(discord.Cog):
                 self.logger.info('Failed to DM member: %s, skipping', member.display_name)
                 pass
             await member.ban(reason='[Internal Banlist] Member was found on the internal banlist and was automatically banned')
-            self.logger.info('Banned member: %s', member.display_name)
+            self.logger.warn('Banned member: %s', member.display_name)
             return
 
         channel = self.bot.get_channel(constants.welcome_channel)

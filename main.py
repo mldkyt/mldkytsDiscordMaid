@@ -1,11 +1,13 @@
 import os
 
 import logging
+import threading
 
 import discord
 from discord import Color, Embed
 from discord.ext.commands import CommandOnCooldown
 
+import asyncio
 import constants
 from cogs.bot_ping import BotPing
 from cogs.cat_points import CatPoints
@@ -25,6 +27,7 @@ from cogs.linux_uptime import Uptime
 from cogs.welcome_goodbye import WelcomeGoodbye
 from cogs.ghost_pings import GhostPings
 from cogs.nya_channel_limit import NyaChannelLimit
+from website.main import run_app
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, TransSelect
 
 logging.basicConfig(level=logging.INFO)
@@ -38,6 +41,9 @@ consoleHandler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(name)
 main_logger = logging.getLogger('astolfo')
 
 bot = discord.Bot(intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
+
+main_logger.info('Starting website')
+threading.Thread(target=lambda: run_app(bot), name='astolfo/Website').start()
 
 main_logger.info('Loading module: Status')
 bot.add_cog(Status(bot))
@@ -75,6 +81,7 @@ main_logger.info('Loading module: Ghost pings')
 bot.add_cog(GhostPings(bot))
 main_logger.info('Loading module: Nya channel limit')
 bot.add_cog(NyaChannelLimit(bot))
+
 
 @bot.event
 async def on_ready():
