@@ -43,7 +43,9 @@ main_logger = logging.getLogger('astolfo')
 bot = discord.Bot(intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
 
 main_logger.info('Starting website')
-threading.Thread(target=lambda: run_app(bot), name='astolfo/Website').start()
+web_thread = threading.Thread(target=lambda: run_app(bot), name='astolfo/Website')
+web_thread.daemon = True
+web_thread.start()
 
 main_logger.info('Loading module: Status')
 bot.add_cog(Status(bot))
