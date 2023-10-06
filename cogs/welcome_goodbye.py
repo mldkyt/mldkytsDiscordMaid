@@ -47,7 +47,7 @@ def cleanup_data(user: int):
         json.dump(chatpoints, f, indent=4)
 
     with open('data/dailymsg.json') as f:
-        dailymsg = json.load(f)
+        dailymsg: list = json.load(f)
     # list of {user_id: str, catpoints: int}
 
     for i in range(len(dailymsg)):
@@ -59,7 +59,7 @@ def cleanup_data(user: int):
         json.dump(dailymsg, f, indent=4)
 
     with open('data/yearlymsg.json') as f:
-        yearlymsg = json.load(f)
+        yearlymsg: list = json.load(f)
     # list of {user_id: str, catpoints: int}
 
     for i in range(len(yearlymsg)):
@@ -117,7 +117,7 @@ def set_inouts_to_today():
     data['joins'] = 0
     data['leaves'] = 0
 
-    with open('data/inouts_in_a_day.json', 'w'):
+    with open('data/inouts_in_a_day.json', 'w') as f:
         json.dump(data, f)
 
 
