@@ -8,8 +8,8 @@ import constants
 
 def init():
     try:
-        with open('data/inouts_in_a_day.json'):
-            pass
+        with open('data/inouts_in_a_day.json') as f:
+            json.load(f)
     except FileNotFoundError:
         with open('data/inouts_in_a_day.json', 'w') as f:
             now = datetime.datetime.now()
@@ -19,6 +19,16 @@ def init():
                 'joins': 0,
                 'leaves': 0
             }, f)
+    except json.JSONDecodeError:
+        with open('data/inouts_in_a_day.json', 'w') as f:
+            now = datetime.datetime.now()
+            json.dump({
+                'day': now.day,
+                'month': now.month,
+                'joins': 0,
+                'leaves': 0
+            }, f)
+            logging.getLogger('astolfo/WelcomeGoodbye').error('Failed to decode inouts_in_a_day.json, resetting to default')
 
 
 def cleanup_data(user: int):
@@ -90,7 +100,7 @@ def increment_leaves_in_a_day():
         data = json.load(f)
 
     now = datetime.datetime.now()
-    if data['month'] != now.month and data['day'] != now.day:
+    if data['month'] != now.month or data['day'] != now.day:
         return
 
     data['leaves'] += 1
@@ -111,9 +121,11 @@ def set_inouts_to_today():
         data = json.load(f)
 
     now = datetime.datetime.now()
-    if now.day == data['day'] and now.month == data['month']:
+    if now.day == data['day'] or now.month == data['month']:
         return
 
+    data['day'] = now.day
+    data['month'] = now.month
     data['joins'] = 0
     data['leaves'] = 0
 
@@ -168,7 +180,7 @@ class WelcomeGoodbye(discord.Cog):
     @loop(minutes=1)
     async def send_inouts_in_a_day(self):
         now = datetime.datetime.now()
-        if now.hour != 0 and now.minute != 0:
+        if now.hour != 0 or now.minute != 0:
             return
         
         self.logger.info('Sending inouts in a day')
