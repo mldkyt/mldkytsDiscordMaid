@@ -27,6 +27,7 @@ from cogs.linux_uptime import Uptime
 from cogs.welcome_goodbye import WelcomeGoodbye
 from cogs.ghost_pings import GhostPings
 from cogs.nya_channel_limit import NyaChannelLimit
+from cogs.ban_invite_links import BanInviteLinks
 from website.main import run_app
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, TransSelect
 
@@ -83,6 +84,8 @@ main_logger.info('Loading module: Ghost pings')
 bot.add_cog(GhostPings(bot))
 main_logger.info('Loading module: Nya channel limit')
 bot.add_cog(NyaChannelLimit(bot))
+main_logger.info('Loading module: Ban invite links')
+bot.add_cog(BanInviteLinks(bot))
 
 
 @bot.event
