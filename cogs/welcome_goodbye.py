@@ -8,8 +8,8 @@ import constants
 
 def init():
     try:
-        with open('data/inouts_in_a_day.json') as f:
-            json.load(f)
+        with open('data/inouts_in_a_day.json'):
+            pass
     except FileNotFoundError:
         with open('data/inouts_in_a_day.json', 'w') as f:
             now = datetime.datetime.now()
@@ -19,16 +19,6 @@ def init():
                 'joins': 0,
                 'leaves': 0
             }, f)
-    except json.JSONDecodeError:
-        with open('data/inouts_in_a_day.json', 'w') as f:
-            now = datetime.datetime.now()
-            json.dump({
-                'day': now.day,
-                'month': now.month,
-                'joins': 0,
-                'leaves': 0
-            }, f)
-            logging.getLogger('astolfo/WelcomeGoodbye').error('Failed to decode inouts_in_a_day.json, resetting to default')
 
 
 def cleanup_data(user: int):
