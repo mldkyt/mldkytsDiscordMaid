@@ -170,6 +170,11 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
+        if constants.moderator_role in [r.id for r in ctx.user.roles] and ctx.user.id != constants.bot_maintainer:
+            self.logger.warning(f'{ctx.user.id} tried to kick another moderator.')
+            await ctx.respond('Nice try', ephemeral=True)
+            return
+
         if reason is None:
             self.logger.info('Defaulting reason to "No reason provided"')
             reason = 'No reason provided'
@@ -222,7 +227,13 @@ class ModerationCommands(discord.Cog):
             self.logger.warning(f'{ctx.user.id} tried to use the ban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
-        
+
+        if constants.moderator_role in [r.id for r in ctx.user.roles] and ctx.user.id != constants.bot_maintainer:
+            self.logger.warning(f'{ctx.user.id} tried to ban another moderator.')
+            await ctx.respond('Nice try', ephemeral=True)
+            return
+
+
         if reason is None:
             self.logger.info('Defaulting reason to "No reason provided"')
             reason = 'No reason provided'
@@ -343,6 +354,11 @@ class ModerationCommands(discord.Cog):
             self.logger.warning(f'{ctx.user.id} tried to use the timeout command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
+
+        if constants.moderator_role in [r.id for r in ctx.user.roles] and ctx.user.id != constants.bot_maintainer:
+            self.logger.warning(f'{ctx.user.id} tried to mute another moderator.')
+            await ctx.respond('Nice try', ephemeral=True)
+            return
         
         if reason is None:
             self.logger.info('Defaulting reason to "No reason provided"')
@@ -405,6 +421,11 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
+        if constants.moderator_role in [r.id for r in ctx.user.roles] and ctx.user.id != constants.bot_maintainer:
+            self.logger.warning(f'{ctx.user.id} tried to langauge timeout another moderator.')
+            await ctx.respond('Nice try', ephemeral=True)
+            return
+
         await ctx.defer()
         log_embed = discord.Embed(
             title='Moderation Command Used',
@@ -449,6 +470,11 @@ class ModerationCommands(discord.Cog):
             self.logger.warning(f'{ctx.user.id} tried to use the remove timeout command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
+
+        if constants.moderator_role in [r.id for r in ctx.user.roles] and ctx.user.id != constants.bot_maintainer:
+            self.logger.warning(f'{ctx.user.id} tried to remove timeout another moderator.')
+            await ctx.respond('Nice try', ephemeral=True)
+            return
         
         # check if user is timed out
         if target.communication_disabled_until is None:
@@ -488,6 +514,11 @@ class ModerationCommands(discord.Cog):
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             self.logger.warning(f'{ctx.user.id} tried to use the warn command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
+            return
+
+        if constants.moderator_role in [r.id for r in ctx.user.roles] and ctx.user.id != constants.bot_maintainer:
+            self.logger.warning(f'{ctx.user.id} tried to warn another moderator.')
+            await ctx.respond('Nice try', ephemeral=True)
             return
 
         await ctx.defer()
@@ -559,6 +590,11 @@ class ModerationCommands(discord.Cog):
             self.logger.warning(f'{ctx.user.id} tried to use the NSFW ban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
+
+        if constants.moderator_role in [r.id for r in ctx.user.roles] and ctx.user.id != constants.bot_maintainer:
+            self.logger.warning(f'{ctx.user.id} tried to NSFW ban another moderator.')
+            await ctx.respond('Nice try', ephemeral=True)
+            return
         
         log_embed = discord.Embed(
             title='Moderation Command Used',
@@ -596,6 +632,11 @@ class ModerationCommands(discord.Cog):
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             self.logger.warning(f'{ctx.user.id} tried to use the NSFW unban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
+            return
+
+        if constants.moderator_role in [r.id for r in ctx.user.roles] and ctx.user.id != constants.bot_maintainer:
+            self.logger.warning(f'{ctx.user.id} tried to langauge remove NSFW ban from another moderator.')
+            await ctx.respond('Nice try', ephemeral=True)
             return
         
         log_embed = discord.Embed(
