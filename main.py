@@ -29,7 +29,9 @@ from cogs.ghost_pings import GhostPings
 from cogs.nya_channel_limit import NyaChannelLimit
 from cogs.ban_invite_links import BanInviteLinks
 from website.main import run_app
-from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, TransSelect
+from cogs.column_3_channel import Column3Chat
+from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, \
+    TransSelect
 
 logging.basicConfig(level=logging.INFO)
 # add file handler
@@ -41,7 +43,8 @@ consoleHandler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(name)
 
 main_logger = logging.getLogger('astolfo')
 
-bot = discord.Bot(intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
+bot = discord.Bot(
+    intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
 
 main_logger.info('Starting website')
 web_thread = threading.Thread(target=lambda: run_app(bot), name='astolfo/Website')
@@ -86,6 +89,8 @@ main_logger.info('Loading module: Nya channel limit')
 bot.add_cog(NyaChannelLimit(bot))
 main_logger.info('Loading module: Ban invite links')
 bot.add_cog(BanInviteLinks(bot))
+main_logger.info('Loading module: :3 channel limit')
+bot.add_cog(Column3Chat(bot))
 
 
 @bot.event
@@ -113,7 +118,9 @@ async def version(ctx: discord.ApplicationContext):
 @bot.event
 async def on_application_command_error(ctx: discord.ApplicationContext, error):
     if isinstance(error, CommandOnCooldown):
-        embed = Embed(title='You are on cooldown cutie :3', description=f'Try again in about {int(round(error.retry_after, 0))} seconds :3', color=Color.red())
+        embed = Embed(title='You are on cooldown cutie :3',
+                      description=f'Try again in about {int(round(error.retry_after, 0))} seconds :3',
+                      color=Color.red())
         await ctx.respond(embed=embed, ephemeral=True)
     else:
         raise error

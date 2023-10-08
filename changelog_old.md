@@ -1,3 +1,11 @@
+# Version 1.5.1
++ The bot no longer logs when a member changes roles
++ The bot now logs usages of mod commands
+
+# Version 1.5.0
++ Added dev command to send messages as bot.
++ Added join/leaves in a day message every day in <#768944487199146044>.
+
 # Version 1.4.0
 + Added /warnings
 + Added /time
