@@ -1,4 +1,6 @@
+import random
 import discord
+from discord.ext import tasks
 import re
 import logging
 import constants
@@ -7,6 +9,8 @@ class NyaChannelLimit(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
         self.logger = logging.getLogger('astolfo/NyaChannelLimit')
         self.bot = bot
+        self.send_random.start()
+        self.logger.info('Started Nyaa random sending task')
         super().__init__()
         self.logger.info('Nyaa channel limit initialization successful')
         
@@ -22,4 +26,52 @@ class NyaChannelLimit(discord.Cog):
             await msg.delete()
             await msg.channel.send(f'{msg.author.mention} This channel is only for meowing, nothing else.', delete_after=5)
         
-    
+    @tasks.loop(minutes=1)
+    async def send_random(self):
+        if random.randint(0, 250) != 250:
+            return
+        
+        channel = self.bot.get_channel(constants.nya_channel)
+        variant = random.randint(1, 2)
+        if variant == 1:
+            amount = random.randint(1, 10)
+            amount_2 = random.randint(1, 5)
+            ending = random.randint(1, 2)
+            tildie = random.randint(1, 2)
+            h = random.randint(1, 2)
+            
+            message = 'ny' + 'a' * amount
+            if h == 2:
+                message += 'h'
+            if tildie == 2:
+                message += '~'
+            if ending == 2:
+                message += ' :' + '3' * amount_2
+                
+            await channel.send(message)
+        elif variant == 2:
+            variant_2 = random.randint(1, 2)
+            if variant_2 == 1:
+                tildie = random.randint(1, 2)
+                ending = random.randint(1, 2)
+                amount_2 = random.randint(1, 5)
+                message = 'Meow'
+                if tildie == 2:
+                    message += '~'
+                if ending == 2:
+                    message += ' :' + '3' * amount_2
+                
+                await channel.send(message)
+            elif variant_2 == 2:
+                amount = random.randint(1, 10)
+                amount_2 = random.randint(1, 5)
+                ending = random.randint(1, 2)
+                tildie = random.randint(1, 2)
+                
+                message = 'm' + 'r' * amount
+                if tildie == 2:
+                    message += '~'
+                if ending == 2:
+                    message += ' :' + '3' * amount_2
+                    
+                await channel.send(message)
