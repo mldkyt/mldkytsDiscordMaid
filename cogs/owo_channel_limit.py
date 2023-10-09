@@ -21,7 +21,7 @@ class OwoChannelLimit(discord.Cog):
             return
         if msg.channel.id != constants.owo_uwu_channel:
             return
-        if msg.content.lower() != 'owo' or msg.content.lower() != 'uwu':
+        if msg.content.lower() != 'owo' and msg.content.lower() != 'uwu':
             await msg.delete()
             await msg.channel.send(f'{msg.author.mention} This channel is only for OwO and UwU, nothing else~ :3', delete_after=5)
             
