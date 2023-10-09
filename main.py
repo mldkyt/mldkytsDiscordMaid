@@ -30,6 +30,7 @@ from cogs.nya_channel_limit import NyaChannelLimit
 from cogs.ban_invite_links import BanInviteLinks
 from website.main import run_app
 from cogs.column_3_channel import Column3Chat
+from cogs.owo_channel_limit import OwoChannelLimit
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, \
     TransSelect
 
@@ -91,6 +92,8 @@ main_logger.info('Loading module: Ban invite links')
 bot.add_cog(BanInviteLinks(bot))
 main_logger.info('Loading module: :3 channel limit')
 bot.add_cog(Column3Chat(bot))
+main_logger.info('Loading module: OwO channel limit')
+bot.add_cog(OwoChannelLimit(bot))
 
 
 @bot.event
