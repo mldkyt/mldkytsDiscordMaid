@@ -50,14 +50,23 @@ class BotCommandsReminder(discord.Cog):
             return
         
         self.logger.info('Sending message to commands channel')
-        await message.channel.send('''**Here are some commands that you can use here:**
+        await message.channel.send('''# Here are some commands that you can use here:
                                        
-owo hug @user - Give a hug to a user
-owo kiss @user - Give a kiss to a user
-owo cuddle @user - Cuddle with a user
-owo pat @user - Pat a user
+L.hug @user - Give a hug to a user
+L.kiss @user - Give a kiss to a user
+L.cuddle @user - Cuddle with a user
+L.pat @user - Pat a user
+L.lapsit @user - Sit on a user's lap
+L.love @user - Show love to a user
+L.marry @user - Marry a user
+L.massage @user - Massage a user
 
-**Some commands from my bot:**
+L.poke @user - Poke a user
+L.bite @user - Bite a user
+L.punch @user - Punch a user
+L.slap @user - Slap a user
+
+# Some commands from my bot:
 
 /catpoints - Check your CatPoints
 /chatpoints - Check your ChatPoints
