@@ -26,6 +26,18 @@ class NyaChannelLimit(discord.Cog):
             await msg.delete()
             await msg.channel.send(f'{msg.author.mention} This channel is only for meowing, nothing else.', delete_after=5)
         
+    @discord.Cog.listener()
+    async def on_message_edit(self, old: discord.Message, new: discord.Message):
+        if new.author.bot:
+            return
+        if new.channel.id != constants.nya_channel:
+            return
+        regex_1 = re.search(r'^[Nn][y]+[a]+[h]*[~]?(\s+[;:][3]+)?$', new.clean_content)
+        regex_2 = re.search(r'^[Mm][er]+[o]?[w]?[~]?(\s+[;:][3])?$', new.clean_content)
+        if regex_1 is None and regex_2 is None:
+            await new.delete()
+            await new.channel.send(f'{new.author.mention} This channel is only for meowing, nothing else.', delete_after=5)
+        
     @tasks.loop(minutes=1)
     async def send_random(self):
         if random.randint(0, 250) != 250:

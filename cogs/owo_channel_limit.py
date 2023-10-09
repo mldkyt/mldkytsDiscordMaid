@@ -25,6 +25,16 @@ class OwoChannelLimit(discord.Cog):
             await msg.delete()
             await msg.channel.send(f'{msg.author.mention} This channel is only for OwO and UwU, nothing else~ :3', delete_after=5)
             
+    @discord.Cog.listener()
+    async def on_message_edit(self, old: discord.Message, new: discord.Message):
+        if new.author.bot:
+            return
+        if new.channel.id != constants.owo_uwu_channel:
+            return
+        if new.content.lower() != 'owo' and new.content.lower() != 'uwu':
+            await new.delete()
+            await new.channel.send(f'{new.author.mention} This channel is only for OwO and UwU, nothing else~ :3', delete_after=5)
+            
     @tasks.loop(minutes=1)
     async def send_random(self):
         if random.randint(0, 250) != 250:
