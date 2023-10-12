@@ -126,7 +126,7 @@ Submit ideas by clicking the button below :3''', view=cogs.ideas.MainIdeas())
     
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def send_message_as_bot(self, ctx: discord.ApplicationContext, content: str):
-        if ctx.user.id != constants.bot_maintainer:
+        if constants.admin_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
         

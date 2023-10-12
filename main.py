@@ -31,6 +31,8 @@ from cogs.ban_invite_links import BanInviteLinks
 from website.main import run_app
 from cogs.column_3_channel import Column3Chat
 from cogs.owo_channel_limit import OwoChannelLimit
+from cogs.message_reactions import MessageReactions
+from cogs.report_command import ReportCommand
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, \
     TransSelect
 
@@ -94,6 +96,10 @@ main_logger.info('Loading module: :3 channel limit')
 bot.add_cog(Column3Chat(bot))
 main_logger.info('Loading module: OwO channel limit')
 bot.add_cog(OwoChannelLimit(bot))
+main_logger.info('Loading module: Message reactions')
+bot.add_cog(MessageReactions(bot))
+main_logger.info('Loading module: Report Command')
+bot.add_cog(ReportCommand(bot))
 
 
 @bot.event

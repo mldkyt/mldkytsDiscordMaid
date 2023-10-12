@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Reports</title>
+</head>
+<body>
+    <h1>Reports</h1>
+    <p id="loading">Reports are loading......</p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Type</th>
+                <th>Message</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="resultbody">
+            
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+        $.getJSON('/api/reports', function(data) {
+            let i = 0
+            for (let item of data) {
+                const el = $('<tr></tr>')
+                const userId = $('<td></td>')
+                userId.text(item.id)
+                const type = $('<td></td>')
+                type.text(item.type)
+                const message = $('<td></td>')
+                message.text(item.message)
+                const deleteA = $('<td></td>')
+                const deleteB = $('<a></a>')
+                deleteB.prop('href', '/api/reports/' + i + '/delete')
+                const deleteBtn = $('<button></button>')
+                deleteBtn.text('Delete')
+                deleteBtn.appendTo(deleteB)
+                deleteB.appendTo(deleteA)
+                userId.appendTo(el)
+                type.appendTo(el)
+                message.appendTo(el)
+                deleteA.appendTo(el)
+                el.appendTo('#resultbody')
+                i++
+            }
+
+            $('#loading').hide()
+        })
+    </script>
+</body>
+</html>

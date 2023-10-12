@@ -77,6 +77,31 @@ def delete_idea(id: int):
     return redirect('/botideas')
 
 
+@app.route('/reports')
+def reports():
+    with open('website/html/reports.html', 'r') as f:
+        return f.read()
+    
+
+@app.route('/api/reports')
+def api_reports():
+    with open('data/reports.json', 'r') as f:
+        return json.dumps(json.load(f))
+
+
+@app.route('/api/reports/<int:id>/delete')
+def api_report_delete(id: int):
+    with open('data/reports.json', 'r') as f:
+        reports: list = json.load(f)
+        
+    del reports[id]
+    
+    with open('data/reports.json', 'w+') as f:
+        json.dump(reports, f, indent=4)
+        
+    return redirect('/reports')
+
+
 def run_app(bot_param: discord.Bot):
     global bot
     bot = bot_param

@@ -24,7 +24,7 @@ class Column3Chat(discord.Cog):
         if msg.channel.id != constants.column_3_channel:
             return
 
-        regex_1 = re.search(r'^:3+$', msg.clean_content)
+        regex_1 = re.search(r'^:3{1,30}$', msg.clean_content)
         if regex_1 is None:
             await msg.delete()
             await msg.channel.send(f'{msg.author.mention} This channel is only for :3, nothing else.',
@@ -37,7 +37,7 @@ class Column3Chat(discord.Cog):
         if new.channel.id != constants.column_3_channel:
             return
 
-        regex_1 = re.search(r'^:3+$', new.clean_content)
+        regex_1 = re.search(r'^:3{1,30}$', new.clean_content)
         if regex_1 is None:
             await new.delete()
             await new.channel.send(f'{new.author.mention} This channel is only for :3, nothing else.',
