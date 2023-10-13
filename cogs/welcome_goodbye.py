@@ -40,7 +40,7 @@ def cleanup_data(user: int):
 
     for i in range(len(chatpoints)):
         if chatpoints[i]['user_id'] == user:
-            chatpoints.pop(i)
+            del chatpoints[i]
             break
 
     with open('data/chatpoints.json', 'w') as f:
@@ -111,7 +111,7 @@ def set_inouts_to_today():
         data = json.load(f)
 
     now = datetime.datetime.now()
-    if now.day == data['day'] or now.month == data['month']:
+    if now.day == data['day'] and now.month == data['month']:
         return
 
     data['day'] = now.day
