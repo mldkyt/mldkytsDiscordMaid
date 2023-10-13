@@ -125,7 +125,7 @@ def set_inouts_to_today():
 
 class WelcomeGoodbye(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/WelcomeGoodbye')
+        self.logger = logging.getLogger('astolfo.WelcomeGoodbye')
         self.bot = bot
         init()
         self.send_inouts_in_a_day.start()

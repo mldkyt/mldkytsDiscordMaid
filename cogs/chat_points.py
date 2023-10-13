@@ -74,7 +74,7 @@ def calculate_level(points: int) -> (int, int, int):
 
 class ChatPoints(discord.Cog):
     def __init__(self, bot: discord.Bot):
-        self.logger = logging.getLogger('astolfo/ChatPoints')
+        self.logger = logging.getLogger('astolfo.ChatPoints')
         self.bot = bot
         init()
         super().__init__()

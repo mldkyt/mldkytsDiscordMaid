@@ -5,7 +5,7 @@ import constants
 
 class MessageReactions(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/MessageReactions')
+        self.logger = logging.getLogger('astolfo.MessageReactions')
         self.bot = bot
         super().__init__()
         self.logger.info('MessageReactions initialization successful')

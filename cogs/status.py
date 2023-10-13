@@ -7,7 +7,7 @@ import constants
 
 class Status(discord.Cog):
     def __init__(self, bot: discord.Bot):
-        self.logger = logging.getLogger('astolfo/Status')
+        self.logger = logging.getLogger('astolfo.Status')
         self.bot = bot
         super().__init__()
         self.logger.info('Initialization successful')

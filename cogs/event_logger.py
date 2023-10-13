@@ -7,7 +7,7 @@ import constants
 
 class EventLogger(discord.Cog):
   def __init__(self, bot: discord.Bot) -> None:
-    self.logger = logging.getLogger('astolfo/EventLogger')
+    self.logger = logging.getLogger('astolfo.EventLogger')
     self.bot = bot
     super().__init__()
     self.logger.info('Initialization successful')

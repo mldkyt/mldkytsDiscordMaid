@@ -33,24 +33,24 @@ from cogs.column_3_channel import Column3Chat
 from cogs.owo_channel_limit import OwoChannelLimit
 from cogs.message_reactions import MessageReactions
 from cogs.report_command import ReportCommand
+from cogs.member_scan import MemberScan
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, \
     TransSelect
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s :: %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 # add file handler
 logger = logging.getLogger()
-handler = logging.FileHandler(filename='logs.log', encoding='utf-8')
-# print to console
-consoleHandler = logging.StreamHandler()
-consoleHandler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(name)s %(message)s'))
+file_handler = logging.FileHandler('logs.log', 'a', 'utf8', delay=True)
+file_handler.setFormatter(logging.Formatter('%(asctime)s %(name)s :: %(message)s', datefmt='%d/%m/%Y %H:%M:%S'))
+logger.addHandler(file_handler)
 
-main_logger = logging.getLogger('astolfo')
+main_logger = logging.getLogger('astolfo.__main__')
 
 bot = discord.Bot(
     intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
 
 main_logger.info('Starting website')
-web_thread = threading.Thread(target=lambda: run_app(bot), name='astolfo/Website')
+web_thread = threading.Thread(target=lambda: run_app(bot), name='astolfo.Website')
 web_thread.daemon = True
 web_thread.start()
 
@@ -100,6 +100,8 @@ main_logger.info('Loading module: Message reactions')
 bot.add_cog(MessageReactions(bot))
 main_logger.info('Loading module: Report Command')
 bot.add_cog(ReportCommand(bot))
+main_logger.info('Loading module: Member Scan')
+bot.add_cog(MemberScan(bot))
 
 
 @bot.event

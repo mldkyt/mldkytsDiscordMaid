@@ -8,7 +8,7 @@ from discord.ext import tasks
 
 class OwoChannelLimit(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/OwoChannelLimit')
+        self.logger = logging.getLogger('astolfo.OwoChannelLimit')
         self.bot = bot
         self.send_random.start()
         self.logger.info('Started OwO random sending task')

@@ -31,7 +31,7 @@ def update_message_time() -> bool:
 
 class BotCommandsReminder(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/BotCommandsReminder')
+        self.logger = logging.getLogger('astolfo.BotCommandsReminder')
         self.bot = bot
         init()
         super().__init__()

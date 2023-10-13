@@ -6,7 +6,7 @@ import constants
 
 class ChatLimit(discord.Cog):
     def __init__(self, bot: discord.Bot):
-        self.logger = logging.getLogger('astolfo/ChatLimit')
+        self.logger = logging.getLogger('astolfo.ChatLimit')
         self.bot = bot
         super().__init__()
         self.logger.info('Initialization successful')

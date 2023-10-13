@@ -65,7 +65,7 @@ def remove_nsfw_ban(user: discord.Member):
 
 class ModerationCommands(discord.Cog):
     def __init__(self, bot: discord.Bot):
-        self.logger = logging.getLogger('astolfo/ModerationCommands')
+        self.logger = logging.getLogger('astolfo.ModerationCommands')
         self.bot = bot
         init()
         super().__init__()

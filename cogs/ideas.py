@@ -33,7 +33,7 @@ def get_ideas():
         
 class Ideas(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/Ideas')
+        self.logger = logging.getLogger('astolfo.Ideas')
         self.bot = bot
         init()
         super().__init__()
@@ -68,7 +68,7 @@ class Ideas(discord.Cog):
 
 class MainIdeas(discord.ui.View):
     def __init__(self):
-        self.logger = logging.getLogger('astolfo/Ideas/MainIdeas')
+        self.logger = logging.getLogger('astolfo.Ideas.MainIdeas')
         super().__init__(timeout=None)
         self.logger.info('MainIdeas was initialized')
         
@@ -82,7 +82,7 @@ class MainIdeas(discord.ui.View):
 class BotIdeaModal(discord.ui.Modal):
     def __init__(self) -> None:
         super().__init__(timeout=300, title='Submit a bot idea')
-        self.logger = logging.getLogger('astolfo/Ideas/BotIdeaModal')
+        self.logger = logging.getLogger('astolfo.Ideas.BotIdeaModal')
         self.logger.info('BotIdeaModal was initialized')
         self.add_item(InputText(label='Idea', placeholder='Enter your idea here', style=discord.InputTextStyle.paragraph))
         
@@ -95,7 +95,7 @@ class BotIdeaModal(discord.ui.Modal):
     
 class ServerIdeaModal(discord.ui.Modal):
     def __init__(self) -> None:
-        self.logger = logging.getLogger('astolfo/Ideas/ServerIdeaModal')
+        self.logger = logging.getLogger('astolfo.Ideas.ServerIdeaModal')
         super().__init__(timeout=300, title='Submit a Discord server idea')
         
         self.add_item(InputText(label='Idea', placeholder='Enter your idea here', style=discord.InputTextStyle.paragraph))
@@ -110,7 +110,7 @@ class ServerIdeaModal(discord.ui.Modal):
         
 class YouTubeIdeasModal(discord.ui.Modal):
     def __init__(self) -> None:
-        self.logger = logging.getLogger('astolfo/Ideas/YouTubeIdeasModal')
+        self.logger = logging.getLogger('astolfo.Ideas.YouTubeIdeasModal')
         super().__init__(timeout=300, title='Submit a YouTube idea')
         
         self.add_item(InputText(label='Idea', placeholder='Enter your idea here', style=discord.InputTextStyle.paragraph))
@@ -125,7 +125,7 @@ class YouTubeIdeasModal(discord.ui.Modal):
 
 class TikTokIdeasModal(discord.ui.Modal):
     def __init__(self) -> None:
-        self.logger = logging.getLogger('astolfo/Ideas/TikTokIdeasModal')
+        self.logger = logging.getLogger('astolfo.Ideas.TikTokIdeasModal')
         super().__init__(timeout=300, title='Submit a TikTok idea')
         
         self.add_item(InputText(label='Idea', placeholder='Enter your idea here', style=discord.InputTextStyle.paragraph))
@@ -140,7 +140,7 @@ class TikTokIdeasModal(discord.ui.Modal):
 
 class IdeasCategory(discord.ui.View):
     def __init__(self):
-        self.logger = logging.getLogger('astolfo/Ideas/IdeasCategory')
+        self.logger = logging.getLogger('astolfo.Ideas.IdeasCategory')
         super().__init__(timeout=120)
         self.logger.info('IdeasCategory was initialized')
     

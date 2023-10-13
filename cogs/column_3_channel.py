@@ -10,7 +10,7 @@ import constants
 
 class Column3Chat(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/:3ChannelLimit')
+        self.logger = logging.getLogger('astolfo.3ChannelLimit')
         self.bot = bot
         self.send_random.start()
         self.logger.info('Starting :3 random sending task')

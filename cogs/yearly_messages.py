@@ -48,7 +48,7 @@ def clear_messages():
 
 class YearlyMessages(discord.Cog):
     def __init__(self, bot: discord.Bot):
-        self.logger = logging.getLogger('astolfo/YearlyMessages')
+        self.logger = logging.getLogger('astolfo.YearlyMessages')
         self.bot = bot
         super().__init__()
         self.logger.info('Initialization successful')

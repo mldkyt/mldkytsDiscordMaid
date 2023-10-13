@@ -10,7 +10,7 @@ def init():
             pass
     except FileNotFoundError:
         with open('data/catpoints.json', 'w') as f:
-            logger = logging.getLogger('astolfo/CatPoints')
+            logger = logging.getLogger('astolfo.CatPoints')
             logger.info('Creating data/catpoints.json')
             json.dump([], f)
 
@@ -54,7 +54,7 @@ def get_catpoints_leaderboard() -> list:
 class CatPoints(discord.Cog):
 
     def __init__(self, bot: discord.Bot):
-        self.logger = logging.getLogger('astolfo/CatPoints')
+        self.logger = logging.getLogger('astolfo.CatPoints')
         self.bot = bot
         init()
         super().__init__()

@@ -48,7 +48,7 @@ def clear_messages():
 
 class DailyMessages(discord.Cog):
     def __init__(self, bot: discord.Bot):
-        self.logger = logging.getLogger('astolfo/DailyMessages')
+        self.logger = logging.getLogger('astolfo.DailyMessages')
         self.bot = bot
         super().__init__()
         self.logger.info('Initialization successful')

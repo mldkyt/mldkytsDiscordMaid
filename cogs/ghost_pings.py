@@ -12,7 +12,7 @@ def init():
 
 def add_message_with_mentions(message: discord.Message) -> None:
     filter_messages()
-    logger = logging.getLogger('astolfo/GhostPings')
+    logger = logging.getLogger('astolfo.GhostPings')
     with open('data/ghost_pings.json') as f:
         data: list = json.load(f)
         
@@ -36,7 +36,7 @@ def is_ghost_ping(message_id: int) -> bool:
     return False
 
 def filter_messages():
-    logger = logging.getLogger('astolfo/GhostPings')
+    logger = logging.getLogger('astolfo.GhostPings')
     with open('data/ghost_pings.json') as f:
         data: list = json.load(f)
         
@@ -52,7 +52,7 @@ def filter_messages():
 
 class GhostPings(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/GhostPings')
+        self.logger = logging.getLogger('astolfo.GhostPings')
         self.bot = bot
         init()
         super().__init__()

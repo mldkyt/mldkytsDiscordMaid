@@ -31,14 +31,14 @@ def add_report(member: discord.Member, type: str, message: str):
 class ReportCommand(discord.Cog):
     
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/ReportCommand')
+        self.logger = logging.getLogger('astolfo.ReportCommand')
         self.bot = bot
         init()
         super().__init__()
         self.logger.info('ReportCommand initialization successful')
         
     @discord.slash_command(guild_ids=[constants.guild_id])
-    @discord.option(name='type', choices=['dm spam', 'bad language', 'bad images', 'rule violation', 'filter bypass'])
+    @discord.option(name='type', choices=['dm spam', 'bad language', 'bad images', 'bad word(s) in bio', 'rule violation', 'filter bypass', 'weird behaviour', 'way too silly :3'])
     async def report(self, ctx: discord.ApplicationContext, member: discord.Member, type: str):
         if member.bot:
             await ctx.respond('You can\'t report bots', ephemeral=True)
@@ -62,7 +62,7 @@ class ReportModal(discord.ui.Modal):
         super().__init__(title='Report %s' % self.member.display_name, timeout=1200)
         
         self.add_item(
-            discord.ui.InputText(label='Message', placeholder='This member...', style=discord.InputTextStyle.short)
+            discord.ui.InputText(label='Message', style=discord.InputTextStyle.long)
         )
         
     async def callback(self, interaction: Interaction):

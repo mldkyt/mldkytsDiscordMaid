@@ -5,7 +5,7 @@ import constants
 
 class BanInviteLinks(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
-        self.logger = logging.getLogger('astolfo/BanInviteLinks')
+        self.logger = logging.getLogger('astolfo.BanInviteLinks')
         self.bot = bot
         super().__init__()
         self.logger.info('BanInviteLinks loaded')
