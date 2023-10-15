@@ -5,7 +5,7 @@
 + Actually kick members when they have something bad in Activity 
 
 # Version 1.6
-+ Limited timing of mods to only admins
++ Limited timing out of mods to only admins
 + Added :3 chat
 + The nya channel is limited to only meow and nya
 
