@@ -70,6 +70,8 @@ class CatPoints(discord.Cog):
         # count the amount of :3, add 1 catpoint for each
         if message.author.bot:
             return
+        if message.channel.type == discord.ChannelType.private:
+            return
 
         catpoints = message.content.count('>:3') * 2
         catpoints += message.content.replace('>:3', '').count(':3')

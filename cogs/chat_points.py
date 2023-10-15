@@ -84,6 +84,8 @@ class ChatPoints(discord.Cog):
     async def on_message(self, message: discord.Message):
         if message.author.bot:
             return
+        if message.channel.type == discord.ChannelType.private:
+            return
 
         old_level, _, _ = calculate_level(get_chatpoints(message.author.id))
         add_chatpoints(message.author.id, len(message.content))

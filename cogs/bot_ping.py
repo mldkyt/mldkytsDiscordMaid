@@ -65,6 +65,8 @@ class BotPing(discord.Cog):
 
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):
+        if msg.author.bot:
+            return
         if f'<@{constants.bot_id}>' in msg.content:
             self.logger.info('Bot was pinged, sending message')
             await msg.channel.send(initial_message % msg.author.mention, view=InitialView())

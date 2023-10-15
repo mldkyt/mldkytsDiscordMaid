@@ -1,3 +1,9 @@
+# Version 1.6.1
++ Fixed bot ping making bot spam
++ Added a NSFW bot command channel
++ Bot no longer counts ChatPoints and CatPoints in DM's
++ Actually kick members when they have something bad in Activity 
+
 # Version 1.6
 + Limited timing of mods to only admins
 + Added :3 chat

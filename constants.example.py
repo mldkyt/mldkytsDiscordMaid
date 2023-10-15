@@ -3,6 +3,7 @@ token = ''
 bot_id = 0
 general_channel = 0
 commands_channel = 0
+nsfw_commands_channel = 0
 welcome_channel = 0
 guild_id = 0
 private_channel = 0
@@ -10,6 +11,8 @@ log_channel = 0
 selfrole_channel = 0
 femboy_media_channel = 0
 nya_channel = 0
+column_3_channel = 0
+owo_uwu_channel = 0
 self_promo = 0
 
 femboy_stage_0_role = 0
@@ -32,9 +35,14 @@ switch_role = 0
 pronoun_roles = []
 
 moderator_role = 0
+admin_role = 0
 
 bot_maintainer = 0
 
 member_banlist = []
 
 firebase_url = ''
+
+word_blacklist = []
+
+dev_mode = False
