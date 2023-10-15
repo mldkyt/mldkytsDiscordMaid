@@ -96,7 +96,7 @@ class BotCommandsReminder(discord.Cog):
             @bot - Get the help message from the bot''')
             return
 
-        if update_nsfw_message_time():
+        if message.channel.id == constants.nsfw_commands_channel and update_nsfw_message_time():
             self.logger.info('Sending message to commands channel')
             await message.channel.send('''# (18+)Here are some commands that you can use here:
 
