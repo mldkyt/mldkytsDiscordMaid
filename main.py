@@ -7,32 +7,31 @@ import discord
 from discord import Color, Embed
 from discord.ext.commands import CommandOnCooldown
 
-import asyncio
 import constants
 from cogs.bot_ping import BotPing
-from cogs.cat_points import CatPoints
-from cogs.chat_points import ChatPoints
-from cogs.daily_messages import DailyMessages
-from cogs.dev_commands import DevCommands
+from cogs.points.cat_points import CatPoints
+from cogs.points.chat_points import ChatPoints
+from cogs.message_counters.daily_messages import DailyMessages
+from cogs.commands.dev_commands import DevCommands
 from cogs.event_logger import EventLogger
-from cogs.moderation_commands import ModerationCommands
+from cogs.commands.moderation_commands import ModerationCommands
 from cogs.status import Status
-from cogs.time_command import TimeCommand
+from cogs.commands.time_command import TimeCommand
 from cogs.unixsocks import UnixSocks
 from cogs.website_sync import WebsiteSync
-from cogs.yearly_messages import YearlyMessages
-from cogs.bot_commands_reminder import BotCommandsReminder
+from cogs.message_counters.yearly_messages import YearlyMessages
+from cogs.channel_specific.bot_commands_reminder import BotCommandsReminder
 from cogs.ideas import Ideas, MainIdeas
 from cogs.linux_uptime import Uptime
 from cogs.welcome_goodbye import WelcomeGoodbye
 from cogs.ghost_pings import GhostPings
-from cogs.nya_channel_limit import NyaChannelLimit
-from cogs.ban_invite_links import BanInviteLinks
+from cogs.channel_specific.nya_channel_limit import NyaChannelLimit
+from cogs.chat_filters.ban_invite_links import BanInviteLinks
 from website.main import run_app
-from cogs.column_3_channel import Column3Chat
-from cogs.owo_channel_limit import OwoChannelLimit
+from cogs.channel_specific.column_3_channel import Column3Chat
+from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
 from cogs.message_reactions import MessageReactions
-from cogs.report_command import ReportCommand
+from cogs.commands.report_command import ReportCommand
 from cogs.member_scan import MemberScan
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, \
     TransSelect
