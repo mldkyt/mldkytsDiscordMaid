@@ -33,6 +33,7 @@ from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
 from cogs.message_reactions import MessageReactions
 from cogs.commands.report_command import ReportCommand
 from cogs.member_scan import MemberScan
+from cogs.channel_specific.mc_channel import MCChannel
 from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, \
     TransSelect
 
@@ -101,6 +102,8 @@ main_logger.info('Loading module: Report Command')
 bot.add_cog(ReportCommand(bot))
 main_logger.info('Loading module: Member Scan')
 bot.add_cog(MemberScan(bot))
+main_logger.info('Loading module: Minecraft Channel')
+bot.add_cog(MCChannel(bot))
 
 
 @bot.event

@@ -171,8 +171,8 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        if constants.moderator_role in [r.id for r in member.roles] and\
-                constants.admin_role not in [r.id for r in member.roles] and\
+        if constants.moderator_role in [r.id for r in member.roles] and \
+                constants.admin_role not in [r.id for r in member.roles] and \
                 ctx.user.id != constants.bot_maintainer:
             self.logger.warning(f'{ctx.user.id} tried to kick another moderator.')
             await ctx.respond('Nice try', ephemeral=True)
@@ -233,8 +233,8 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        if constants.moderator_role in [r.id for r in member.roles] and\
-                constants.admin_role not in [r.id for r in ctx.user.roles] and\
+        if constants.moderator_role in [r.id for r in member.roles] and \
+                constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
             self.logger.warning(f'{ctx.user.id} tried to ban another moderator.')
             await ctx.respond('Nice try', ephemeral=True)
@@ -362,8 +362,8 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        if constants.moderator_role in [r.id for r in member.roles] and\
-                constants.admin_role not in [r.id for r in ctx.user.roles] and\
+        if constants.moderator_role in [r.id for r in member.roles] and \
+                constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
             self.logger.warning(f'{ctx.user.id} tried to mute another moderator.')
             await ctx.respond('Nice try', ephemeral=True)
@@ -433,8 +433,8 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        if constants.moderator_role in [r.id for r in member.roles] and\
-                constants.admin_role not in [r.id for r in ctx.user.roles] and\
+        if constants.moderator_role in [r.id for r in member.roles] and \
+                constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
             self.logger.warning(f'{ctx.user.id} tried to langauge timeout another moderator.')
             await ctx.respond('Nice try', ephemeral=True)
@@ -490,8 +490,8 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        if constants.moderator_role in [r.id for r in target.roles] and\
-                constants.admin_role not in [r.id for r in ctx.user.roles] and\
+        if constants.moderator_role in [r.id for r in target.roles] and \
+                constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
             self.logger.warning(f'{ctx.user.id} tried to remove timeout another moderator.')
             await ctx.respond('Nice try', ephemeral=True)
@@ -538,8 +538,8 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        if constants.moderator_role in [r.id for r in target.roles] and\
-                constants.admin_role not in [r.id for r in ctx.user.roles] and\
+        if constants.moderator_role in [r.id for r in target.roles] and \
+                constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
             self.logger.warning(f'{ctx.user.id} tried to warn another moderator.')
             await ctx.respond('Nice try', ephemeral=True)
@@ -621,8 +621,8 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        if constants.moderator_role in [r.id for r in target.roles] and\
-                constants.admin_role not in [r.id for r in ctx.user.roles] and\
+        if constants.moderator_role in [r.id for r in target.roles] and \
+                constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
             self.logger.warning(f'{ctx.user.id} tried to NSFW ban another moderator.')
             await ctx.respond('Nice try', ephemeral=True)
@@ -666,8 +666,8 @@ class ModerationCommands(discord.Cog):
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
-        if constants.moderator_role in [r.id for r in target.roles] and\
-                constants.admin_role not in [r.id for r in ctx.user.roles] and\
+        if constants.moderator_role in [r.id for r in target.roles] and \
+                constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
             self.logger.warning(f'{ctx.user.id} tried to langauge remove NSFW ban from another moderator.')
             await ctx.respond('Nice try', ephemeral=True)
