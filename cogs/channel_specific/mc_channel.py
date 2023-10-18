@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 import discord
@@ -9,12 +10,14 @@ import constants
 server_offline_msg = '''# Minecraft Server
 Status: **Offline**
 IP: **Not available** at this moment
-Minecraft Version: 1.20.1'''
+Minecraft Version: 1.20.1
+Last update: %s'''
 
 server_online_msg = '''# Minecraft Server
 Status: Online
 IP: **%s**
-Minecraft Version: 1.20.1'''
+Minecraft Version: 1.20.1
+Last update: %s'''
 
 
 class MCChannel(discord.Cog):
@@ -24,16 +27,11 @@ class MCChannel(discord.Cog):
             self.logger.warning('Skipping Minecraft channel checker because parameters are not defined')
             return
         self.bot = bot
-        self.last_status = 'offline'
-        self.last_msg = ''
         super().__init__()
         self.logger.info('Minecraft Channel module initiated')
 
     @discord.Cog.listener()
     async def on_ready(self):
-        channel = self.bot.get_channel(constants.mc_channel_id)
-        message = await channel.fetch_message(constants.mc_message_id)
-        self.last_msg = message.content
         self.update_mc_server.start()
 
     async def update_message(self):
@@ -43,17 +41,15 @@ class MCChannel(discord.Cog):
             'Authorization': f'Bearer {constants.ngrok_token}'
         }).json()
 
+        date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
         for i in ngrok_data['tunnels']:
             if i['forwards_to'] == 'localhost:25565':
-                final_msg = server_online_msg % (i['public_url'][6:])
+                final_msg = server_online_msg % (i['public_url'][6:], date)
                 break
         else:
-            final_msg = server_offline_msg
+            final_msg = server_offline_msg % date
 
-        if self.last_msg == final_msg:
-            return
-
-        self.last_msg = final_msg
         channel = self.bot.get_channel(constants.mc_channel_id)
         message = await channel.fetch_message(constants.mc_message_id)
         await message.edit(content=final_msg)
