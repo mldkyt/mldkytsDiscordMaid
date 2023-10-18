@@ -1,27 +1,57 @@
 import logging
 import discord
 import constants
+import os
 
 
 # log: message delete, message edit, member timeout, member kick and member ban
+
+
+def init():
+    if not os.path.exists('attachments'):
+        os.makedirs('attachments')
+
 
 class EventLogger(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
         self.logger = logging.getLogger('astolfo.EventLogger')
         self.bot = bot
+        init()
         super().__init__()
         self.logger.info('Initialization successful')
+
+    @discord.Cog.listener()
+    async def on_message(self, msg: discord.Message):
+        if msg.author.bot:
+            return
+        if len(msg.attachments) > 0:
+            if not os.path.exists(f'attachments/{msg.id}/'):
+                os.makedirs(f'attachments/{msg.id}/')
+            for attachment in msg.attachments:
+                filename = attachment.filename
+                await attachment.save(f'attachments/{msg.id}/{filename}')
+                self.logger.info(f'Attachment from {msg.author} sent in {msg.channel.mention} was successfully saved')
 
     @discord.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
         if message.author.bot:
             return
         self.logger.info(f'Message from {message.author} deleted in {message.channel.mention}')
+
+        files = []
+        attachment_count = 0
+        if os.path.exists(f'attachments/{message.id}/'):
+            for filename in os.listdir(f'attachments/{message.id}/'):
+                files.append(discord.File(f'attachments/{message.id}/{filename}'))
+                attachment_count += 1
+
         channel = self.bot.get_channel(constants.log_channel)
         embed = discord.Embed(title='Message Deleted',
                               description=f'{message.author} deleted a message in {message.channel.mention}\nOriginal content:\n\n{message.content}',
                               color=discord.Color.red())
-        await channel.send(embed=embed)
+        embed.add_field(name='Count of attachments', value=f'{attachment_count}')
+
+        await channel.send(embed=embed, files=files)
 
     @discord.Cog.listener()
     async def on_message_edit(self, before: discord.Message, after: discord.Message):
