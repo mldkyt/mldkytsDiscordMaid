@@ -18,7 +18,7 @@ class BanInviteLinks(discord.Cog):
             self.logger.info('Ignoring message in self-promo channel')
             return
         
-        match_1 = re.search(r'(https?:\/\/)?(www.)?(discord.(gg|io|me|li)|discordapp.com\/invite)\/[^\s\/]+', msg.content)
+        match_1 = re.search(r'(https?://)?(www.)?(discord.(gg|io|me|li)|discordapp.com/invite)/[^\s/]+', msg.content)
         if match_1 is not None:
             self.logger.info('Invite link detected')
             await msg.delete()

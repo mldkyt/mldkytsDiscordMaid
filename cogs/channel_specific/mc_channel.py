@@ -32,6 +32,9 @@ class MCChannel(discord.Cog):
 
     @discord.Cog.listener()
     async def on_ready(self):
+        if constants.ngrok_token == '' or constants.mc_channel_id == 0 or constants.mc_message_id == 0:
+            self.logger.warning('Skipping on_ready in Minecraft channel checker because parameters are not defined')
+            return
         self.update_mc_server.start()
 
     async def update_message(self):

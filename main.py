@@ -27,6 +27,7 @@ from cogs.welcome_goodbye import WelcomeGoodbye
 from cogs.ghost_pings import GhostPings
 from cogs.channel_specific.nya_channel_limit import NyaChannelLimit
 from cogs.chat_filters.ban_invite_links import BanInviteLinks
+from views.incoming_location import IncomingLocation
 from website.main import run_app
 from cogs.channel_specific.column_3_channel import Column3Chat
 from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
@@ -116,6 +117,7 @@ async def on_ready():
     bot.add_view(TransSelect())
     bot.add_view(TopBottomSelect())
     bot.add_view(MainIdeas())
+    bot.add_view(IncomingLocation())
 
 
 @bot.slash_command(guild_ids=[constants.guild_id])

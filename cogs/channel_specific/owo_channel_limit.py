@@ -10,6 +10,9 @@ class OwoChannelLimit(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
         self.logger = logging.getLogger('astolfo.OwoChannelLimit')
         self.bot = bot
+        if constants.owo_uwu_channel == 0:
+            self.logger.warning('Owo channel limit is disabled because channel is not specified')
+            return
         self.send_random.start()
         self.logger.info('Started OwO random sending task')
         super().__init__()

@@ -4,55 +4,7 @@ import discord
 import views.roles
 import cogs.ideas
 import constants
-
-def cleanup_data(user: int):
-    with open('data/catpoints.json') as f:
-        catpoints = json.load(f)
-    # list of {user_id: str, catpoints: int}
-
-    for i in range(len(catpoints)):
-        if catpoints[i]['user_id'] == user:
-            catpoints.pop(i)
-            break
-
-    with open('data/catpoints.json', 'w') as f:
-        json.dump(catpoints, f, indent=4)
-
-    with open('data/chatpoints.json') as f:
-        chatpoints = json.load(f)
-    # list of {user_id: str, catpoints: int}
-
-    for i in range(len(chatpoints)):
-        if chatpoints[i]['user_id'] == user:
-            chatpoints.pop(i)
-            break
-
-    with open('data/chatpoints.json', 'w') as f:
-        json.dump(chatpoints, f, indent=4)
-
-    with open('data/dailymsg.json') as f:
-        dailymsg = json.load(f)
-    # list of {user_id: str, catpoints: int}
-
-    for i in range(len(dailymsg)):
-        if dailymsg[i]['user_id'] == user:
-            dailymsg.pop(i)
-            break
-
-    with open('data/dailymsg.json', 'w') as f:
-        json.dump(dailymsg, f, indent=4)
-
-    with open('data/yearlymsg.json') as f:
-        yearlymsg = json.load(f)
-    # list of {user_id: str, catpoints: int}
-
-    for i in range(len(yearlymsg)):
-        if yearlymsg[i]['user_id'] == user:
-            yearlymsg.pop(i)
-            break
-
-    with open('data/yearlymsg.json', 'w') as f:
-        json.dump(yearlymsg, f, indent=4)
+import views.incoming_location
 
 
 class DevCommands(discord.Cog):
@@ -61,15 +13,10 @@ class DevCommands(discord.Cog):
         super().__init__()
 
     @discord.slash_command(guild_ids=[constants.guild_id])
-    @discord.option(name='template', description='The template to send', type=discord.SlashCommandOptionType.string, required=True, choices=[
-        "roles_pings",
-        "roles_femboy",
-        "roles_nsfw",
-        "roles_pronouns",
-        "roles_trans",
-        "roles_topbottom",
-        'ideas'
-    ])
+    @discord.option(name='template', description='The template to send', type=discord.SlashCommandOptionType.string,
+                    required=True,
+                    choices=["roles_pings", "roles_femboy", "roles_nsfw", "roles_pronouns", "roles_trans",
+                             "roles_topbottom", 'ideas', "feedback_incoming"])
     async def send_template_msg(self, ctx: discord.ApplicationContext, template: str):
         if ctx.user.id != 575536897141637120 and ctx.user.id != 1149748649446883358:
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
@@ -88,7 +35,8 @@ Select a femboy stage according to the info below:
 **Stage 3:** Feminine clothing
 **Stage 4:** Make-up
 **Stage 5:** YOU'RE A MF TRAP
-**PWETTY PWEASE SELECT THESE ACCORDING TO REALITY AND DON'T SELECT STAGE 4 JUST BECAUSE IT PUTS YOU ON THE TOP I BEG YOU!**''', view=views.roles.FemboyRoleSelectView())
+**PWETTY PWEASE SELECT THESE ACCORDING TO REALITY AND DON'T SELECT STAGE 4 JUST BECAUSE IT PUTS YOU ON THE TOP I BEG YOU!**''',
+                                   view=views.roles.FemboyRoleSelectView())
             await ctx.respond('Send the message successfully', ephemeral=True)
         elif template == 'roles_nsfw':
             await ctx.channel.send('''# NSFW role
@@ -111,24 +59,9 @@ Select your Top/Switch/Bottom role here :3''', view=views.roles.TopBottomSelect(
             await ctx.channel.send('''# Ideas
 Submit ideas by clicking the button below :3''', view=cogs.ideas.MainIdeas())
             await ctx.respond('Send the message successfully', ephemeral=True)
+        elif template == 'feedback_incoming':
+            await ctx.channel.send('''# Where did you come from
+Select where you came from. Only for analytical purposes.''', view=views.incoming_location.IncomingLocation())
+            await ctx.respond('Send the message successfully', ephemeral=True)
         else:
             await ctx.respond('Invalid template', ephemeral=True)
-            
-    @discord.slash_command(guild_ids=[constants.guild_id])
-    async def test_delete_user(self, ctx: discord.ApplicationContext, user: str):
-        if ctx.user.id != constants.bot_maintainer:
-            await ctx.respond('You are not allowed to use this command', ephemeral=True)
-            return
-        
-        cleanup_data(int(user))
-        await ctx.respond('Deleted user data', ephemeral=True)
-
-    
-    @discord.slash_command(guild_ids=[constants.guild_id])
-    async def send_message_as_bot(self, ctx: discord.ApplicationContext, content: str):
-        if constants.admin_role not in [r.id for r in ctx.user.roles]:
-            await ctx.respond('You are not allowed to use this command', ephemeral=True)
-            return
-        
-        await ctx.channel.send(content)
-        await ctx.respond('Message was sent as bot.', ephemeral=True)

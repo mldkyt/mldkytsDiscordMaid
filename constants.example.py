@@ -39,8 +39,6 @@ admin_role = 0
 
 bot_maintainer = 0
 
-member_banlist = []
-
 firebase_url = ''
 
 word_blacklist = []

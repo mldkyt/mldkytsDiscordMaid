@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import json
 import logging
@@ -63,6 +64,26 @@ def remove_nsfw_ban(user: discord.Member):
         json.dump(bans, f)
 
 
+def add_to_banlist(user: int):
+    with open('data/ban_list.json', 'r') as f:
+        data = json.load(f)
+
+    data.append(user)
+
+    with open('data/ban_list.json', 'w') as f:
+        json.dump(data, f)
+
+
+def remove_from_banlist(user: int):
+    with open('data/ban_list.json', 'r') as f:
+        data = json.load(f)
+
+    data.remove(user)
+
+    with open('data/ban_list.json', 'w') as f:
+        json.dump(data, f)
+
+
 class ModerationCommands(discord.Cog):
     def __init__(self, bot: discord.Bot):
         self.logger = logging.getLogger('astolfo.ModerationCommands')
@@ -70,6 +91,10 @@ class ModerationCommands(discord.Cog):
         init()
         super().__init__()
         self.logger.info('Initialization successful')
+
+    banlist_group = discord.SlashCommandGroup(name='banlist',
+                                              description='A ban list for banning members who have never joined before.',
+                                              guild_ids=[constants.guild_id])
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def clear(self, ctx: discord.ApplicationContext, search_past: int,
@@ -203,7 +228,7 @@ class ModerationCommands(discord.Cog):
                             value='https://discord.gg/JgFNmSwYME')
             try:
                 await member.send(embed=embed)
-            except discord.Forbidden:
+            except (discord.Forbidden, discord.HTTPException):
                 self.logger.info(f'Could not send DM to {member}, skipping')
                 pass
 
@@ -219,7 +244,7 @@ class ModerationCommands(discord.Cog):
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def ban(self, ctx: discord.ApplicationContext, member: discord.Member, reason: str = None,
-                  send_dm: bool = True):
+                  send_dm: bool = True, delete_messages: bool = True):
         """Ban a member from the server.
 
         Args:
@@ -263,7 +288,7 @@ class ModerationCommands(discord.Cog):
                                   description=f'Reason: {reason}', color=discord.Color.red())
             try:
                 await member.send(embed=embed)
-            except discord.Forbidden:
+            except (discord.Forbidden, discord.HTTPException):
                 self.logger.info(f'Could not send DM to {member}, skipping')
                 pass
 
@@ -277,6 +302,20 @@ class ModerationCommands(discord.Cog):
 
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
+
+        if delete_messages:
+            deleting_status = await ctx.channel.send('Deleting messages for banned member...')
+            deleted = 0
+            for channel in ctx.guild.text_channels:
+                messages = await channel.history(limit=100).flatten()
+                messages = [m for m in messages if m.author.id == member.id]
+                messages = [m for m in messages if m.created_at > discord.utils.utcnow() - datetime.timedelta(weeks=2)]
+                deleted += len(messages)
+                await channel.delete_messages(messages, reason=f'Banned member\'s messages are getting deleted')
+
+            await deleting_status.edit(content=f'Deleting completed successfully. Deleted {deleted} messages.')
+            await asyncio.sleep(3)
+            await deleting_status.delete()
 
     async def unban_autocomplete(self: discord.AutocompleteContext):
         options = []
@@ -404,7 +443,7 @@ class ModerationCommands(discord.Cog):
                                   description=f'Reason: {reason}\nDuration: {duration}', color=discord.Color.orange())
             try:
                 await member.send(embed=embed)
-            except discord.Forbidden:
+            except (discord.Forbidden, discord.HTTPException):
                 self.logger.info(f'Could not send DM to {member}, skipping')
                 pass
 
@@ -460,7 +499,7 @@ class ModerationCommands(discord.Cog):
                                   color=discord.Color.orange())
             try:
                 await member.send(embed=embed)
-            except discord.Forbidden:
+            except (discord.Forbidden, discord.HTTPException):
                 self.logger.info(f'Could not send DM to {member}, skipping')
                 pass
 
@@ -554,7 +593,7 @@ class ModerationCommands(discord.Cog):
                                   color=discord.Color.orange())
             try:
                 await target.send(embed=embed)
-            except discord.Forbidden:
+            except (discord.Forbidden, discord.HTTPException):
                 self.logger.info(f'Could not send DM to {target}, skipping')
                 pass
 
@@ -691,3 +730,13 @@ class ModerationCommands(discord.Cog):
 
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
+
+    @banlist_group.command()
+    async def add_id(self, ctx: discord.ApplicationContext, id: int):
+        add_to_banlist(id)
+        await ctx.respond('Member added.', ephemeral=True)
+
+    @banlist_group.command()
+    async def remove_id(self, ctx: discord.ApplicationContext, id: int):
+        remove_from_banlist(id)
+        await ctx.respond('Member removed if found.', ephemeral=True)

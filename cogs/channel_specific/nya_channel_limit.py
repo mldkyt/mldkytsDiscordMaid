@@ -10,6 +10,9 @@ class NyaChannelLimit(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
         self.logger = logging.getLogger('astolfo.NyaChannelLimit')
         self.bot = bot
+        if constants.nya_channel == 0:
+            self.logger.warning('Skipping NyaChannelLimit module because the channel isn\'t specified')
+            return
         self.send_random.start()
         self.logger.info('Started Nyaa random sending task')
         super().__init__()
