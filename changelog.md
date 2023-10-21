@@ -1,3 +1,9 @@
+# Version 1.7
++ Ban list
++ Messages get deleted when a member gets banned
++ Leave messages are now changed if the member is kicked/banned
++ Other small changes
+
 # Version 1.6.1
 + Fixed bot ping making bot spam
 + Added a NSFW bot command channel
@@ -13,9 +19,3 @@
 + Added a bot commands usage message in <#1106092370509955163>
 + Fixed daily in/out message in <#768944487199146044> not sending
 
-# Version 1.5.3
-+ Bot uses current server name instead of "mldkyt's server"
-+ All moderation commands now send response as public by default
-
-# Version 1.5.2
-- Removed the /headpat and /cuddle command, they were replaced by OwO bot
