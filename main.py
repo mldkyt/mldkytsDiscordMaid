@@ -4,6 +4,7 @@ import logging
 import threading
 
 import discord
+import sentry_sdk
 from discord import Color, Embed
 from discord.ext.commands import CommandOnCooldown
 
@@ -35,6 +36,17 @@ from cogs.commands.report_command import ReportCommand
 from cogs.member_scan import MemberScan
 from cogs.channel_specific.mc_channel import MCChannel
 from views.roles import MainView
+
+sentry_sdk.init(
+    dsn="https://d6c1d6f042b67ae35ca58a92f4e1cac4@o4506100661682176.ingest.sentry.io/4506100664172544",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s :: %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 # add file handler
