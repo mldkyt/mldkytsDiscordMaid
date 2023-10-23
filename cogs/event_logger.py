@@ -72,22 +72,6 @@ class EventLogger(discord.Cog):
         await channel.send(embed=embed)
 
     @discord.Cog.listener()
-    async def on_member_ban(self, guild: discord.Guild, user: discord.User):
-        self.logger.info(f'{user} was banned from the server')
-        channel = self.bot.get_channel(constants.log_channel)
-        embed = discord.Embed(title='Member Banned', description=f'{user} was banned from the server.',
-                              color=discord.Color.red())
-        await channel.send(embed=embed)
-
-    @discord.Cog.listener()
-    async def on_member_unban(self, guild: discord.Guild, user: discord.User):
-        self.logger.info(f'{user} was unbanned from the server')
-        channel = self.bot.get_channel(constants.log_channel)
-        embed = discord.Embed(title='Member Unbanned', description=f'{user} was unbanned from the server.',
-                              color=discord.Color.red())
-        await channel.send(embed=embed)
-
-    @discord.Cog.listener()
     async def on_member_update(self, before: discord.Member, after: discord.Member):
         if before.nick != after.nick:
             self.logger.info(f'{before} changed their nickname from {before.nick} to {after.nick}')

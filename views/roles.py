@@ -12,11 +12,55 @@ def has_nsfw_ban(target: discord.Member):
     return target.id in data
 
 
-class RoleSelectView(ui.View):
+main_message = 'Welcome to the role selector! Select a category to begin!'
+
+
+class MainView(ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
-    @ui.button(label='New Video Pings', custom_id='new_video_pings', style=discord.ButtonStyle.blurple)
+    @discord.ui.string_select(placeholder='Category', custom_id='roles_category', options=[
+        discord.SelectOption(label='Pings', value='pings', description='Ping roles'),
+        discord.SelectOption(label='Pronouns', value='pronouns',
+                             description='Pronoun roles and trans role'),
+        discord.SelectOption(label='Femboy Role', value='femboy', description='5 femboy stage roles'),
+        discord.SelectOption(label='NSFW role', value='nsfw', description='NSFW role'),
+        discord.SelectOption(label='Top or Bottom', value='topbottom', description='Top, Switch and Bottom roles')
+    ], min_values=1, max_values=1)
+    async def select(self, select: discord.ui.Select, interaction: discord.Interaction):
+        if len(select.values) != 1:
+            return
+
+        if select.values[0] == 'pings':
+            await interaction.response.send_message(content='Select ping roles below: ', view=PingRoleView(),
+                                                    ephemeral=True)
+        elif select.values[0] == 'pronouns':
+            await interaction.response.send_message(content='Select pronoun roles below: ', view=PronounSelect(),
+                                                    ephemeral=True)
+        elif select.values[0] == 'femboy':
+            await interaction.response.send_message(content='''Select a femboy stage below: 
+- Stage 0: Access to femboy channels
+- Stage 1: Acting feminine
+- Stage 2: Shaving
+- Stage 3: Thigh highs (Programming socks), Skirt, Crop top, ...
+- Stage 4: Makeup
+- Stage 5: ANIME TRAP aww how so cute OH ITS A BOY WTF :3''', view=FemboyRoleSelectView(),
+                                                    ephemeral=True)
+        elif select.values[0] == 'nsfw':
+            await interaction.response.send_message(content='Click below to get NSFW role: ', view=NsfwRoleSelectView(),
+                                                    ephemeral=True)
+        elif select.values[0] == 'topbottom':
+            await interaction.response.send_message(content='Select top, switch and bottom roles: ',
+                                                    view=TopBottomSelect(), ephemeral=True)
+        else:
+            await interaction.response.send_message(content='❌ Invalid selection', ephemeral=True)
+
+
+class PingRoleView(ui.View):
+    def __init__(self):
+        super().__init__()
+
+    @ui.button(label='New Video Pings', style=discord.ButtonStyle.blurple)
     async def toggle_new_vids(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         new_vids_role = guild.get_role(1133732578055168040)
@@ -28,7 +72,7 @@ class RoleSelectView(ui.View):
             await interaction.user.remove_roles(new_vids_role, reason='New videos role deselected')
             await interaction.response.send_message('Removed new videos role', ephemeral=True)
 
-    @ui.button(label='Mod Update Pings', custom_id='game_mod_update_pings', style=discord.ButtonStyle.blurple)
+    @ui.button(label='Mod Update Pings', style=discord.ButtonStyle.blurple)
     async def toggle_game_mod_updates(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         game_mod_updates_role = guild.get_role(861679309394673696)
@@ -40,7 +84,7 @@ class RoleSelectView(ui.View):
             await interaction.user.remove_roles(game_mod_updates_role, reason='Game mod updates role deselected')
             await interaction.response.send_message('Removed game mod updates role', ephemeral=True)
 
-    @ui.button(label='Livestream Pings', custom_id='livestream_pings', style=discord.ButtonStyle.blurple)
+    @ui.button(label='Livestream Pings', style=discord.ButtonStyle.blurple)
     async def toggle_live_pings(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         live_pings_role = guild.get_role(1140290624654946445)
@@ -52,7 +96,7 @@ class RoleSelectView(ui.View):
             await interaction.user.remove_roles(live_pings_role, reason='Live pings role deselected')
             await interaction.response.send_message('Removed live pings role', ephemeral=True)
 
-    @ui.button(label='TikTok Pings', custom_id='tiktok_pings', style=discord.ButtonStyle.blurple)
+    @ui.button(label='TikTok Pings', style=discord.ButtonStyle.blurple)
     async def toggle_tiktok_pings(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         tiktok_pings_role = guild.get_role(1152575554533478483)
@@ -68,14 +112,16 @@ class RoleSelectView(ui.View):
 class FemboyRoleSelectView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(discord.ui.Button(label='Creator of these stages', url='https://www.youtube.com/watch?v=lPG-9fu7xLY', row=2))
+        self.add_item(
+            discord.ui.Button(label='Creator of these stages', url='https://www.youtube.com/watch?v=lPG-9fu7xLY',
+                              row=2))
 
-    @discord.ui.button(label='0', custom_id='role_stage_0', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='0', style=discord.ButtonStyle.blurple)
     async def stage_0_role(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
-        
+
         await interaction.response.defer(ephemeral=True, invisible=False)
-        
+
         stage_0 = guild.get_role(constants.femboy_stage_0_role)
         stage_1 = guild.get_role(constants.femboy_stage_1_role)
         stage_2 = guild.get_role(constants.femboy_stage_2_role)
@@ -87,7 +133,7 @@ class FemboyRoleSelectView(discord.ui.View):
         await interaction.user.remove_roles(stage_1, stage_2, stage_3, stage_4, stage_5, reason='Stage 0 role selected')
         await interaction.followup.send(content='Stage 0 femboy role selected')
 
-    @discord.ui.button(label='1', custom_id='role_stage_1', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='1', style=discord.ButtonStyle.blurple)
     async def stage_1_role(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         await interaction.response.defer(ephemeral=True, invisible=False)
@@ -102,7 +148,7 @@ class FemboyRoleSelectView(discord.ui.View):
         await interaction.user.remove_roles(stage_2, stage_3, stage_4, stage_5, reason='Stage 1 role selected')
         await interaction.followup.send(content='Stage 1 femboy role selected')
 
-    @discord.ui.button(label='2', custom_id='role_stage_2', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='2', style=discord.ButtonStyle.blurple)
     async def stage_2_role(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         await interaction.response.defer(ephemeral=True, invisible=False)
@@ -117,7 +163,7 @@ class FemboyRoleSelectView(discord.ui.View):
         await interaction.user.remove_roles(stage_3, stage_4, stage_5, reason='Stage 2 role selected')
         await interaction.followup.send(content='Stage 2 femboy role selected')
 
-    @discord.ui.button(label='3', custom_id='role_stage_3', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='3', style=discord.ButtonStyle.blurple)
     async def stage_3_role(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         await interaction.response.defer(ephemeral=True, invisible=False)
@@ -131,8 +177,8 @@ class FemboyRoleSelectView(discord.ui.View):
         await interaction.user.add_roles(stage_0, stage_1, stage_2, stage_3, reason='Stage 3 role selected')
         await interaction.user.remove_roles(stage_4, stage_5, reason='Stage 3 role selected')
         await interaction.followup.send(content='Stage 3 femboy role selected')
-        
-    @discord.ui.button(label='4', custom_id='role_stage_4', style=discord.ButtonStyle.blurple)
+
+    @discord.ui.button(label='4', style=discord.ButtonStyle.blurple)
     async def stage_4_role(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         await interaction.response.defer(ephemeral=True, invisible=False)
@@ -146,9 +192,8 @@ class FemboyRoleSelectView(discord.ui.View):
         await interaction.user.add_roles(stage_0, stage_1, stage_2, stage_3, stage_4, reason='Stage 4 role selected')
         await interaction.user.remove_roles(stage_5, reason='Stage 4 role selected')
         await interaction.followup.send(content='Stage 4 femboy role selected')
-        
-        
-    @discord.ui.button(label='5', custom_id='role_stage_5', style=discord.ButtonStyle.blurple)
+
+    @discord.ui.button(label='5', style=discord.ButtonStyle.blurple)
     async def stage_5_role(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         await interaction.response.defer(ephemeral=True, invisible=False)
@@ -159,15 +204,31 @@ class FemboyRoleSelectView(discord.ui.View):
         stage_4 = guild.get_role(constants.femboy_stage_4_role)
         stage_5 = guild.get_role(constants.femboy_stage_5_role)
 
-        await interaction.user.add_roles(stage_0, stage_1, stage_2, stage_3, stage_4, stage_5, reason='Stage 5 role selected')
+        await interaction.user.add_roles(stage_0, stage_1, stage_2, stage_3, stage_4, stage_5,
+                                         reason='Stage 5 role selected')
         await interaction.followup.send(content='Stage 5 femboy role selected')
+
+    @discord.ui.button(label='Remove', style=discord.ButtonStyle.red)
+    async def remove_role(self, button: discord.ui.Button, interaction: discord.Interaction):
+        guild = interaction.guild
+        await interaction.response.defer(ephemeral=True, invisible=False)
+        stage_0 = guild.get_role(constants.femboy_stage_0_role)
+        stage_1 = guild.get_role(constants.femboy_stage_1_role)
+        stage_2 = guild.get_role(constants.femboy_stage_2_role)
+        stage_3 = guild.get_role(constants.femboy_stage_3_role)
+        stage_4 = guild.get_role(constants.femboy_stage_4_role)
+        stage_5 = guild.get_role(constants.femboy_stage_5_role)
+
+        await interaction.user.remove_roles(stage_0, stage_1, stage_2, stage_3, stage_4, stage_5,
+                                            reason='Deselected all stages')
+        await interaction.followup.send(content='Removed all stages')
 
 
 class NsfwRoleSelectView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None)
+        super().__init__()
 
-    @discord.ui.button(label='NSFW role', custom_id='role_nsfw', style=discord.ButtonStyle.danger)
+    @discord.ui.button(label='NSFW role', style=discord.ButtonStyle.danger)
     async def toggle_nsfw_role(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
         nsfw_role = guild.get_role(1152684011748077619)
@@ -186,7 +247,7 @@ With taking this role, you agree that you're 18+ and I'm not responsible if you 
 
 class NsfwRoleConfirmView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None)
+        super().__init__()
 
     @discord.ui.button(label='Confirm', style=discord.ButtonStyle.danger)
     async def confirm_nsfw_role(self, button: discord.ui.Button, interaction: discord.Interaction):
@@ -203,15 +264,12 @@ class NsfwRoleConfirmView(discord.ui.View):
             await interaction.response.send_message('You already have the NSFW role', ephemeral=True)
 
 
-
-
-
 # a member can have at most 1 role
 class PronounSelect(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None)
+        super().__init__()
 
-    @discord.ui.button(label='he/him', custom_id='role_pronouns_he', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='he/him', style=discord.ButtonStyle.blurple)
     async def he_him(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)
@@ -228,7 +286,7 @@ class PronounSelect(discord.ui.View):
             await member.remove_roles(role, reason='he/him pronouns deselected')
             await interaction.response.send_message('he/him pronouns removed', ephemeral=True)
 
-    @discord.ui.button(label='she/her', custom_id='role_pronouns_she', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='she/her', style=discord.ButtonStyle.blurple)
     async def she_her(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)
@@ -245,7 +303,7 @@ class PronounSelect(discord.ui.View):
             await member.remove_roles(role, reason='she/her pronouns deselected')
             await interaction.response.send_message('she/her pronouns removed', ephemeral=True)
 
-    @discord.ui.button(label='they/them', custom_id='role_pronouns_they', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='they/them', style=discord.ButtonStyle.blurple)
     async def they_them(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)
@@ -262,13 +320,13 @@ class PronounSelect(discord.ui.View):
             await member.remove_roles(role, reason='they/them pronouns pronouns deselected')
             await interaction.response.send_message('they/them pronouns pronouns removed', ephemeral=True)
 
-    @discord.ui.button(label='any pronouns', custom_id='role_pronouns_any', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='any pronouns', style=discord.ButtonStyle.blurple)
     async def any(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)
         role = guild.get_role(constants.any_pronouns_role)
         if role not in member.roles:
-            for i in constants.pronoun_roles: 
+            for i in constants.pronoun_roles:
                 if i in [r.id for r in member.roles]:
                     await interaction.response.send_message('You can\'t have multiple pronoun roles', ephemeral=True)
                     return
@@ -279,12 +337,7 @@ class PronounSelect(discord.ui.View):
             await member.remove_roles(role, reason='Any pronouns pronouns deselected')
             await interaction.response.send_message('Any pronouns pronouns removed', ephemeral=True)
 
-
-class TransSelect(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-
-    @discord.ui.button(label='Trans', custom_id='role_trans', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='I am Trans', style=discord.ButtonStyle.blurple, row=2)
     async def trans(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)
@@ -299,9 +352,9 @@ class TransSelect(discord.ui.View):
 
 class TopBottomSelect(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None)
+        super().__init__()
 
-    @discord.ui.button(label='Top', custom_id='role_top', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='Top', style=discord.ButtonStyle.blurple)
     async def top(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)
@@ -313,7 +366,7 @@ class TopBottomSelect(discord.ui.View):
             await member.remove_roles(role, reason='Top role deselected')
             await interaction.response.send_message('Top role removed', ephemeral=True)
 
-    @discord.ui.button(label='Bottom', custom_id='role_bottom', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='Bottom', style=discord.ButtonStyle.blurple)
     async def bottom(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)
@@ -325,7 +378,7 @@ class TopBottomSelect(discord.ui.View):
             await member.remove_roles(role, reason='Bottom role deselected')
             await interaction.response.send_message('Bottom role removed', ephemeral=True)
 
-    @discord.ui.button(label='Switch', custom_id='role_switch', style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label='Switch', style=discord.ButtonStyle.blurple)
     async def switch(self, button: discord.Button, interaction: discord.Interaction):
         guild = interaction.guild
         member = guild.get_member(interaction.user.id)

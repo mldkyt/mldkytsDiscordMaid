@@ -27,7 +27,6 @@ from cogs.welcome_goodbye import WelcomeGoodbye
 from cogs.ghost_pings import GhostPings
 from cogs.channel_specific.nya_channel_limit import NyaChannelLimit
 from cogs.chat_filters.ban_invite_links import BanInviteLinks
-from views.incoming_location import IncomingLocation
 from website.main import run_app
 from cogs.channel_specific.column_3_channel import Column3Chat
 from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
@@ -35,8 +34,7 @@ from cogs.message_reactions import MessageReactions
 from cogs.commands.report_command import ReportCommand
 from cogs.member_scan import MemberScan
 from cogs.channel_specific.mc_channel import MCChannel
-from views.roles import FemboyRoleSelectView, NsfwRoleSelectView, PronounSelect, RoleSelectView, TopBottomSelect, \
-    TransSelect
+from views.roles import MainView
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s :: %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 # add file handler
@@ -110,14 +108,8 @@ bot.add_cog(MCChannel(bot))
 @bot.event
 async def on_ready():
     main_logger.info('Logged in and ready to go!')
-    bot.add_view(RoleSelectView())
-    bot.add_view(FemboyRoleSelectView())
-    bot.add_view(NsfwRoleSelectView())
-    bot.add_view(PronounSelect())
-    bot.add_view(TransSelect())
-    bot.add_view(TopBottomSelect())
+    bot.add_view(MainView())
     bot.add_view(MainIdeas())
-    bot.add_view(IncomingLocation())
 
 
 @bot.slash_command(guild_ids=[constants.guild_id])

@@ -4,6 +4,7 @@ import logging
 import discord
 import constants
 
+
 def init():
     try:
         with open('data/chatpoints.json') as f:
@@ -92,13 +93,14 @@ class ChatPoints(discord.Cog):
         self.logger.info(f'Added {len(message.content)} ChatPoints to {message.author}')
         current_points = get_chatpoints(message.author.id)
         new_level, next_level_points, last_level_points = calculate_level(current_points)
-        
+
         if old_level != new_level:
             self.logger.info(f'{message.author} leveled up! {old_level} -> {new_level}')
             channel = self.bot.get_channel(1156628671747080233)
-            embed = discord.Embed(title='Level up!', description=f'{message.author.display_name} leveled up!\n**{old_level}** -> **{new_level}**\n**{current_points - last_level_points}**/**{next_level_points - last_level_points}** till the next level', color=discord.Color.green())
+            embed = discord.Embed(title='Level up!',
+                                  description=f'{message.author.display_name} leveled up!\n**{old_level}** -> **{new_level}**\n**{current_points - last_level_points}**/**{next_level_points - last_level_points}** till the next level',
+                                  color=discord.Color.green())
             await channel.send(content=f'{message.author.mention}', embed=embed)
-            
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def chatpoints(self, ctx: discord.ApplicationContext):
@@ -106,8 +108,10 @@ class ChatPoints(discord.Cog):
         self.logger.info(f'{ctx.user} used /chatpoints')
         chatpoints = get_chatpoints(ctx.user.id)
         level, next_level_xp, _ = calculate_level(chatpoints)
-        self.logger.info(f'{ctx.user} has {chatpoints} ChatPoints (level {level}, {chatpoints}/{next_level_xp} till next level)')
-        await ctx.respond(f'You have {chatpoints} ChatPoints (level {level}, {chatpoints}/{next_level_xp} till next level)')
+        self.logger.info(
+            f'{ctx.user} has {chatpoints} ChatPoints (level {level}, {chatpoints}/{next_level_xp} till next level)')
+        await ctx.respond(
+            f'You have {chatpoints} ChatPoints (level {level}, {chatpoints}/{next_level_xp} till next level)')
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def chatpoint_leaderboard(self, ctx: discord.ApplicationContext):

@@ -1,3 +1,8 @@
+# Version 2.0
++ Reworked #roles
++ Removed /kick, /ban and /timeout and replaced with Discord default
++ 
+
 # Version 1.7
 + Ban list
 + Messages get deleted when a member gets banned

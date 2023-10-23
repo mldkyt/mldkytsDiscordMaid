@@ -77,11 +77,11 @@ class YearlyMessages(discord.Cog):
         self.logger.info('Sending yearly messages')
 
         messages = get_messages()
-        # show top n talkers or top 5 talkers when there are less than 5 talkers
-        if len(messages) < 10:
-            msg = f'# Top {len(messages)} Chatters\n'
-        else:
-            msg = f'# Top 10 YEARLY Chatters\n'
+        message_count = 0
+        for message in messages:
+            message_count += message["messages"]
+
+        msg = '# This year, there were %d messages sent, top chatters:\n' % message_count
 
         for i, user_data in enumerate(messages):
             self.logger.info(f'User {user_data["user_id"]} has {user_data["messages"]} messages')

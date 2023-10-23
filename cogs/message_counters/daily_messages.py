@@ -77,11 +77,11 @@ class DailyMessages(discord.Cog):
         self.logger.info('Clearing messages and sending top 5 chatters')
 
         messages = get_messages()
-        # show top n talkers or top 5 talkers when there are less than 5 talkers
-        if len(messages) < 5:
-            msg = f'# Top {len(messages)} Talkers\n'
-        else:
-            msg = f'# Top 5 Chatters\n'
+        message_count = 0
+        for message in messages:
+            message_count += message["messages"]
+
+        msg = "# Today, there were %d sent messages:\n" % message_count
 
         for i, user_data in enumerate(messages):
             # try to find the user by id, show their display_name if found, else mention
