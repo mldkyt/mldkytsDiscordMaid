@@ -143,15 +143,6 @@ class WelcomeGoodbye(discord.Cog):
         self.logger.info('Member joined: %s', member.display_name)
         if member.id in get_banlist():
             self.logger.info('Member is in ban list: %s', member.display_name)
-            try:
-                self.logger.info('Attempting to DM member: %s', member.display_name)
-                embed = discord.Embed(title=f'You have been banned from {member.guild.name}',
-                                      description=f'Reason: [Internal Banlist] Member was found on the internal banlist and was automatically banned',
-                                      color=discord.Color.red())
-                await member.send(embed=embed)
-            except discord.Forbidden:
-                self.logger.info('Failed to DM member: %s, skipping', member.display_name)
-                pass
             await member.ban(
                 reason='[Internal Banlist] Member was found on the internal banlist and was automatically banned')
 

@@ -56,8 +56,12 @@ logger.addHandler(file_handler)
 
 main_logger = logging.getLogger('astolfo.__main__')
 
-bot = discord.Bot(
-    intents=discord.Intents.default() | discord.Intents.message_content | discord.Intents.members | discord.Intents.presences)
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
+intents.presences = True
+
+bot = discord.Bot(intents=intents)
 
 main_logger.info('Starting website')
 web_thread = threading.Thread(target=lambda: run_app(bot), name='astolfo.Website')
