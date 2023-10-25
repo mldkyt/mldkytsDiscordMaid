@@ -68,6 +68,9 @@ web_thread = threading.Thread(target=lambda: run_app(bot), name='astolfo.Website
 web_thread.daemon = True
 web_thread.start()
 
+if not os.path.exists('data'):
+    os.mkdir('data')
+
 main_logger.info('Loading module: Status')
 bot.add_cog(Status(bot))
 main_logger.info('Loading module: Daily Messages')

@@ -4,14 +4,16 @@ import logging
 import discord
 from discord.ext.tasks import loop
 
+import os
 import constants
 
 
 def init():
-    try:
-        with open('data/inouts_in_a_day.json'):
-            pass
-    except FileNotFoundError:
+    if not os.path.exists('data/ban_list.json'):
+        with open('data/ban_list.json', 'w') as f:
+            f.write('[]')
+    
+    if not os.path.exists('data/inouts_in_a_day.json'):
         with open('data/inouts_in_a_day.json', 'w') as f:
             now = datetime.datetime.now()
             json.dump({
