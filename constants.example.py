@@ -41,6 +41,8 @@ bot_maintainer = 0
 
 firebase_url = ''
 
-word_blacklist = []
-
 dev_mode = False
+
+ngrok_token = ''
+mc_message_id = 0
+mc_channel_id = 0

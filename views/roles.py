@@ -44,7 +44,7 @@ class MainView(ui.View):
 - Stage 2: Shaving
 - Stage 3: Thigh highs (Programming socks), Skirt, Crop top, ...
 - Stage 4: Makeup
-- Stage 5: ANIME TRAP aww how so cute OH ITS A BOY WTF :3''', view=FemboyRoleSelectView(),
+- Stage 5: TRAP >:3''', view=FemboyRoleSelectView(),
                                                     ephemeral=True)
         elif select.values[0] == 'nsfw':
             await interaction.response.send_message(content='Click below to get NSFW role: ', view=NsfwRoleSelectView(),

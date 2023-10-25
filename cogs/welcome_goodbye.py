@@ -23,21 +23,21 @@ def init():
 
 
 def cleanup_data(user: int):
-    with open('data/catpoints.json') as f:
-        catpoints = json.load(f)
-    # list of {user_id: str, catpoints: int}
+    with open('data/cutepoints.json') as f:
+        cutepoints = json.load(f)
+    # list of {user_id: str, cutepoints: int}
 
-    for i in range(len(catpoints)):
-        if catpoints[i]['user_id'] == user:
-            catpoints.pop(i)
+    for i in range(len(cutepoints)):
+        if cutepoints[i]['user_id'] == user:
+            cutepoints.pop(i)
             break
 
-    with open('data/catpoints.json', 'w') as f:
-        json.dump(catpoints, f, indent=4)
+    with open('data/cutepoints.json', 'w') as f:
+        json.dump(cutepoints, f, indent=4)
 
     with open('data/chatpoints.json') as f:
         chatpoints = json.load(f)
-    # list of {user_id: str, catpoints: int}
+    # list of {user_id: str, cutepoints: int}
 
     for i in range(len(chatpoints)):
         if chatpoints[i]['user_id'] == user:
@@ -49,7 +49,7 @@ def cleanup_data(user: int):
 
     with open('data/dailymsg.json') as f:
         dailymsg: list = json.load(f)
-    # list of {user_id: str, catpoints: int}
+    # list of {user_id: str, cutepoints: int}
 
     for i in range(len(dailymsg)):
         if dailymsg[i]['user_id'] == user:
@@ -61,7 +61,7 @@ def cleanup_data(user: int):
 
     with open('data/yearlymsg.json') as f:
         yearlymsg: list = json.load(f)
-    # list of {user_id: str, catpoints: int}
+    # list of {user_id: str, cutepoints: int}
 
     for i in range(len(yearlymsg)):
         if yearlymsg[i]['user_id'] == user:

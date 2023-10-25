@@ -15,8 +15,6 @@ class Column3Chat(discord.Cog):
         if constants.column_3_channel == 0:
             self.logger.warning('Skipping column 3 channel because it is not specified')
             return
-        self.send_random.start()
-        self.logger.info('Starting :3 random sending task')
         super().__init__()
         self.logger.info(':3 channel limit initialization successful')
 
@@ -45,12 +43,3 @@ class Column3Chat(discord.Cog):
             await new.delete()
             await new.channel.send(f'{new.author.mention} This channel is only for :3, nothing else.',
                                    delete_after=5)
-
-    @tasks.loop(minutes=1)
-    async def send_random(self):
-        if random.randint(0, 250) != 250:
-            return
-
-        amount = random.randint(1, 10)
-        channel = self.bot.get_channel(constants.column_3_channel)
-        await channel.send(':' + '3' * amount)

@@ -1,9 +1,9 @@
 
 import logging
+
 import discord
+
 import constants
-import random
-from discord.ext import tasks
 
 
 class OwoChannelLimit(discord.Cog):
@@ -13,8 +13,6 @@ class OwoChannelLimit(discord.Cog):
         if constants.owo_uwu_channel == 0:
             self.logger.warning('Owo channel limit is disabled because channel is not specified')
             return
-        self.send_random.start()
-        self.logger.info('Started OwO random sending task')
         super().__init__()
         self.logger.info('OwO channel limit initialization successful')
         
@@ -37,15 +35,3 @@ class OwoChannelLimit(discord.Cog):
         if new.content.lower() != 'owo' and new.content.lower() != 'uwu':
             await new.delete()
             await new.channel.send(f'{new.author.mention} This channel is only for OwO and UwU, nothing else~ :3', delete_after=5)
-            
-    @tasks.loop(minutes=1)
-    async def send_random(self):
-        if random.randint(0, 250) != 250:
-            return
-        
-        channel = self.bot.get_channel(constants.owo_uwu_channel)
-        variant = random.randint(1, 2)
-        if variant == 1:
-            await channel.send('owo')
-        elif variant == 2:
-            await channel.send('uwu')

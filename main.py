@@ -33,7 +33,6 @@ from cogs.channel_specific.column_3_channel import Column3Chat
 from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
 from cogs.message_reactions import MessageReactions
 from cogs.commands.report_command import ReportCommand
-from cogs.member_scan import MemberScan
 from cogs.channel_specific.mc_channel import MCChannel
 from views.roles import MainView
 
@@ -111,8 +110,6 @@ main_logger.info('Loading module: Message reactions')
 bot.add_cog(MessageReactions(bot))
 main_logger.info('Loading module: Report Command')
 bot.add_cog(ReportCommand(bot))
-main_logger.info('Loading module: Member Scan')
-bot.add_cog(MemberScan(bot))
 main_logger.info('Loading module: Minecraft Channel')
 bot.add_cog(MCChannel(bot))
 

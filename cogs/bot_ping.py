@@ -12,10 +12,10 @@ ChatPoints are points given to everyone for chatting in the server.
 You get 1 ChatPoint for every letter you send in a message.
 You can check your balance with `/chatpoints` in <#{constants.commands_channel}>.'''
 
-cat_points_message = f'''# CatPoints
-CatPoints are points given to everyone when they use :3 in a message.
-You get 1 CatPoint for every :3 (and some variations of it) you send in a message.
-You can check your balance with `/catpoints` in <#{constants.commands_channel}>.'''
+cute_points_message = f'''# CutePoints
+CutePoints are points given to everyone who acts cute :3
+You get 1 CatPoint for every cute thing you send in a message.
+You can check your balance with `/cutepoints` in <#{constants.commands_channel}>.'''
 
 
 class ChatPointsView(discord.ui.View):
@@ -28,11 +28,11 @@ class ChatPointsView(discord.ui.View):
         await interaction.response.defer()
 
 
-class CatPointsView(discord.ui.View):
+class CutePointsView(discord.ui.View):
 
     @discord.ui.button(label='Back to main page', style=discord.ButtonStyle.primary)
-    async def chat_ponts(self, button: discord.ui.Button, interaction: discord.Interaction):
-        logger = logging.getLogger('astolfo.BotPing.CatPointsView')
+    async def chat_points(self, button: discord.ui.Button, interaction: discord.Interaction):
+        logger = logging.getLogger('astolfo.BotPing.CutePointsView')
         logger.info('Back to main page button pressed')
         await interaction.message.edit(content=(initial_message % interaction.user.mention), view=InitialView())
         await interaction.response.defer()
@@ -47,11 +47,11 @@ class InitialView(discord.ui.View):
         await interaction.message.edit(content=chat_points_message, view=ChatPointsView())
         await interaction.response.defer()
 
-    @discord.ui.button(label='What are CatPoints?', style=discord.ButtonStyle.primary)
+    @discord.ui.button(label='What are CutePoints?', style=discord.ButtonStyle.primary)
     async def cat_ponts(self, button: discord.ui.Button, interaction: discord.Interaction):
         logger = logging.getLogger('astolfo.BotPing/InitialView')
-        logger.info('What are CatPoints button pressed')
-        await interaction.message.edit(content=cat_points_message, view=CatPointsView())
+        logger.info('What are CutePoints button pressed')
+        await interaction.message.edit(content=cute_points_message, view=CutePointsView())
         await interaction.response.defer()
 
 

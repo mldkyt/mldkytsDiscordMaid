@@ -91,7 +91,7 @@ class BotCommandsReminder(discord.Cog):
             
             # Some commands from my bot:
 
-            /catpoints - Check your CatPoints
+            /cutepoints - Check your CutePoints
             /chatpoints - Check your ChatPoints
             @bot - Get the help message from the bot''')
             return
@@ -127,7 +127,7 @@ class BotCommandsReminder(discord.Cog):
             
             # Some commands from my bot:
 
-            /catpoints - Check your CatPoints
+            /cutepoints - Check your CutePoints
             /chatpoints - Check your ChatPoints
             @bot - Get the help message from the bot''')
             return

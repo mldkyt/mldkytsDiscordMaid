@@ -1,41 +1,48 @@
 import json
 import logging
+import os
 
 import discord
 
 
 def init():
+    if os.path.exists('data/catpoints.json') and not os.path.exists('data/cutepoints.json'):
+        logging.getLogger('astolfo.CutePoints').info('Updating catpoints.json to cutepoints.json')
+        with open('data/cutepoints.json', 'w') as f1:
+            with open('data/catpoints.json') as f2:
+                f1.write(f2.read())
+
+        os.remove('data/catpoints.json')
+
     try:
-        with open('data/catpoints.json') as f:
+        with open('data/cutepoints.json') as f:
             pass
     except FileNotFoundError:
-        with open('data/catpoints.json', 'w') as f:
-            logger = logging.getLogger('astolfo.CatPoints')
-            logger.info('Creating data/catpoints.json')
+        with open('data/cutepoints.json', 'w') as f:
+            logger = logging.getLogger('astolfo.CutePoints')
+            logger.info('Creating data/cutepoints.json')
             json.dump([], f)
 
 
-def add_catpoints(userid: int, catpoints: int):
-    with open('data/catpoints.json') as f:
+def add_cutepoints(userid: int, cutepoints: int):
+    with open('data/cutepoints.json') as f:
         data = json.load(f)
 
-    # array of {user_id: int, catpoints: int}
     for user_data in data:
         if user_data['user_id'] == userid:
-            user_data['catpoints'] += catpoints
+            user_data['catpoints'] += cutepoints
             break
     else:
-        data.append({'user_id': userid, 'catpoints': catpoints})
+        data.append({'user_id': userid, 'catpoints': cutepoints})
 
-    with open('data/catpoints.json', 'w') as f:
+    with open('data/cutepoints.json', 'w') as f:
         json.dump(data, f)
 
 
-def get_catpoints(userid: int) -> int:
-    with open('data/catpoints.json') as f:
+def get_cutepoints(userid: int) -> int:
+    with open('data/cutepoints.json') as f:
         data = json.load(f)
 
-    # array of {user_id: int, catpoints: int}
     for user_data in data:
         if user_data['user_id'] == userid:
             return user_data['catpoints']
@@ -43,27 +50,26 @@ def get_catpoints(userid: int) -> int:
         return 0
 
 
-def get_catpoints_leaderboard() -> list:
-    with open('data/catpoints.json') as f:
+def get_cutepoints_leaderboard() -> list:
+    with open('data/cutepoints.json') as f:
         data = json.load(f)
 
-    # array of {user_id: int, catpoints: int}
     return sorted(data, key=lambda x: x['catpoints'], reverse=True)
 
 
-class CatPoints(discord.Cog):
+class CutePoints(discord.Cog):
 
     def __init__(self, bot: discord.Bot):
-        self.logger = logging.getLogger('astolfo.CatPoints')
+        self.logger = logging.getLogger('astolfo.CutePoints')
         self.bot = bot
         init()
         super().__init__()
         self.logger.info('Initialization successful')
 
     @discord.slash_command()
-    async def catpoints(self, ctx: discord.ApplicationContext):
-        """Get your CatPoints amount"""
-        await ctx.respond(f'You have {get_catpoints(ctx.user.id)} CatPoints')
+    async def cutepoints(self, ctx: discord.ApplicationContext):
+        """Get your CutePoints amount"""
+        await ctx.respond(f'You have {get_cutepoints(ctx.user.id)} CutePoints')
 
     @discord.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -73,29 +79,30 @@ class CatPoints(discord.Cog):
         if message.channel.type == discord.ChannelType.private:
             return
 
-        catpoints = message.content.count('>:3') * 2
-        catpoints += message.content.replace('>:3', '').count(':3')
-        catpoints += message.content.count(':#')
-        catpoints += message.content.count(';3')
-        catpoints += message.content.count('にゃ')
-        catpoints += message.content.count('nya')
-        catpoints += message.content.count('meow')
-        catpoints += message.content.count('mrow')
-        catpoints += message.content.count('mrrr')
-        if catpoints > 0:
-            self.logger.info(f'Adding {catpoints} CatPoints to {message.author}')
-        add_catpoints(message.author.id, catpoints)
+        cutepoints = message.content.count('>:3') * 2
+        cutepoints += message.content.replace('>:3', '').count(':3')
+        cutepoints += message.content.count(':#')
+        cutepoints += message.content.count(';3')
+        cutepoints += message.content.count('にゃ')
+        cutepoints += message.content.count('nya')
+        cutepoints += message.content.count('meow')
+        cutepoints += message.content.count('mrow')
+        cutepoints += message.content.count('mrrr')
+        cutepoints += message.content.count('~')
+        if cutepoints > 0:
+            self.logger.info(f'Adding {cutepoints} CutePoints to {message.author}')
+        add_cutepoints(message.author.id, cutepoints)
 
     @discord.slash_command()
-    async def catpoints_leaderboard(self, ctx: discord.ApplicationContext):
-        """Get the CatPoints leaderboard"""
-        self.logger.info('Getting CatPoints leaderboard')
-        leaderboard = get_catpoints_leaderboard()
-        msg = "# CatPoints Leaderboard\n"
+    async def cutepoints_leaderboard(self, ctx: discord.ApplicationContext):
+        """Get the CutePoints leaderboard"""
+        self.logger.info('Getting CutePoints leaderboard')
+        leaderboard = get_cutepoints_leaderboard()
+        msg = "# CutePoints Leaderboard\n"
         for i, user_data in enumerate(leaderboard):
             user = await self.bot.fetch_user(user_data['user_id'])
-            self.logger.info(f'Adding {user.display_name} with {user_data["catpoints"]} CatPoints to leaderboard')
-            msg += f"{i + 1}. {user.display_name} has {user_data['catpoints']} CatPoints\n"
+            self.logger.info(f'Adding {user.display_name} with {user_data["catpoints"]} CutePoints to leaderboard')
+            msg += f"{i + 1}. {user.display_name} has {user_data['catpoints']} CutePoints\n"
             if i == 9:
                 break
 
