@@ -10,7 +10,7 @@ from discord.ext.commands import CommandOnCooldown
 
 import constants
 from cogs.bot_ping import BotPing
-from cogs.points.cat_points import CatPoints
+from cogs.points.cute_points import CutePoints
 from cogs.points.chat_points import ChatPoints
 from cogs.message_counters.daily_messages import DailyMessages
 from cogs.commands.dev_commands import DevCommands
@@ -72,8 +72,8 @@ main_logger.info('Loading module: Yearly messages')
 bot.add_cog(YearlyMessages(bot))
 main_logger.info('Loading module: Bot ping')
 bot.add_cog(BotPing(bot))
-main_logger.info('Loading module: CatPoints')
-bot.add_cog(CatPoints(bot))
+main_logger.info('Loading module: CutePoints')
+bot.add_cog(CutePoints(bot))
 main_logger.info('Loading module: ChatPoints')
 bot.add_cog(ChatPoints(bot))
 main_logger.info('Loading module: Moderation Commands')
