@@ -107,23 +107,13 @@ class CutePoints(discord.Cog):
     @discord.slash_command()
     async def cutepoints_leaderboard(self, ctx: discord.ApplicationContext):
         """Get the CutePoints leaderboard"""
-        self.logger.info('Getting CutePoints leaderboard')
-        leaderboard = get_cutepoints_leaderboard()
-        msg = "# CutePoints Leaderboard\n"
-        for i, user_data in enumerate(leaderboard):
-            user = await self.bot.fetch_user(user_data['user_id'])
-            self.logger.info(f'Adding {user.display_name} with {user_data["catpoints"]} CutePoints to leaderboard')
-            msg += f"{i + 1}. {user.display_name} has {user_data['catpoints']} CutePoints\n"
-            if i == 9:
-                break
-
-        await ctx.respond(msg)
+        await ctx.respond('CutePoints have moved here! https://mldkyt.com/discord/cutepoints')
 
 
     @tasks.loop(hours=24)
     async def sync_online(self):
         self.logger.info('Uploading CutePoints leaderboard to Firebase')
-        data = get_cutepoints_leaderboard()[:10]
+        data = get_cutepoints_leaderboard()[:50]
         data_2 = []
         for i in data:
             member = self.bot.get_guild(constants.guild_id).get_member(i['user_id'])

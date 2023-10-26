@@ -126,24 +126,13 @@ class ChatPoints(discord.Cog):
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def chatpoint_leaderboard(self, ctx: discord.ApplicationContext):
         """ChatPoints Leaderboard"""
-        self.logger.info(f'{ctx.user} used /chatpoint_leaderboard')
-        chatpoints = get_chatpoints_leaderboard()
-        # show 10 top users
-        msg = "# ChatPoints Leaderboard\n"
-        for i, user in enumerate(chatpoints[:10]):
-            self.logger.info(f'Adding {user["user_id"]} with {user["chatpoints"]} ChatPoints to leaderboard')
-            user_obj = await self.bot.fetch_user(user['user_id'])
-            msg += f"{i + 1}. {user_obj.display_name} has {user['chatpoints']} ChatPoints\n"
-            if i == 9:
-                break
-
-        await ctx.respond(msg)
+        await ctx.respond('ChatPoints have moved here! https://mldkyt.com/discord/chatpoints')
         
         
     @tasks.loop(hours=24)
     async def update_online(self):
         self.logger.info('Uploading ChatPoints leaderboard to Firebase')
-        leader_board = get_chatpoints_leaderboard()[:10]
+        leader_board = get_chatpoints_leaderboard()[:50]
         data_2 = []
         for i in leader_board:
             member = self.bot.get_guild(constants.guild_id).get_member(i['user_id'])
