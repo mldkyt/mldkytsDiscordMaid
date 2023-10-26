@@ -2,6 +2,8 @@ import json
 import logging
 
 import discord
+from discord.ext import tasks
+import requests
 import constants
 
 
@@ -79,6 +81,10 @@ class ChatPoints(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
+        if constants.firebase_url != '':
+            self.update_online.start()
+        else:
+            self.logger.info('Online updater is not running as no Firebase was specified')
         self.logger.info('Initialization successful')
 
     @discord.Cog.listener()
@@ -128,3 +134,12 @@ class ChatPoints(discord.Cog):
                 break
 
         await ctx.respond(msg)
+        
+        
+    @tasks.loop(hours=24)
+    async def update_online(self):
+        self.logger.info('Uploading ChatPoints leaderboard to Firebase')
+        leader_board = get_chatpoints_leaderboard()[:10]
+        response = requests.put(f'https://{constants.firebase_url}/discordstats/chatpoints.json', \
+            json=leader_board)
+        self.logger.info(f'Firebase responded with {response.status_code}')

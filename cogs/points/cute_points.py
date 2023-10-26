@@ -2,8 +2,10 @@ import json
 import logging
 import os
 
+from discord.ext import tasks
 import discord
-
+import requests
+import constants
 
 def init():
     if os.path.exists('data/catpoints.json') and not os.path.exists('data/cutepoints.json'):
@@ -64,6 +66,11 @@ class CutePoints(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
+        if constants.firebase_url != '':
+            self.logger.info('Starting sync_online loop')
+            self.sync_online.start()
+        else:
+            self.logger.info('Not syncing online users because no Firebase was provided')
         self.logger.info('Initialization successful')
 
     @discord.slash_command()
@@ -108,3 +115,13 @@ class CutePoints(discord.Cog):
                 break
 
         await ctx.respond(msg)
+
+
+    @tasks.loop(hours=24)
+    async def sync_online(self):
+        self.logger.info('Uploading CutePoints leaderboard to Firebase')
+        data = get_cutepoints_leaderboard()[:10]
+        requests.put(f'https://{constants.firebase_url}/discordstats/cutepoints.json', \
+            json=data)
+        self.logger.info('CutePoints leaderboard synced')
+        

@@ -36,15 +36,14 @@ class WebsiteSync(discord.Cog):
             data = requests.get(f'https://{constants.firebase_url}/ff/votes.json').json()
             channel = self.bot.get_channel(constants.private_channel)
             await channel.send(f'{len(data)} headpats for Programmer Astolfo on femboy friday! :3')
-            requests.put(f'https://{constants.firebase_url}/ff/votes.json', data='[]')
+            requests.put(f'https://{constants.firebase_url}/ff/votes.json', json=[])
 
     def sync_members(self):
         self.logger.info('Syncing members')
-        data = {
-            'members': len(self.bot.get_guild(constants.guild_id).members),
-            'online': len([member for member in self.bot.get_guild(constants.guild_id).members if
-                           member.status != discord.Status.offline]),
-        }
-        self.logger.info('Members: %s, Online: %s', data['members'], data['online'])
-        requests.put(f'https://{constants.firebase_url}/discordstats.json', json=data)
+        members = [m for m in self.bot.get_guild(constants.guild_id).members if not m.bot]
+        online = [m for m in members if m.status != discord.Status.offline]
+        
+        self.logger.info('Members: %s, Online: %s', len(members), len(online))
+        requests.put(f'https://{constants.firebase_url}/discordstats/members.json', json=len(members))
+        requests.put(f'https://{constants.firebase_url}/discordstats/online.json', json=len(online))
         self.logger.info('Members synced')
