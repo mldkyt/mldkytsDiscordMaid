@@ -84,6 +84,7 @@ class CutePoints(discord.Cog):
         cutepoints += message.content.count(':#')
         cutepoints += message.content.count(';3')
         cutepoints += message.content.count('にゃ')
+        cutepoints += message.content.count('ニャー')
         cutepoints += message.content.count('nya')
         cutepoints += message.content.count('meow')
         cutepoints += message.content.count('mrow')

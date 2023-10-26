@@ -16,7 +16,7 @@ def init():
 
 def add_chatpoints(userid: int, chatpoints: int):
     with open('data/chatpoints.json') as f:
-        data = json.load(f)
+        data: list = json.load(f)
 
     # array of {user_id: int, chatpoints: int}
     for user_data in data:

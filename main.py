@@ -34,6 +34,7 @@ from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
 from cogs.message_reactions import MessageReactions
 from cogs.commands.report_command import ReportCommand
 from cogs.channel_specific.mc_channel import MCChannel
+from cogs.testing import Testing
 from views.roles import MainView
 
 sentry_sdk.init(
@@ -119,6 +120,9 @@ main_logger.info('Loading module: Report Command')
 bot.add_cog(ReportCommand(bot))
 main_logger.info('Loading module: Minecraft Channel')
 bot.add_cog(MCChannel(bot))
+if constants.dev_mode:
+    main_logger.info('Loading module: Testing')
+    bot.add_cog(Testing())
 
 
 @bot.event

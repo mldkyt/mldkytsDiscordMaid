@@ -24,56 +24,6 @@ def init():
             }, f)
 
 
-def cleanup_data(user: int):
-    with open('data/cutepoints.json') as f:
-        cutepoints = json.load(f)
-    # list of {user_id: str, cutepoints: int}
-
-    for i in range(len(cutepoints)):
-        if cutepoints[i]['user_id'] == user:
-            cutepoints.pop(i)
-            break
-
-    with open('data/cutepoints.json', 'w') as f:
-        json.dump(cutepoints, f, indent=4)
-
-    with open('data/chatpoints.json') as f:
-        chatpoints = json.load(f)
-    # list of {user_id: str, cutepoints: int}
-
-    for i in range(len(chatpoints)):
-        if chatpoints[i]['user_id'] == user:
-            del chatpoints[i]
-            break
-
-    with open('data/chatpoints.json', 'w') as f:
-        json.dump(chatpoints, f, indent=4)
-
-    with open('data/dailymsg.json') as f:
-        dailymsg: list = json.load(f)
-    # list of {user_id: str, cutepoints: int}
-
-    for i in range(len(dailymsg)):
-        if dailymsg[i]['user_id'] == user:
-            dailymsg.pop(i)
-            break
-
-    with open('data/dailymsg.json', 'w') as f:
-        json.dump(dailymsg, f, indent=4)
-
-    with open('data/yearlymsg.json') as f:
-        yearlymsg: list = json.load(f)
-    # list of {user_id: str, cutepoints: int}
-
-    for i in range(len(yearlymsg)):
-        if yearlymsg[i]['user_id'] == user:
-            yearlymsg.pop(i)
-            break
-
-    with open('data/yearlymsg.json', 'w') as f:
-        json.dump(yearlymsg, f, indent=4)
-
-
 def increment_joins_in_a_day():
     with open('data/inouts_in_a_day.json') as f:
         data = json.load(f)
@@ -190,7 +140,6 @@ class WelcomeGoodbye(discord.Cog):
             goodbye_message = f'⚠️ {member.display_name} was kicked!'
         if banned:
             goodbye_message = f'❌ {member.display_name} was banned!'
-        cleanup_data(member.id)
         self.logger.info('Cleaned up data for member: %s', member.display_name)
         channel = self.bot.get_channel(constants.welcome_channel)
         self.logger.info('Sending goodbye/warning/ban message for member: %s', member.display_name)
