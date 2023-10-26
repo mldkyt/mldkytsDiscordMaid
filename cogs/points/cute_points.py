@@ -66,12 +66,15 @@ class CutePoints(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
+        self.logger.info('Initialization successful')
+
+    @discord.Cog.listener()
+    async def on_ready(self):
         if constants.firebase_url != '':
             self.logger.info('Starting sync_online loop')
             self.sync_online.start()
         else:
             self.logger.info('Not syncing online users because no Firebase was provided')
-        self.logger.info('Initialization successful')
 
     @discord.slash_command()
     async def cutepoints(self, ctx: discord.ApplicationContext):
@@ -121,7 +124,22 @@ class CutePoints(discord.Cog):
     async def sync_online(self):
         self.logger.info('Uploading CutePoints leaderboard to Firebase')
         data = get_cutepoints_leaderboard()[:10]
+        data_2 = []
+        for i in data:
+            member = self.bot.get_guild(constants.guild_id).get_member(i['user_id'])
+            i['cutepoints'] = i['catpoints']
+            del i['catpoints']
+            if member is not None:
+                i['name'] = member.display_name
+                if member.avatar is not None:
+                    i['avatar'] = str(member.avatar.url)
+                else:
+                    i['avatar'] = 'https://cdn.discordapp.com/embed/avatars/5.png'
+                data_2.append(i)
+            else:
+                i['name'] = f'User({i["user_id"]})'
+                i['avatar'] = 'https://cdn.discordapp.com/embed/avatars/5.png'
         requests.put(f'https://{constants.firebase_url}/discordstats/cutepoints.json', \
-            json=data)
+            json=data_2)
         self.logger.info('CutePoints leaderboard synced')
         

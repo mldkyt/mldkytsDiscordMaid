@@ -81,11 +81,15 @@ class ChatPoints(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
+        self.logger.info('Initialization successful')
+        
+    @discord.Cog.listener()
+    async def on_ready(self):
+        self.logger.info('Starting sync_online loop')
         if constants.firebase_url != '':
             self.update_online.start()
         else:
             self.logger.info('Online updater is not running as no Firebase was specified')
-        self.logger.info('Initialization successful')
 
     @discord.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -140,6 +144,19 @@ class ChatPoints(discord.Cog):
     async def update_online(self):
         self.logger.info('Uploading ChatPoints leaderboard to Firebase')
         leader_board = get_chatpoints_leaderboard()[:10]
+        data_2 = []
+        for i in leader_board:
+            member = self.bot.get_guild(constants.guild_id).get_member(i['user_id'])
+            if member is not None:
+                i['name'] = member.display_name
+                if member.avatar is not None:
+                    i['avatar'] = str(member.avatar.url)
+                else:
+                    i['avatar'] = 'https://cdn.discordapp.com/embed/avatars/5.png'
+                data_2.append(i)
+            else:
+                i['name'] = f'User({i["user_id"]})'
+                i['avatar'] = 'https://cdn.discordapp.com/embed/avatars/5.png'
         response = requests.put(f'https://{constants.firebase_url}/discordstats/chatpoints.json', \
             json=leader_board)
         self.logger.info(f'Firebase responded with {response.status_code}')
