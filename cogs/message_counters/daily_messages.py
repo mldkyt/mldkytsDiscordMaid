@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+import os
 
 import discord
 from discord.ext import tasks
@@ -46,6 +47,20 @@ def clear_messages():
         json.dump([], f)
 
 
+def save_messages_to_history():
+    now = datetime.datetime.now()
+    yesterday = now - datetime.timedelta(days=1)
+    with open('data/dailymsg.json') as f:
+        data: list = json.load(f)
+        
+    # create folder data/messages_daily_history if it doesn't exist
+    if not os.path.exists('data/messages_daily_history'):
+        os.makedirs('data/messages_daily_history')
+    
+    with open(f'data/messages_daily_history/{yesterday.day}-{yesterday.month}-{yesterday.year}.json', 'w') as f:
+        json.dump(data, f)
+        
+
 class DailyMessages(discord.Cog):
     def __init__(self, bot: discord.Bot):
         self.logger = logging.getLogger('astolfo.DailyMessages')
@@ -66,6 +81,11 @@ class DailyMessages(discord.Cog):
             return
 
         add_message(message.author.id)
+        
+    @discord.slash_command()
+    async def test_save_messages_to_history(self, ctx: discord.ApplicationContext):
+        save_messages_to_history()
+        await ctx.respond('Saved messages to history', ephemeral=True)
 
     @tasks.loop(minutes=1)
     async def clear_messages(self):
@@ -76,6 +96,7 @@ class DailyMessages(discord.Cog):
         
         self.logger.info('Clearing messages and sending top 5 chatters')
 
+        save_messages_to_history()
         messages = get_messages()
         message_count = 0
         for message in messages:

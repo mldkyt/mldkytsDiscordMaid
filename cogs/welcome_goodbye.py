@@ -66,6 +66,13 @@ def set_inouts_to_today():
     now = datetime.datetime.now()
     if now.day == data['day'] and now.month == data['month']:
         return
+    
+    if not os.path.exists('data/inout_history'):
+        os.mkdir('data/inout_history')
+        
+    yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+    with open(f'data/inout_history/{yesterday.month}-{yesterday.day}-{yesterday.year}.json', 'w') as f:
+        json.dump(data, f)
 
     data['day'] = now.day
     data['month'] = now.month
