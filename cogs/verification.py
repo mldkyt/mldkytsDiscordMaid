@@ -14,7 +14,7 @@ verify_2 = '''# (2/4)Please pick your femboy stage, or skip this question
 - 0: Access to femboy channels
 - 1: Acting feminine
 - 2: Shaving
-- 3: Thigh highs (Programming socks), Skirt, Crop top, ...
+- 3: Thigh highs (Programming socks), skirt, Crop top, ...
 - 4: Makeup
 - 5: TRAP >:3'''
 verify_3 = '''# (3/4)Please pick your top/bottom/switch role or skip this question'''
@@ -36,6 +36,12 @@ class Verification(discord.Cog):
         
         await ctx.channel.send(slash_command_message, view=VerifyMain())
         await ctx.respond('Sending verification message', ephemeral=True)
+        
+    @discord.Cog.listener()
+    async def on_member_join(self, member: discord.Member):
+        verify_channel = self.bot.get_channel(constants.verify_channel)
+        msg = await verify_channel.send(f'{member.mention}, please verify here')
+        await msg.delete()
     
     
 class VerifyMain(discord.ui.View):

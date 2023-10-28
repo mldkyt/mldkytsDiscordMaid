@@ -14,6 +14,7 @@ nya_channel = 0
 column_3_channel = 0
 owo_uwu_channel = 0
 self_promo = 0
+verify_channel = 0
 
 femboy_stage_0_role = 0
 femboy_stage_1_role = 0
@@ -32,6 +33,8 @@ top_role = 0
 bottom_role = 0
 switch_role = 0
 
+verified_role = 0
+
 pronoun_roles = []
 
 moderator_role = 0
@@ -46,3 +49,5 @@ dev_mode = False
 ngrok_token = ''
 mc_message_id = 0
 mc_channel_id = 0
+
+sentry_url = ''

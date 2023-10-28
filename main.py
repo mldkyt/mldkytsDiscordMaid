@@ -39,14 +39,9 @@ from cogs.verification import Verification, VerifyMain
 from views.roles import MainView
 
 sentry_sdk.init(
-    dsn="https://d6c1d6f042b67ae35ca58a92f4e1cac4@o4506100661682176.ingest.sentry.io/4506100664172544",
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
+    dsn=constants.sentry_url,
     traces_sample_rate=1.0,
-    # Set profiles_sample_rate to 1.0 to profile 100%
-    # of sampled transactions.
-    # We recommend adjusting this value in production.
-    profiles_sample_rate=1.0,
+    profiles_sample_rate=1.0
 )
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s :: %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
