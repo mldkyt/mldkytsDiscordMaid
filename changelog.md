@@ -1,3 +1,8 @@
+# Version 2.2
+- Custom verification
+- Fixed /banlist add and /banlist remove
+- Limited #daily-fun-fact to 1 message per day
+
 # Version 2.1
 - Moved /cutepoints_leaderboard and /chatpoints_leaderboard to the website
 - Increased the leaderboard length from 10 to 50

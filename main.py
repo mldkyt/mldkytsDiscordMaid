@@ -36,6 +36,7 @@ from cogs.commands.report_command import ReportCommand
 from cogs.channel_specific.mc_channel import MCChannel
 from cogs.testing import Testing
 from cogs.verification import Verification, VerifyMain
+from cogs.channel_specific.daily_fun_fact_limit import DailyFunFactLimit
 from views.roles import MainView
 
 sentry_sdk.init(
@@ -122,6 +123,8 @@ if constants.dev_mode:
 
 main_logger.info('Loading module: Verification')
 bot.add_cog(Verification(bot))
+main_logger.info('Loading module: Daily Fun Fact Limit')
+bot.add_cog(DailyFunFactLimit(bot))
 
 @bot.event
 async def on_ready():
@@ -155,7 +158,7 @@ async def on_application_command_error(ctx: discord.ApplicationContext, error):
 @bot.slash_command(guild_ids=[constants.guild_id])
 async def changelog(ctx: discord.ApplicationContext):
     with open('changelog.md') as f:
-        await ctx.respond(f.read(), ephemeral=True)
+        await ctx.respond(f.read())
 
 
 @bot.slash_command(guild_ids=[constants.guild_id])
@@ -169,7 +172,7 @@ async def full_changelog(ctx: discord.ApplicationContext):
     data = data_1 + data_2
     with open('temp.md', 'w') as f:
         f.write(data)
-    await ctx.respond("Here you go: ", file=discord.File('temp.md', filename='changelog.md'), ephemeral=True)
+    await ctx.respond("Here you go: ", file=discord.File('temp.md', filename='changelog.md'))
     os.remove('temp.md')
 
 

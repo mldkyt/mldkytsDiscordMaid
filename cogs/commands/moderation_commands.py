@@ -350,7 +350,11 @@ class ModerationCommands(discord.Cog):
         await log_channel.send(embed=log_embed)
 
     @banlist_group.command()
-    async def add_id(self, ctx: discord.ApplicationContext, id: int):
+    async def add_id(self, ctx: discord.ApplicationContext, id: str):
+        if not id.isnumeric():
+            await ctx.respond('Invalid ID', ephemeral=True)
+            return
+        
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('No permission', ephemeral=True)
             return
@@ -359,7 +363,11 @@ class ModerationCommands(discord.Cog):
         await ctx.respond('Member added.', ephemeral=True)
 
     @banlist_group.command()
-    async def remove_id(self, ctx: discord.ApplicationContext, id: int):
+    async def remove_id(self, ctx: discord.ApplicationContext, id: str):
+        if not id.isnumeric():
+            await ctx.respond('Invalid ID', ephemeral=True)
+            return
+        
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
             await ctx.respond('No permission', ephemeral=True)
             return
