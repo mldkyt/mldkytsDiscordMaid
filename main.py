@@ -35,6 +35,7 @@ from cogs.message_reactions import MessageReactions
 from cogs.commands.report_command import ReportCommand
 from cogs.channel_specific.mc_channel import MCChannel
 from cogs.testing import Testing
+from cogs.verification import Verification
 from views.roles import MainView
 
 sentry_sdk.init(
@@ -124,6 +125,8 @@ if constants.dev_mode:
     main_logger.info('Loading module: Testing')
     bot.add_cog(Testing())
 
+main_logger.info('Loading module: Verification')
+bot.add_cog(Verification(bot))
 
 @bot.event
 async def on_ready():
