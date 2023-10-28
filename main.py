@@ -35,7 +35,7 @@ from cogs.message_reactions import MessageReactions
 from cogs.commands.report_command import ReportCommand
 from cogs.channel_specific.mc_channel import MCChannel
 from cogs.testing import Testing
-from cogs.verification import Verification
+from cogs.verification import Verification, VerifyMain
 from views.roles import MainView
 
 sentry_sdk.init(
@@ -133,6 +133,7 @@ async def on_ready():
     main_logger.info('Logged in and ready to go!')
     bot.add_view(MainView())
     bot.add_view(MainIdeas())
+    bot.add_view(VerifyMain())
 
 
 @bot.slash_command(guild_ids=[constants.guild_id])
