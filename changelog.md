@@ -1,8 +1,9 @@
-# Version 2.3-b3
+# Version 2.3-b4
 - Beta testing
 - Add misc option to roles
 - Fix the misc roles option
 - Fix the misc roles option finalyl!!!!
+- Get removing role to work
 
 # Version 2.2
 - Custom verification

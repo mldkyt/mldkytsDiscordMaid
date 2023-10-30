@@ -396,7 +396,7 @@ class MiscRoleSelectView(discord.ui.View):
         role = member.guild.get_role(role)
         if role is None:
             return
-        if role not in [r.id for r in member.roles]:
+        if role not in member.roles:
             await member.add_roles(role, reason='Misc role selected')
         else:
             await member.remove_roles(role, reason='Misc role deselected')
