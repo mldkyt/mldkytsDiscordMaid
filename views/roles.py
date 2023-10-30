@@ -393,6 +393,9 @@ class MiscRoleSelectView(discord.ui.View):
         super().__init__()
 
     async def toggle_role(self, member: discord.Member, role: int):
+        role = member.guild.get_role(role)
+        if role is None:
+            return
         if role not in [r.id for r in member.roles]:
             await member.add_roles(role, reason='Misc role selected')
         else:
