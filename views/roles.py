@@ -63,7 +63,7 @@ class PingRoleView(ui.View):
     @ui.button(label='New Video Pings', style=discord.ButtonStyle.blurple)
     async def toggle_new_vids(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
-        new_vids_role = guild.get_role(1133732578055168040)
+        new_vids_role = guild.get_role(constants.new_videos_role)
 
         if new_vids_role not in interaction.user.roles:
             await interaction.user.add_roles(new_vids_role, reason='New videos role selected')
@@ -72,22 +72,10 @@ class PingRoleView(ui.View):
             await interaction.user.remove_roles(new_vids_role, reason='New videos role deselected')
             await interaction.response.send_message('Removed new videos role', ephemeral=True)
 
-    @ui.button(label='Mod Update Pings', style=discord.ButtonStyle.blurple)
-    async def toggle_game_mod_updates(self, button: discord.ui.Button, interaction: discord.Interaction):
-        guild = interaction.guild
-        game_mod_updates_role = guild.get_role(861679309394673696)
-
-        if game_mod_updates_role not in interaction.user.roles:
-            await interaction.user.add_roles(game_mod_updates_role, reason='Game mod updates role selected')
-            await interaction.response.send_message('Added game mod updates role', ephemeral=True)
-        else:
-            await interaction.user.remove_roles(game_mod_updates_role, reason='Game mod updates role deselected')
-            await interaction.response.send_message('Removed game mod updates role', ephemeral=True)
-
     @ui.button(label='Livestream Pings', style=discord.ButtonStyle.blurple)
     async def toggle_live_pings(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
-        live_pings_role = guild.get_role(1140290624654946445)
+        live_pings_role = guild.get_role(constants.live_pings_role)
 
         if live_pings_role not in interaction.user.roles:
             await interaction.user.add_roles(live_pings_role, reason='Live pings role selected')
@@ -99,7 +87,7 @@ class PingRoleView(ui.View):
     @ui.button(label='TikTok Pings', style=discord.ButtonStyle.blurple)
     async def toggle_tiktok_pings(self, button: discord.ui.Button, interaction: discord.Interaction):
         guild = interaction.guild
-        tiktok_pings_role = guild.get_role(1152575554533478483)
+        tiktok_pings_role = guild.get_role(constants.tiktok_pings_role)
 
         if tiktok_pings_role not in interaction.user.roles:
             await interaction.user.add_roles(tiktok_pings_role, reason='TikTok pings role selected')
