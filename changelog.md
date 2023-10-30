@@ -1,3 +1,7 @@
+# Version 2.3-b1
+- Beta testing
+- Add misc option to roles
+
 # Version 2.2
 - Custom verification
 - Fixed /banlist add and /banlist remove
