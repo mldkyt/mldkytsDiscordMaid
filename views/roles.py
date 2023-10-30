@@ -20,12 +20,18 @@ class MainView(ui.View):
         super().__init__(timeout=None)
 
     @discord.ui.string_select(placeholder='Category', custom_id='roles_category', options=[
-        discord.SelectOption(label='Pings', value='pings', description='Ping roles'),
+        discord.SelectOption(label='Pings', value='pings',
+                             description='Ping roles'),
         discord.SelectOption(label='Pronouns', value='pronouns',
                              description='Pronoun roles and trans role'),
-        discord.SelectOption(label='Femboy Role', value='femboy', description='5 femboy stage roles'),
-        discord.SelectOption(label='NSFW role', value='nsfw', description='NSFW role'),
-        discord.SelectOption(label='Top or Bottom', value='topbottom', description='Top, Switch and Bottom roles')
+        discord.SelectOption(label='Femboy Role', value='femboy',
+                             description='5 femboy stage roles'),
+        discord.SelectOption(label='NSFW role', value='nsfw',
+                             description='NSFW role'),
+        discord.SelectOption(label='Top or Bottom', value='topbottom',
+                             description='Top, Switch and Bottom roles'),
+        discord.SelectOption(label='Miscellaneous',
+                             value='misc', description='Miscellaneous roles')
     ], min_values=1, max_values=1)
     async def select(self, select: discord.ui.Select, interaction: discord.Interaction):
         if len(select.values) != 1:
@@ -45,13 +51,16 @@ class MainView(ui.View):
 - Stage 3: Thigh highs (Programming socks), Skirt, Crop top, ...
 - Stage 4: Makeup
 - Stage 5: TRAP >:3''', view=FemboyRoleSelectView(),
-                                                    ephemeral=True)
+                ephemeral=True)
         elif select.values[0] == 'nsfw':
             await interaction.response.send_message(content='Click below to get NSFW role: ', view=NsfwRoleSelectView(),
                                                     ephemeral=True)
         elif select.values[0] == 'topbottom':
             await interaction.response.send_message(content='Select top, switch and bottom roles: ',
                                                     view=TopBottomSelect(), ephemeral=True)
+        elif select.values[0] == 'misc':
+            await interaction.response.send_message(content='Select miscellaneous roles: ', view=MiscRoleSelectView(),
+                                                    ephemeral=True)
         else:
             await interaction.response.send_message(content='❌ Invalid selection', ephemeral=True)
 
@@ -377,3 +386,34 @@ class TopBottomSelect(discord.ui.View):
         else:
             await member.remove_roles(role, reason='Switch role deselected')
             await interaction.response.send_message('Switch role removed', ephemeral=True)
+
+
+class MiscRoleSelectView(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+
+    async def toggle_role(self, member: discord.Member, role: int):
+        if role not in [r.id for r in member.roles]:
+            await member.add_roles(role, reason='Misc role selected')
+        else:
+            await member.remove_roles(role, reason='Misc role deselected')
+
+    @discord.ui.button(label='Boy breeder', style=discord.ButtonStyle.blurple)
+    async def boy_breeder(self, button: discord.Button, interaction: discord.Interaction):
+        await self.toggle_role(interaction.user, constants.boy_breeder_role)
+        await interaction.response.send_message('Toggled boy breeder role', ephemeral=True)
+
+    @discord.ui.button(label='Breedable boy', style=discord.ButtonStyle.blurple)
+    async def breedable_boy(self, button: discord.Button, interaction: discord.Interaction):
+        await self.toggle_role(interaction.user, constants.breedable_boy_role)
+        await interaction.response.send_message('Toggled breedable boy role', ephemeral=True)
+
+    @discord.ui.button(label='Good boy', style=discord.ButtonStyle.blurple)
+    async def good_boy(self, button: discord.Button, interaction: discord.Interaction):
+        await self.toggle_role(interaction.user, constants.good_boy_role)
+        await interaction.response.send_message('Toggled good boy role', ephemeral=True)
+
+    @discord.ui.button(label='Good girl', style=discord.ButtonStyle.blurple)
+    async def good_girl(self, button: discord.Button, interaction: discord.Interaction):
+        await self.toggle_role(interaction.user, constants.good_girl_role)
+        await interaction.response.send_message('Toggled good girl role', ephemeral=True)
