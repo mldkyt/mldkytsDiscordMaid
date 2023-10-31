@@ -420,3 +420,5 @@ class MiscRoleSelectView(discord.ui.View):
     async def good_girl(self, button: discord.Button, interaction: discord.Interaction):
         await self.toggle_role(interaction.user, constants.good_girl_role)
         await interaction.response.send_message('Toggled good girl role', ephemeral=True)
+
+    # TODO: Add catboy and catgirl
