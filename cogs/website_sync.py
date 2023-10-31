@@ -28,6 +28,7 @@ class WebsiteSync(discord.Cog):
     @tasks.loop(hours=24)
     async def sync(self):
         self.sync_members()
+        await self.sync_bans()
 
     @tasks.loop(minutes=1)
     async def after_femboy(self):
@@ -47,3 +48,22 @@ class WebsiteSync(discord.Cog):
         requests.put(f'https://{constants.firebase_url}/discordstats/members.json', json=len(members))
         requests.put(f'https://{constants.firebase_url}/discordstats/online.json', json=len(online))
         self.logger.info('Members synced')
+        
+    @discord.Cog.listener()
+    async def on_member_ban(self, guild, user):
+        self.logger.info('Banned %s, syncing bans', user)
+        requests.put(f'https://{constants.firebase_url}/bans/{user.id}.json', json=True)
+
+    async def sync_bans(self):
+        self.logger.info('Syncing bans')
+        bans = []
+        async for i in self.bot.get_guild(constants.guild_id).bans():
+            bans.append({
+                'user': i.user.display_name,
+                'reason': i.reason,
+                'id': i.user.id
+            })
+        
+        self.logger.info('Submitting bans to database')    
+        requests.put(f'https://{constants.firebase_url}/discordstats/bans.json', json=bans)
+        
