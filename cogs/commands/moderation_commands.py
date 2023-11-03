@@ -62,25 +62,70 @@ def remove_nsfw_ban(user: discord.Member):
 
     with open('data/nsfw_bans.json', 'w') as f:
         json.dump(bans, f)
+        
 
-
-def add_to_banlist(user: int):
-    with open('data/ban_list.json', 'r') as f:
-        data = json.load(f)
-
-    data.append(user)
-
-    with open('data/ban_list.json', 'w') as f:
+def add_chatpoints(user: int, chatpoints: int):
+    with open('data/chatpoints.json') as f:
+        data: list = json.load(f)
+        
+    for user_data in data:
+        if user_data['user_id'] == user:
+            if 'chatpoints' not in user_data:
+                user_data['chatpoints'] = 0
+            user_data['chatpoints'] += chatpoints
+            break
+    else:
+        data.append({'user_id': user, 'chatpoints': chatpoints})
+        
+    with open('data/chatpoints.json', 'w') as f:
         json.dump(data, f)
-
-
-def remove_from_banlist(user: int):
-    with open('data/ban_list.json', 'r') as f:
-        data = json.load(f)
-
-    data.remove(user)
-
-    with open('data/ban_list.json', 'w') as f:
+        
+def remove_chatpoints(user: int, chatpoints: int):
+    with open('data/chatpoints.json') as f:
+        data: list = json.load(f)
+        
+    for user_data in data:
+        if user_data['user_id'] == user:
+            if 'chatpoints' not in user_data:
+                user_data['chatpoints'] = 0
+            user_data['chatpoints'] -= chatpoints
+            break
+    else:
+        data.append({'user_id': user, 'chatpoints': chatpoints})
+        
+    with open('data/chatpoints.json', 'w') as f:
+        json.dump(data, f)
+        
+def add_cutepoints(user: int, cutepoints: int):
+    with open('data/cutepoints.json') as f:
+        data: list = json.load(f)
+        
+    for user_data in data:
+        if user_data['user_id'] == user:
+            if 'cutepoints' not in user_data:
+                user_data['cutepoints'] = 0
+            user_data['cutepoints'] += cutepoints
+            break
+    else:
+        data.append({'user_id': user, 'cutepoints': cutepoints})
+    
+    with open('data/cutepoints.json', 'w') as f:
+        json.dump(data, f)
+        
+def remove_cutepoints(user: int, cutepoints: int):
+    with open('data/cutepoints.json') as f:
+        data: list = json.load(f)
+        
+    for user_data in data:
+        if user_data['user_id'] == user:
+            if 'cutepoints' not in user_data:
+                user_data['cutepoints'] = 0
+            user_data['cutepoints'] -= cutepoints
+            break
+    else:
+        data.append({'user_id': user, 'cutepoints': cutepoints})
+        
+    with open('data/cutepoints.json', 'w') as f:
         json.dump(data, f)
 
 
@@ -91,12 +136,11 @@ class ModerationCommands(discord.Cog):
         init()
         super().__init__()
         self.logger.info('Initialization successful')
+        
+    mod_group = discord.SlashCommandGroup('moderation', description='Moderation commands', guild_ids=[constants.guild_id])
+    admin_group = discord.SlashCommandGroup('admin', description='Admin commands', guild_ids=[constants.guild_id])
 
-    banlist_group = discord.SlashCommandGroup(name='banlist',
-                                              description='A ban list for banning members who have never joined before.',
-                                              guild_ids=[constants.guild_id])
-
-    @discord.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.slash_command(guild_ids=[constants.guild_id])
     async def clear(self, ctx: discord.ApplicationContext, search_past: int,
                     author: discord.Member = None, not_author: discord.Member = None,
                     starts_with: str = None, ends_with: str = None, contains: str = None,
@@ -127,11 +171,6 @@ class ModerationCommands(discord.Cog):
                 discord.EmbedField('Manually delete', 'Yes' if manual_delete else 'No', True)
             ]
         )
-
-        if search_past > 100:
-            self.logger.info(f'{ctx.user.id} tried to delete more than 100 messages')
-            await ctx.respond('You can only delete 100 messages at a time', ephemeral=True)
-            return
 
         # get number of messages and bulk delete them
         messages = await ctx.channel.history(limit=search_past).flatten()
@@ -174,13 +213,15 @@ class ModerationCommands(discord.Cog):
             await ctx.followup.send(f'Deleted {len(messages)} messages')
         else:
             self.logger.info(f'Bulk deleting {len(messages)} messages')
-            await ctx.channel.delete_messages(messages)
-            await ctx.respond(f'Deleted {len(messages)} messages')
+            await ctx.defer()
+            for chunk in [messages[i:i+100] for i in range(0, len(messages), 100)]:
+                await ctx.channel.delete_messages(chunk)
+            await ctx.followup.send(f'Deleted {len(messages)} messages')
 
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=embed)
 
-    @discord.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.slash_command(guild_ids=[constants.guild_id])
     async def warn(self, ctx: discord.ApplicationContext, target: discord.Member, reason: str, send_dm: bool = True):
         """Add a warning to a member.
 
@@ -223,7 +264,7 @@ class ModerationCommands(discord.Cog):
         await log_channel.send(embed=mod_embed)
         await ctx.followup.send(embed=mod_embed)
 
-    @discord.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.slash_command(guild_ids=[constants.guild_id])
     async def warnings(self, ctx: discord.ApplicationContext, target: discord.Member):
         """View the warnings for a member.
 
@@ -264,7 +305,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
 
-    @discord.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.slash_command(guild_ids=[constants.guild_id])
     async def nsfw_ban(self, ctx: discord.ApplicationContext, target: discord.Member):
         """Ban someone from accessing NSFW channels.
 
@@ -309,7 +350,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
 
-    @discord.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.slash_command(guild_ids=[constants.guild_id])
     async def remove_nsfw_ban(self, ctx: discord.ApplicationContext, target: discord.Member):
         """Unban someone from accessing NSFW channels.
 
@@ -348,29 +389,108 @@ class ModerationCommands(discord.Cog):
 
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
-
-    @banlist_group.command()
-    async def add_id(self, ctx: discord.ApplicationContext, id: str):
-        if not id.isnumeric():
-            await ctx.respond('Invalid ID', ephemeral=True)
+        
+    @admin_group.slash_command(guild_ids=[constants.guild_id])
+    async def add_chatpoints(self, ctx: discord.ApplicationContext, user: discord.Member, chatpoints: int):
+        """Add ChatPoints to a user."""
+        if constants.admin_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(
+                f'{ctx.user.id} tried to use the add_chatpoints command, but does not have permission to do so!')
+            await ctx.respond('You have to be admin or higher to use this command', ephemeral=True)
             return
         
-        if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            await ctx.respond('No permission', ephemeral=True)
-            return
-
-        add_to_banlist(id)
-        await ctx.respond('Member added.', ephemeral=True)
-
-    @banlist_group.command()
-    async def remove_id(self, ctx: discord.ApplicationContext, id: str):
-        if not id.isnumeric():
-            await ctx.respond('Invalid ID', ephemeral=True)
+        log_embed = discord.Embed(
+            title='Admin Command Used',
+            description='The command /add_chatpoints was used.',
+            fields=[
+                discord.EmbedField('User', ctx.user.display_name, True),
+                discord.EmbedField('Target', user.display_name, True),
+                discord.EmbedField('ChatPoints', str(chatpoints), True)
+            ]
+        )
+        
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
+        
+        self.logger.info(f'Adding {chatpoints} ChatPoints to {user}')
+        add_chatpoints(user.id, chatpoints)
+        await ctx.respond(f'Added {chatpoints} ChatPoints to {user}', ephemeral=True)
+        
+    @admin_group.slash_command(guild_ids=[constants.guild_id])
+    async def remove_chatpoints(self, ctx: discord.ApplicationContext, user: discord.Member, chatpoints: int):
+        """Remove ChatPoints from a user."""
+        if constants.admin_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(
+                f'{ctx.user.id} tried to use the remove_chatpoints command, but does not have permission to do so!')
+            await ctx.respond('You have to be admin or higher to use this command', ephemeral=True)
             return
         
-        if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            await ctx.respond('No permission', ephemeral=True)
+        log_embed = discord.Embed(
+            title='Admin Command Used',
+            description='The command /remove_chatpoints was used.',
+            fields=[
+                discord.EmbedField('User', ctx.user.display_name, True),
+                discord.EmbedField('Target', user.display_name, True),
+                discord.EmbedField('ChatPoints', str(chatpoints), True)
+            ]
+        )
+        
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
+        
+        self.logger.info(f'Removing {chatpoints} ChatPoints from {user}')
+        remove_chatpoints(user.id, chatpoints)
+        await ctx.respond(f'Removed {chatpoints} ChatPoints from {user}', ephemeral=True)
+        
+    @admin_group.slash_command(guild_ids=[constants.guild_id])
+    async def add_cutepoints(self, ctx: discord.ApplicationContext, user: discord.Member, cutepoints: int):
+        """Add CutePoints to a user."""
+        if constants.admin_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(
+                f'{ctx.user.id} tried to use the add_cutepoints command, but does not have permission to do so!')
+            await ctx.respond('You have to be admin or higher to use this command', ephemeral=True)
             return
-
-        remove_from_banlist(id)
-        await ctx.respond('Member removed if found.', ephemeral=True)
+        
+        log_embed = discord.Embed(
+            title='Admin Command Used',
+            description='The command /add_cutepoints was used.',
+            fields=[
+                discord.EmbedField('User', ctx.user.display_name, True),
+                discord.EmbedField('Target', user.display_name, True),
+                discord.EmbedField('CutePoints', str(cutepoints), True)
+            ]
+        )
+        
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
+        
+        self.logger.info(f'Adding {cutepoints} CutePoints to {user}')
+        add_cutepoints(user.id, cutepoints)
+        await ctx.respond(f'Added {cutepoints} CutePoints to {user}', ephemeral=True)
+        
+    @admin_group.slash_command(guild_ids=[constants.guild_id])
+    async def remove_cutepoints(self, ctx: discord.ApplicationContext, user: discord.Member, cutepoints: int):
+        """Remove CutePoints from a user."""
+        if constants.admin_role not in [r.id for r in ctx.user.roles]:
+            self.logger.warning(
+                f'{ctx.user.id} tried to use the remove_cutepoints command, but does not have permission to do so!')
+            await ctx.respond('You have to be admin or higher to use this command', ephemeral=True)
+            return
+        
+        log_embed = discord.Embed(
+            title='Admin Command Used',
+            description='The command /remove_cutepoints was used.',
+            fields=[
+                discord.EmbedField('User', ctx.user.display_name, True),
+                discord.EmbedField('Target', user.display_name, True),
+                discord.EmbedField('CutePoints', str(cutepoints), True)
+            ]
+        )
+        
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
+        
+        self.logger.info(f'Removing {cutepoints} CutePoints from {user}')
+        remove_cutepoints(user.id, cutepoints)
+        await ctx.respond(f'Removed {cutepoints} CutePoints from {user}', ephemeral=True)
+        

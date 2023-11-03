@@ -16,27 +16,27 @@ class MessageReactions(discord.Cog):
         if msg.author.bot:
             return
 
-        match = re.search(r':3+', msg.clean_content)
+        match = re.search(r':3+', msg.clean_content, flags=re.IGNORECASE)
         if match is not None:
             emote = self.bot.get_emoji(1161378541561204827)  # :3 emoji
             await msg.add_reaction(emote)
 
-        match = re.search(r'(owo|uwu)', msg.clean_content)
+        match = re.search(r'(owo|uwu)', msg.clean_content, flags=re.IGNORECASE)
         if match is not None:
             emote = self.bot.get_emoji(1161378540059627621)  # owo emoji
             await msg.add_reaction(emote)
 
-        match = re.search(r'ny+a+', msg.clean_content)
+        match = re.search(r'ny+a+', msg.clean_content, flags=re.IGNORECASE)
         if match is not None:
             emote = self.bot.get_emoji(1161378537719205989)  # nya emoji
             await msg.add_reaction(emote)
 
-        match = re.search(r'meo+w+', msg.clean_content)
+        match = re.search(r'meo+w+', msg.clean_content, flags=re.IGNORECASE)
         if match is not None:
             emote = self.bot.get_emoji(1161378537719205989)  # nya emoji
             await msg.add_reaction(emote)
 
-        match = re.search(r'mr+', msg.clean_content)
+        match = re.search(r'mr+', msg.clean_content, flags=re.IGNORECASE)
         if match is not None:
             emote = self.bot.get_emoji(1161378537719205989)  # nya emoji
             await msg.add_reaction(emote)
@@ -50,27 +50,27 @@ class MessageReactions(discord.Cog):
         await ctx.defer()
 
         async for msg in ctx.channel.history(limit=100):
-            match = re.search(r':3+', msg.clean_content)
+            match = re.search(r':3+', msg.clean_content, flags=re.IGNORECASE)
             if match is not None:
                 emote = self.bot.get_emoji(1161378541561204827)
                 await msg.add_reaction(emote)
 
-            match = re.search(r'(owo|uwu)', msg.clean_content)
+            match = re.search(r'(owo|uwu)', msg.clean_content, flags=re.IGNORECASE)
             if match is not None:
                 emote = self.bot.get_emoji(1161378540059627621)
                 await msg.add_reaction(emote)
 
-            match = re.search(r'ny+a+', msg.clean_content)
+            match = re.search(r'ny+a+', msg.clean_content, flags=re.IGNORECASE)
             if match is not None:
                 emote = self.bot.get_emoji(1161378537719205989)
                 await msg.add_reaction(emote)
 
-            match = re.search(r'meo+w+', msg.clean_content)
+            match = re.search(r'meo+w+', msg.clean_content, flags=re.IGNORECASE)
             if match is not None:
                 emote = self.bot.get_emoji(1161378537719205989)
                 await msg.add_reaction(emote)
 
-            match = re.search(r'mr+', msg.clean_content)
+            match = re.search(r'mr+', msg.clean_content, flags=re.IGNORECASE)
             if match is not None:
                 emote = self.bot.get_emoji(1161378537719205989)
                 await msg.add_reaction(emote)

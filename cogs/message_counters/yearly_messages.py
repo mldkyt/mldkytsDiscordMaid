@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+import re
 
 import discord
 from discord.ext import tasks
@@ -33,6 +34,53 @@ def add_message(user: int):
     with open('data/yearlymsg.json', 'w') as f:
         json.dump(data, f)
 
+def add_owo(user: int):
+    with open('data/yearlymsg.json') as f:
+        data: list = json.load(f)
+        
+    for user_data in data:
+        if user_data['user_id'] == user:
+            if 'owos' not in user_data:
+                user_data['owos'] = 0
+            user_data['owos'] += 1
+            break
+    else:
+        data.append({'user_id': user, 'owos': 1})
+    
+    with open('data/yearlymsg.json', 'w') as f:
+        json.dump(data, f)
+        
+def add_nya(user: int):
+    with open('data/yearlymsg.json') as f:
+        data: list = json.load(f)
+        
+    for user_data in data:
+        if user_data['user_id'] == user:
+            if 'nyas' not in user_data:
+                user_data['nyas'] = 0
+            user_data['nyas'] += 1
+            break
+    else:
+        data.append({'user_id': user, 'nyas': 1})
+        
+    with open('data/yearlymsg.json', 'w') as f:
+        json.dump(data, f)
+        
+def add_catface(user: int):
+    with open('data/yearlymsg.json') as f:
+        data: list = json.load(f)
+        
+    for user_data in data:
+        if user_data['user_id'] == user:
+            if 'catfaces' not in user_data:
+                user_data['catfaces'] = 0
+            user_data['catfaces'] += 1
+            break
+    else:
+        data.append({'user_id': user, 'catfaces': 1})
+            
+    with open('data/yearlymsg.json', 'w') as f:
+        json.dump(data, f)
 
 def get_messages():
     """Get all messages and sort them by messages sent"""
@@ -57,7 +105,7 @@ class YearlyMessages(discord.Cog):
     async def on_ready(self):
         init_messages()
         self.logger.info('Starting clear_messages loop')
-        self.clear_messages.start()
+        self.clear_messages_task.start()
         pass
 
     @discord.Cog.listener()
@@ -66,8 +114,18 @@ class YearlyMessages(discord.Cog):
             return
 
         add_message(message.author.id)
+        
+        if re.search(r':3+', message.clean_content, flags=re.IGNORECASE):
+            add_catface(message.author.id)
+        if re.search(r'(owo|uwu)', message.clean_content, flags=re.IGNORECASE):
+            add_owo(message.author.id)
+        if re.search(r'ny+a+', message.clean_content, flags=re.IGNORECASE):
+            add_nya(message.author.id)
+        if re.search(r'meo+w+', message.clean_content, flags=re.IGNORECASE):
+            add_nya(message.author.id)
+        if re.search(r'mr+', message.clean_content, flags=re.IGNORECASE):
+            add_nya(message.author.id)
 
-    @tasks.loop(minutes=1)
     async def clear_messages(self):
         """Check if it's a new year, if so, send top 10 YEARLY talkers and clear the list"""
         time = datetime.datetime.now()
@@ -78,8 +136,14 @@ class YearlyMessages(discord.Cog):
 
         messages = get_messages()
         message_count = 0
+        owo_count = 0
+        nya_count = 0
+        catface_count = 0
         for message in messages:
             message_count += message["messages"]
+            owo_count += message["owos"]
+            nya_count += message["nyas"]
+            catface_count += message["catfaces"]
 
         msg = '# This year, there were %d messages sent, top chatters:\n' % message_count
 
@@ -94,9 +158,14 @@ class YearlyMessages(discord.Cog):
             msg += f'{i + 1}. {username}: {user_data["messages"]} messages\n'
             if i == 9:
                 break
-
+            
+        msg += "\nAlso, there were %d owo's, %d meows and %d :3s sent this year. How cute~! :3" % (owo_count, nya_count, catface_count)
         msg += f'# HAPPY NEW YEAR {time.year} EVERYONE!! :3'
 
         self.logger.info('Sending yearly messages')
         await self.bot.get_channel(constants.general_channel).send(msg)
         clear_messages()
+
+    @tasks.loop(minutes=1)
+    async def clear_messages_task(self):
+        await self.clear_messages()
