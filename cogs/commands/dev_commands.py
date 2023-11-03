@@ -11,7 +11,9 @@ class DevCommands(discord.Cog):
         self.bot = bot
         super().__init__()
 
-    @discord.slash_command(guild_ids=[constants.guild_id])
+    dev_group = discord.SlashCommandGroup(name='dev', description='Commands for developers')
+
+    @dev_group.command(guild_ids=[constants.guild_id])
     @discord.option(name='template', description='The template to send', type=discord.SlashCommandOptionType.string,
                     required=True,
                     choices=["roles", 'ideas', 'analytics-from'])
@@ -33,3 +35,25 @@ Submit ideas by clicking the button below :3''', view=cogs.ideas.MainIdeas())
             await ctx.respond('Send the message successfully', ephemeral=True)
         else:
             await ctx.respond('Invalid template', ephemeral=True)
+            
+    @dev_group.command(guild_ids=[constants.guild_id])
+    async def list_emoji_urls(self, ctx: discord.ApplicationContext):
+        if ctx.user.id != 575536897141637120 and ctx.user.id != 1149748649446883358:
+            await ctx.respond('You are not allowed to use this command', ephemeral=True)
+            return
+
+        msg = ''
+        for emoji in ctx.guild.emojis:
+            msg += f'{emoji.name}: {emoji.url}\n'
+        await ctx.respond(msg, ephemeral=True)
+        
+    @dev_group.command(guild_ids=[constants.guild_id])
+    async def list_sticker_urls(self, ctx: discord.ApplicationContext):
+        if ctx.user.id != 575536897141637120 and ctx.user.id != 1149748649446883358:
+            await ctx.respond('You are not allowed to use this command', ephemeral=True)
+            return
+
+        msg = ''
+        for sticker in ctx.guild.stickers:
+            msg += f'{sticker.name}: {sticker.url}\n'
+        await ctx.respond(msg, ephemeral=True)
