@@ -148,8 +148,7 @@ class DailyMessages(discord.Cog):
         save_messages_to_history()
         await ctx.respond('Saved messages to history', ephemeral=True)
 
-    # @discord.slash_command(name="test_clear_messages", guild_ids=[constants.guild_id])
-    async def clear_messages(self, ctx: discord.ApplicationContext):
+    async def clear_messages(self):
         self.logger.info('Clearing messages and sending top 5 chatters')
         
         time = datetime.datetime.now()
@@ -186,7 +185,6 @@ class DailyMessages(discord.Cog):
 
         await self.bot.get_channel(constants.general_channel).send(msg)
         clear_messages()
-        await ctx.respond('Cleared messages and sent top 5 chatters', ephemeral=True)
 
     @tasks.loop(minutes=1)
     async def clear_messages_task(self):
