@@ -140,7 +140,7 @@ class ModerationCommands(discord.Cog):
     mod_group = discord.SlashCommandGroup('moderation', description='Moderation commands', guild_ids=[constants.guild_id])
     admin_group = discord.SlashCommandGroup('admin', description='Admin commands', guild_ids=[constants.guild_id])
 
-    @mod_group.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.command(guild_ids=[constants.guild_id])
     async def clear(self, ctx: discord.ApplicationContext, search_past: int,
                     author: discord.Member = None, not_author: discord.Member = None,
                     starts_with: str = None, ends_with: str = None, contains: str = None,
@@ -221,7 +221,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=embed)
 
-    @mod_group.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.command(guild_ids=[constants.guild_id])
     async def warn(self, ctx: discord.ApplicationContext, target: discord.Member, reason: str, send_dm: bool = True):
         """Add a warning to a member.
 
@@ -264,7 +264,7 @@ class ModerationCommands(discord.Cog):
         await log_channel.send(embed=mod_embed)
         await ctx.followup.send(embed=mod_embed)
 
-    @mod_group.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.command(guild_ids=[constants.guild_id])
     async def warnings(self, ctx: discord.ApplicationContext, target: discord.Member):
         """View the warnings for a member.
 
@@ -305,7 +305,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
 
-    @mod_group.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.command(guild_ids=[constants.guild_id])
     async def nsfw_ban(self, ctx: discord.ApplicationContext, target: discord.Member):
         """Ban someone from accessing NSFW channels.
 
@@ -350,7 +350,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
 
-    @mod_group.slash_command(guild_ids=[constants.guild_id])
+    @mod_group.command(guild_ids=[constants.guild_id])
     async def remove_nsfw_ban(self, ctx: discord.ApplicationContext, target: discord.Member):
         """Unban someone from accessing NSFW channels.
 
@@ -390,7 +390,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
         
-    @admin_group.slash_command(guild_ids=[constants.guild_id])
+    @admin_group.command(guild_ids=[constants.guild_id])
     async def add_chatpoints(self, ctx: discord.ApplicationContext, user: discord.Member, chatpoints: int):
         """Add ChatPoints to a user."""
         if constants.admin_role not in [r.id for r in ctx.user.roles]:
@@ -416,7 +416,7 @@ class ModerationCommands(discord.Cog):
         add_chatpoints(user.id, chatpoints)
         await ctx.respond(f'Added {chatpoints} ChatPoints to {user}', ephemeral=True)
         
-    @admin_group.slash_command(guild_ids=[constants.guild_id])
+    @admin_group.command(guild_ids=[constants.guild_id])
     async def remove_chatpoints(self, ctx: discord.ApplicationContext, user: discord.Member, chatpoints: int):
         """Remove ChatPoints from a user."""
         if constants.admin_role not in [r.id for r in ctx.user.roles]:
@@ -442,7 +442,7 @@ class ModerationCommands(discord.Cog):
         remove_chatpoints(user.id, chatpoints)
         await ctx.respond(f'Removed {chatpoints} ChatPoints from {user}', ephemeral=True)
         
-    @admin_group.slash_command(guild_ids=[constants.guild_id])
+    @admin_group.command(guild_ids=[constants.guild_id])
     async def add_cutepoints(self, ctx: discord.ApplicationContext, user: discord.Member, cutepoints: int):
         """Add CutePoints to a user."""
         if constants.admin_role not in [r.id for r in ctx.user.roles]:
@@ -468,7 +468,7 @@ class ModerationCommands(discord.Cog):
         add_cutepoints(user.id, cutepoints)
         await ctx.respond(f'Added {cutepoints} CutePoints to {user}', ephemeral=True)
         
-    @admin_group.slash_command(guild_ids=[constants.guild_id])
+    @admin_group.command(guild_ids=[constants.guild_id])
     async def remove_cutepoints(self, ctx: discord.ApplicationContext, user: discord.Member, cutepoints: int):
         """Remove CutePoints from a user."""
         if constants.admin_role not in [r.id for r in ctx.user.roles]:
