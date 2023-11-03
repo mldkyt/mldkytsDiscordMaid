@@ -136,6 +136,9 @@ class YearlyMessages(discord.Cog):
 
         messages = get_messages()
         message_count = 0
+        owo_count = 0
+        nya_count = 0
+        catface_count = 0
         for message in messages:
             message_count += message["messages"]
             owo_count += message["owos"]
