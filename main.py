@@ -126,7 +126,6 @@ main_logger.info('Loading module: Verification')
 bot.add_cog(Verification(bot))
 main_logger.info('Loading module: Daily Fun Fact Limit')
 bot.add_cog(DailyFunFactLimit(bot))
-# TODO: Add a module for ban sync 
 
 @bot.event
 async def on_ready():
