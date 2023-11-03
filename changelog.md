@@ -7,7 +7,7 @@
 - Removed banlist, you can ban a member using UserID and mention
 - Added Analytics: From where did you come
 - Add admin commands for abuse:
-    - /add_chatpoints - Add chatpoints to a member
-    - /remove_chatpoints - Remove chatpoints from a member
-    - /add_cutepoints - Add cutepoints to a member
-    - /remove_cutepoints - Remove cutepoints from a member
+  - /add_chatpoints - Add chatpoints to a member
+  - /remove_chatpoints - Remove chatpoints from a member
+  - /add_cutepoints - Add cutepoints to a member
+  - /remove_cutepoints - Remove cutepoints from a member
