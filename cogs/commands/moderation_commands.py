@@ -409,6 +409,9 @@ class ModerationCommands(discord.Cog):
             ]
         )
         
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
+        
         self.logger.info(f'Adding {chatpoints} ChatPoints to {user}')
         add_chatpoints(user.id, chatpoints)
         await ctx.respond(f'Added {chatpoints} ChatPoints to {user}', ephemeral=True)
@@ -431,6 +434,9 @@ class ModerationCommands(discord.Cog):
                 discord.EmbedField('ChatPoints', str(chatpoints), True)
             ]
         )
+        
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
         
         self.logger.info(f'Removing {chatpoints} ChatPoints from {user}')
         remove_chatpoints(user.id, chatpoints)
@@ -455,6 +461,9 @@ class ModerationCommands(discord.Cog):
             ]
         )
         
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
+        
         self.logger.info(f'Adding {cutepoints} CutePoints to {user}')
         add_cutepoints(user.id, cutepoints)
         await ctx.respond(f'Added {cutepoints} CutePoints to {user}', ephemeral=True)
@@ -477,6 +486,9 @@ class ModerationCommands(discord.Cog):
                 discord.EmbedField('CutePoints', str(cutepoints), True)
             ]
         )
+        
+        log_channel = self.bot.get_channel(constants.log_channel)
+        await log_channel.send(embed=log_embed)
         
         self.logger.info(f'Removing {cutepoints} CutePoints from {user}')
         remove_cutepoints(user.id, cutepoints)
