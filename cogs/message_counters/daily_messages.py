@@ -149,11 +149,11 @@ class DailyMessages(discord.Cog):
         await ctx.respond('Saved messages to history', ephemeral=True)
 
     async def clear_messages(self):
-        self.logger.info('Clearing messages and sending top 5 chatters')
-        
         time = datetime.datetime.now()
         if time.hour != 0 or time.minute != 0:
             return
+        
+        self.logger.info('Clearing messages and sending top 5 chatters')
 
         save_messages_to_history()
         messages = get_messages()
