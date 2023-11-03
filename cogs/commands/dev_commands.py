@@ -1,3 +1,4 @@
+import os
 import discord
 
 import cogs.ideas
@@ -44,8 +45,14 @@ Submit ideas by clicking the button below :3''', view=cogs.ideas.MainIdeas())
 
         msg = ''
         for emoji in ctx.guild.emojis:
-            msg += f'{emoji.name}: {emoji.url}\n'
-        await ctx.respond(msg, ephemeral=True)
+            msg += f'{emoji.url}\n'
+            
+        with open('temp.txt', 'w') as f:
+            f.write(msg)
+        
+        await ctx.respond('Here ya go!', file=discord.File('temp.txt'), ephemeral=True)
+        
+        os.remove('temp.txt')
         
     @dev_group.command(guild_ids=[constants.guild_id])
     async def list_sticker_urls(self, ctx: discord.ApplicationContext):
@@ -55,5 +62,11 @@ Submit ideas by clicking the button below :3''', view=cogs.ideas.MainIdeas())
 
         msg = ''
         for sticker in ctx.guild.stickers:
-            msg += f'{sticker.name}: {sticker.url}\n'
-        await ctx.respond(msg, ephemeral=True)
+            msg += f'{sticker.url}\n'
+            
+        with open('temp.txt', 'w') as f:
+            f.write(msg)
+            
+        await ctx.respond(msg, file=discord.File('temp.txt'), ephemeral=True)
+        
+        os.remove('temp.txt')
