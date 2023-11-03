@@ -64,26 +64,6 @@ def remove_nsfw_ban(user: discord.Member):
         json.dump(bans, f)
 
 
-def add_to_banlist(user: int):
-    with open('data/ban_list.json', 'r') as f:
-        data = json.load(f)
-
-    data.append(user)
-
-    with open('data/ban_list.json', 'w') as f:
-        json.dump(data, f)
-
-
-def remove_from_banlist(user: int):
-    with open('data/ban_list.json', 'r') as f:
-        data = json.load(f)
-
-    data.remove(user)
-
-    with open('data/ban_list.json', 'w') as f:
-        json.dump(data, f)
-
-
 class ModerationCommands(discord.Cog):
     def __init__(self, bot: discord.Bot):
         self.logger = logging.getLogger('astolfo.ModerationCommands')
@@ -91,10 +71,6 @@ class ModerationCommands(discord.Cog):
         init()
         super().__init__()
         self.logger.info('Initialization successful')
-
-    banlist_group = discord.SlashCommandGroup(name='banlist',
-                                              description='A ban list for banning members who have never joined before.',
-                                              guild_ids=[constants.guild_id])
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def clear(self, ctx: discord.ApplicationContext, search_past: int,
@@ -348,29 +324,3 @@ class ModerationCommands(discord.Cog):
 
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
-
-    @banlist_group.command()
-    async def add_id(self, ctx: discord.ApplicationContext, id: str):
-        if not id.isnumeric():
-            await ctx.respond('Invalid ID', ephemeral=True)
-            return
-        
-        if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            await ctx.respond('No permission', ephemeral=True)
-            return
-
-        add_to_banlist(id)
-        await ctx.respond('Member added.', ephemeral=True)
-
-    @banlist_group.command()
-    async def remove_id(self, ctx: discord.ApplicationContext, id: str):
-        if not id.isnumeric():
-            await ctx.respond('Invalid ID', ephemeral=True)
-            return
-        
-        if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            await ctx.respond('No permission', ephemeral=True)
-            return
-
-        remove_from_banlist(id)
-        await ctx.respond('Member removed if found.', ephemeral=True)

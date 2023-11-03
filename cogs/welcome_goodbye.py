@@ -8,11 +8,7 @@ import os
 import constants
 
 
-def init():
-    if not os.path.exists('data/ban_list.json'):
-        with open('data/ban_list.json', 'w') as f:
-            f.write('[]')
-    
+def init():    
     if not os.path.exists('data/inouts_in_a_day.json'):
         with open('data/inouts_in_a_day.json', 'w') as f:
             now = datetime.datetime.now()
@@ -83,11 +79,6 @@ def set_inouts_to_today():
         json.dump(data, f)
 
 
-def get_banlist():
-    with open('data/ban_list.json') as f:
-        return json.load(f)
-
-
 class WelcomeGoodbye(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
         self.logger = logging.getLogger('astolfo.WelcomeGoodbye')
@@ -100,26 +91,7 @@ class WelcomeGoodbye(discord.Cog):
     @discord.Cog.listener()
     async def on_member_join(self, member: discord.Member):
         self.logger.info('Member joined: %s', member.display_name)
-        if member.id in get_banlist():
-            self.logger.info('Member is in ban list: %s', member.display_name)
-            await member.ban(
-                reason='[Internal Banlist] Member was found on the internal banlist and was automatically banned')
-
-            log_message = discord.Embed(
-                title='CRITICAL WARNING',
-                description='Member on banlist tried to join this server',
-                fields=[
-                    discord.EmbedField(name='Member', value=member.display_name),
-                    discord.EmbedField(name='Member ID', value=str(member.id))
-                ]
-            )
-
-            log_channel = self.bot.get_channel(constants.log_channel)
-            await log_channel.send(content=f'<@{constants.bot_maintainer}>', embed=log_message)
-
-            self.logger.warning('Banned member: %s', member.display_name)
-            return
-
+        
         channel = self.bot.get_channel(constants.welcome_channel)
         await channel.send(f':green_circle: Welcome {member.display_name} to {member.guild.name}!')
         increment_joins_in_a_day()
@@ -130,15 +102,12 @@ class WelcomeGoodbye(discord.Cog):
         banned = False
 
         self.logger.info('Member left: %s', member.display_name)
-        if member.id in get_banlist():
-            self.logger.info('Member is in ban list: %s, avoiding to send their goodbye message', member.display_name)
-            return
 
-        async for entry in member.guild.audit_logs(limit=1, action=discord.AuditLogAction.kick):
+        async for entry in member.guild.audit_logs(limit=10, action=discord.AuditLogAction.kick):
             if entry.target == member:
                 kicked = True
 
-        async for entry in member.guild.audit_logs(limit=1, action=discord.AuditLogAction.ban):
+        async for entry in member.guild.audit_logs(limit=10, action=discord.AuditLogAction.ban):
             if entry.target == member:
                 banned = True
 
@@ -185,8 +154,4 @@ class WelcomeGoodbye(discord.Cog):
                               color=discord.Colour.green())
         channel = self.bot.get_channel(constants.welcome_channel)
         await channel.send(embed=embed)
-
-    @discord.Cog.listener()
-    async def on_member_ban(self, member: discord.Member):
-        channel = self.bot.get_channel(constants.welcome_channel)
-        await channel.send(f'❌ {member.display_name} was banned from this server.')
+        
