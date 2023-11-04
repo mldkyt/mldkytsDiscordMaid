@@ -7,6 +7,7 @@ import discord
 import sentry_sdk
 from discord import Color, Embed
 from discord.ext.commands import CommandOnCooldown
+from cogs.femboy_of_the_month import FemboyOfTheMonth
 
 import constants
 from cogs.bot_ping import BotPing
@@ -127,6 +128,8 @@ main_logger.info('Loading module: Verification')
 bot.add_cog(Verification(bot))
 main_logger.info('Loading module: Daily Fun Fact Limit')
 bot.add_cog(DailyFunFactLimit(bot))
+main_logger.info('Loading module: Femboy of the month')
+bot.add_cog(FemboyOfTheMonth(bot))
 
 @bot.event
 async def on_ready():
