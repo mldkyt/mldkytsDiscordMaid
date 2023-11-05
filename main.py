@@ -30,7 +30,6 @@ from cogs.ghost_pings import GhostPings
 from cogs.channel_specific.nya_channel_limit import NyaChannelLimit
 from cogs.chat_filters.ban_invite_links import BanInviteLinks
 from views.analytics_from import AnalyticsFrom
-from website.main import run_app
 from cogs.channel_specific.column_3_channel import Column3Chat
 from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
 from cogs.message_reactions import MessageReactions
@@ -63,11 +62,6 @@ intents.members = True
 intents.presences = True
 
 bot = discord.Bot(intents=intents)
-
-main_logger.info('Starting website')
-web_thread = threading.Thread(target=lambda: run_app(bot), name='astolfo.Website')
-web_thread.daemon = True
-web_thread.start()
 
 if not os.path.exists('data'):
     os.mkdir('data')
