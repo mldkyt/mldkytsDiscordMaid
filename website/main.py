@@ -105,6 +105,6 @@ def api_report_delete(id: int):
 def run_app(bot_param: discord.Bot):
     global bot
     bot = bot_param
-    app.run(port=7576)
+    app.run(host='0.0.0.0', port=7576)
 
 
