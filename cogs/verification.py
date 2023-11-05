@@ -3,29 +3,11 @@ import logging
 import discord
 from discord.ui.item import Item
 import constants
+from utils.language import get_string, get_user_lang
 
 
 slash_command_message = '# Welcome to the server!\nPlease verify yourself by clicking the button below.'
-verify_0 = '''# (0/5)Welcome to %s
-You are going to pick roles and then you\'ll get verified.
-Click Next to continue'''
-verify_1 = '''# (1/5)Please pick your **preferred** pronoun role'''
-verify_2 = '''# (2/5)Please pick your femboy stage, or skip this question
-- 0: Access to femboy channels
-- 1: Acting feminine
-- 2: Shaving
-- 3: Thigh highs (Programming socks), skirt, Crop top, ...
-- 4: Makeup
-- 5: TRAP >:3'''
-verify_3 = '''# (3/5)Select ping roles or skip this question'''
-verify_4 = '''# (4/5)Please pick your top/bottom/switch role or skip this question'''
-verify_5 = '''# (5/5) You are done with role setup!
-## Rules of this server
-1. No N-word
-2. No hate speech on any group of people
-3. NSFW only in NSFW channels
-## Click finish to get verified!'''
-
+temp_lang = 'en'
 
 class Verification(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
@@ -83,49 +65,67 @@ class VerifyMain(discord.ui.View):
                 resetting = True
                 await interaction.user.remove_roles(role)
 
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
         if resetting:
-            await interaction.followup.send(verify_0 % interaction.guild.name, view=VerifyStart())
+            await interaction.followup.send(get_string('verify_1', lang) % interaction.guild.name, view=VerifyStart())
         else:
-            await interaction.response.send_message(verify_0 % interaction.guild.name, view=VerifyStart(), ephemeral=True)
+            await interaction.response.send_message(get_string('verify_1', lang) % interaction.guild.name, view=VerifyStart(), ephemeral=True)
 
 
 class VerifyStart(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=120)
 
-    @discord.ui.button(label='Next', style=discord.ButtonStyle.green)
+    @discord.ui.button(label=get_string('verify_1_next', temp_lang), style=discord.ButtonStyle.green)
     async def verify_next(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_1, view=VerifyPronouns())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_2', lang), view=VerifyPronouns())
 
 
 class VerifyPronouns(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=120)
 
-    @discord.ui.button(label='He/Him', style=discord.ButtonStyle.green)
+    @discord.ui.button(label=get_string('verify_2_he/him', temp_lang), style=discord.ButtonStyle.green)
     async def verify_he_him(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_2, view=VerifyFemboy())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_3', lang), view=VerifyFemboy())
 
         he_him_role = interaction.guild.get_role(constants.he_him_role)
         await interaction.user.add_roles(he_him_role)
 
-    @discord.ui.button(label='She/Her', style=discord.ButtonStyle.green)
+    @discord.ui.button(label=get_string('verify_2_she/her', temp_lang), style=discord.ButtonStyle.green)
     async def verify_she_her(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_2, view=VerifyFemboy())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_3', lang), view=VerifyFemboy())
 
         she_her_role = interaction.guild.get_role(constants.she_her_role)
         await interaction.user.add_roles(she_her_role)
 
-    @discord.ui.button(label='They/Them', style=discord.ButtonStyle.green)
+    @discord.ui.button(label=get_string('verify_2_they/them', temp_lang), style=discord.ButtonStyle.green)
     async def verify_they_them(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_2, view=VerifyFemboy())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_3', lang), view=VerifyFemboy())
 
         they_them_role = interaction.guild.get_role(constants.they_them_role)
         await interaction.user.add_roles(they_them_role)
 
-    @discord.ui.button(label='Any pronouns', style=discord.ButtonStyle.green)
+    @discord.ui.button(label=get_string('verify_2_any', temp_lang), style=discord.ButtonStyle.green)
     async def verify_any_pronouns(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_2, view=VerifyFemboy())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_3', lang), view=VerifyFemboy())
 
         any_pronouns_role = interaction.guild.get_role(
             constants.any_pronouns_role)
@@ -138,14 +138,20 @@ class VerifyFemboy(discord.ui.View):
 
     @discord.ui.button(label='0')
     async def verify_stage_0(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
 
         stage_0 = interaction.guild.get_role(constants.femboy_stage_0_role)
         await interaction.user.add_roles(stage_0)
 
     @discord.ui.button(label='1')
     async def verify_stage_1(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
 
         stage_0 = interaction.guild.get_role(constants.femboy_stage_0_role)
         await interaction.user.add_roles(stage_0)
@@ -154,7 +160,10 @@ class VerifyFemboy(discord.ui.View):
 
     @discord.ui.button(label='2')
     async def verify_stage_2(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
 
         stage_0 = interaction.guild.get_role(constants.femboy_stage_0_role)
         await interaction.user.add_roles(stage_0)
@@ -165,7 +174,10 @@ class VerifyFemboy(discord.ui.View):
 
     @discord.ui.button(label='3')
     async def verify_stage_3(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
 
         stage_0 = interaction.guild.get_role(constants.femboy_stage_0_role)
         await interaction.user.add_roles(stage_0)
@@ -178,7 +190,10 @@ class VerifyFemboy(discord.ui.View):
 
     @discord.ui.button(label='4')
     async def verify_stage_4(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
 
         stage_0 = interaction.guild.get_role(constants.femboy_stage_0_role)
         await interaction.user.add_roles(stage_0)
@@ -193,7 +208,10 @@ class VerifyFemboy(discord.ui.View):
 
     @discord.ui.button(label='5')
     async def verify_stage_5(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
 
         stage_0 = interaction.guild.get_role(constants.femboy_stage_0_role)
         await interaction.user.add_roles(stage_0)
@@ -208,9 +226,12 @@ class VerifyFemboy(discord.ui.View):
         stage_5 = interaction.guild.get_role(constants.femboy_stage_5_role)
         await interaction.user.add_roles(stage_5)
 
-    @discord.ui.button(label='I am not a femboy', style=discord.ButtonStyle.danger)
+    @discord.ui.button(label=get_string('verify_3_not_a_femboy', temp_lang), style=discord.ButtonStyle.danger)
     async def verify_skip_femboy(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(verify_3, view=VerifyPings())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
 
 
 class VerifyPings(discord.ui.View):
@@ -219,37 +240,49 @@ class VerifyPings(discord.ui.View):
     
     @discord.ui.button(label='New Video Pings')
     async def verify_new_video_pings(self, button: discord.ui.Button, interaction: discord.Interaction):
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
         new_video_pings_role = interaction.guild.get_role(constants.new_videos_role)
         if new_video_pings_role in interaction.user.roles:
             await interaction.user.remove_roles(new_video_pings_role)
-            await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+            await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
         else:
             await interaction.user.add_roles(new_video_pings_role)
-            await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+            await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
             
     @discord.ui.button(label='New Stream Pings')
     async def verify_new_stream_pings(self, button: discord.ui.Button, interaction: discord.Interaction):
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
         new_stream_pings_role = interaction.guild.get_role(constants.live_pings_role)
         if new_stream_pings_role in interaction.user.roles:
             await interaction.user.remove_roles(new_stream_pings_role)
-            await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+            await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
         else:
             await interaction.user.add_roles(new_stream_pings_role)
-            await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+            await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
             
     @discord.ui.button(label='New TikTok Pings')
     async def verify_new_tiktok_pings(self, button: discord.ui.Button, interaction: discord.Interaction):
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
         tiktok_pings_role = interaction.guild.get_role(constants.tiktok_pings_role)
         if tiktok_pings_role in interaction.user.roles:
             await interaction.user.remove_roles(tiktok_pings_role)
-            await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+            await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
         else:
             await interaction.user.add_roles(tiktok_pings_role)
-            await interaction.response.edit_message(content=verify_3, view=VerifyPings())
+            await interaction.response.edit_message(content=get_string('verify_4', lang), view=VerifyPings())
             
     @discord.ui.button(label='Next')
     async def verify_next(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_4, view=VerifyTopBottom())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_5', lang), view=VerifyTopBottom())
 
 
 class VerifyTopBottom(discord.ui.View):
@@ -258,35 +291,47 @@ class VerifyTopBottom(discord.ui.View):
 
     @discord.ui.button(label='Top')
     async def verify_top(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_5, view=VerifyFinish())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_6', lang), view=VerifyFinish())
 
         top_role = interaction.guild.get_role(constants.top_role)
         await interaction.user.add_roles(top_role)
 
     @discord.ui.button(label='Bottom')
     async def verify_bottom(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_5, view=VerifyFinish())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_6', lang), view=VerifyFinish())
 
         bottom_role = interaction.guild.get_role(constants.bottom_role)
         await interaction.user.add_roles(bottom_role)
 
     @discord.ui.button(label='Switch')
     async def verify_switch(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_5, view=VerifyFinish())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_6', lang), view=VerifyFinish())
 
         switch_role = interaction.guild.get_role(constants.switch_role)
         await interaction.user.add_roles(switch_role)
 
-    @discord.ui.button(label='I don\'t want to/Skip', style=discord.ButtonStyle.danger)
+    @discord.ui.button(label=get_string('verify_5_skip', temp_lang), style=discord.ButtonStyle.danger)
     async def verify_skip_top_bottom(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.edit_message(content=verify_5, view=VerifyFinish())
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.edit_message(content=get_string('verify_6', lang), view=VerifyFinish())
 
 
 class VerifyFinish(discord.ui.View):
     def __init__(self):
         super().__init__()
 
-    @discord.ui.button(label='Finish', style=discord.ButtonStyle.green)
+    @discord.ui.button(label=get_string('verify_6_finish', temp_lang), style=discord.ButtonStyle.green)
     async def verify_finish(self, button: discord.ui.Button, interaction: discord.Interaction):
         self.disable_all_items()
         await interaction.response.edit_message(view=self)

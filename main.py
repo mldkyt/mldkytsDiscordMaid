@@ -39,6 +39,7 @@ from cogs.channel_specific.mc_channel import MCChannel
 from cogs.testing import Testing
 from cogs.verification import Verification, VerifyMain
 from cogs.channel_specific.daily_fun_fact_limit import DailyFunFactLimit
+from cogs.commands.language_commands import LanguageCommands
 from views.roles import MainView
 
 sentry_sdk.init(
@@ -130,6 +131,8 @@ main_logger.info('Loading module: Daily Fun Fact Limit')
 bot.add_cog(DailyFunFactLimit(bot))
 main_logger.info('Loading module: Femboy of the month')
 bot.add_cog(FemboyOfTheMonth(bot))
+main_logger.info('Loading module: Language Commands')
+bot.add_cog(LanguageCommands(bot))
 
 @bot.event
 async def on_ready():

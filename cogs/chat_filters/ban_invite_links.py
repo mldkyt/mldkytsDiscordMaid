@@ -2,6 +2,7 @@ import discord
 import logging
 import re
 import constants
+from utils.language import get_string, get_user_lang
 
 class BanInviteLinks(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
@@ -22,5 +23,6 @@ class BanInviteLinks(discord.Cog):
         if match_1 is not None:
             self.logger.info('Invite link detected')
             await msg.delete()
-            await msg.channel.send(f'{msg.author.mention} Please do not send invite links to other servers here!', delete_after=5)
+            lang = get_user_lang(msg.author.id)
+            await msg.channel.send(get_string('invite_links_banned', lang) % (msg.author.mention), delete_after=5)
             return

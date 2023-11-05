@@ -4,6 +4,7 @@ import re
 
 import discord
 from discord.ext import tasks
+from utils.language import get_string, get_user_lang
 
 import constants
 
@@ -28,7 +29,8 @@ class Column3Chat(discord.Cog):
         regex_1 = re.search(r'^:3{1,30}$', msg.clean_content)
         if regex_1 is None:
             await msg.delete()
-            await msg.channel.send(f'{msg.author.mention} This channel is only for :3, nothing else.',
+            lang = get_user_lang(msg.author.id)
+            await msg.channel.send(get_string(':3_channel_limitation', lang) % (msg.author.mention),
                                    delete_after=5)
 
     @discord.Cog.listener()
@@ -41,5 +43,6 @@ class Column3Chat(discord.Cog):
         regex_1 = re.search(r'^:3{1,30}$', new.clean_content)
         if regex_1 is None:
             await new.delete()
-            await new.channel.send(f'{new.author.mention} This channel is only for :3, nothing else.',
+            lang = get_user_lang(new.author.id)
+            await new.channel.send(get_string(':3_channel_limitation', lang) % (new.author.mention),
                                    delete_after=5)

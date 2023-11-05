@@ -4,6 +4,7 @@ import logging
 import os
 import discord
 import constants
+from utils.language import get_string, get_user_lang
 
 
 def init():
@@ -49,4 +50,5 @@ class DailyFunFactLimit(discord.Cog):
             return
         
         await msg.delete()
-        await msg.channel.send('You can only send one fun fact per day!', delete_after=5)
+        lang = get_user_lang(msg.author.id)
+        await msg.channel.send(get_string('You can only send one fun fact per day!', lang), delete_after=5)

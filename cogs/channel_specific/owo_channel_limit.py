@@ -5,6 +5,8 @@ import discord
 
 import constants
 
+from utils.language import get_string, get_user_lang
+
 
 class OwoChannelLimit(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
@@ -24,7 +26,8 @@ class OwoChannelLimit(discord.Cog):
             return
         if msg.content.lower() != 'owo' and msg.content.lower() != 'uwu':
             await msg.delete()
-            await msg.channel.send(f'{msg.author.mention} This channel is only for OwO and UwU, nothing else~ :3', delete_after=5)
+            lang = get_user_lang(msg.author.id)
+            await msg.channel.send(get_string('owo_channel_limit', lang) % (msg.author.mention), delete_after=5)
             
     @discord.Cog.listener()
     async def on_message_edit(self, old: discord.Message, new: discord.Message):
@@ -34,4 +37,5 @@ class OwoChannelLimit(discord.Cog):
             return
         if new.content.lower() != 'owo' and new.content.lower() != 'uwu':
             await new.delete()
-            await new.channel.send(f'{new.author.mention} This channel is only for OwO and UwU, nothing else~ :3', delete_after=5)
+            lang = get_user_lang(new.author.id)
+            await new.channel.send(get_string('owo_channel_limit', lang) % (new.author.mention), delete_after=5)

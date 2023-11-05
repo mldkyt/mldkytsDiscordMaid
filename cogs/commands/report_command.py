@@ -7,6 +7,8 @@ from discord.ui.input_text import InputText
 import constants
 import os
 
+from utils.language import get_string, get_user_lang
+
 def init():
     if not os.path.exists('data/reports.json'):
         with open('data/reports.json', 'w') as f:
@@ -40,14 +42,15 @@ class ReportCommand(discord.Cog):
     @discord.slash_command(guild_ids=[constants.guild_id])
     @discord.option(name='type', choices=['dm spam', 'bad language', 'bad images', 'bad word(s) in bio', 'rule violation', 'filter bypass', 'weird behaviour', 'way too silly :3'])
     async def report(self, ctx: discord.ApplicationContext, member: discord.Member, type: str):
+        lang = get_user_lang(ctx.author.id)
         if member.bot:
-            await ctx.respond('You can\'t report bots', ephemeral=True)
+            await ctx.respond(get_string('report_error_bot', lang), ephemeral=True)
             return
         if constants.moderator_role in [r.id for r in member.roles]:
-            await ctx.respond('You can\'t report mods', ephemeral=True)
+            await ctx.respond(get_string('report_error_mod', lang), ephemeral=True)
             return
         if member.id == ctx.author.id:
-            await ctx.respond('You can\'t report yourself', ephemeral=True)
+            await ctx.respond(get_string('report_error_self', lang), ephemeral=True)
             return
         
         modal = ReportModal(member, type)
@@ -59,7 +62,8 @@ class ReportModal(discord.ui.Modal):
         self.member = member
         self.type = type
         
-        super().__init__(title='Report %s' % self.member.display_name, timeout=1200)
+        lang = get_user_lang(member.id)
+        super().__init__(title=get_string('report_modal_title', lang) % self.member.display_name, timeout=1200)
         
         self.add_item(
             discord.ui.InputText(label='Message', style=discord.InputTextStyle.long)
@@ -69,4 +73,5 @@ class ReportModal(discord.ui.Modal):
         message = self.children[0].value
         add_report(self.member, self.type, message)
         self.stop()
-        await interaction.response.send_message(f'Successfully reported {self.member.display_name}.', ephemeral=True)
+        lang = get_user_lang(self.member.id)
+        await interaction.response.send_message(get_string('report_success', lang) % (self.member.display_name), ephemeral=True)

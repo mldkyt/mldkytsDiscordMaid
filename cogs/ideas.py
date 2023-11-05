@@ -5,6 +5,7 @@ from discord.ui.input_text import InputText
 from discord.ui.item import Item
 import os
 import constants
+from utils.language import get_string, get_user_lang
 
 def init():
     if os.path.exists('data/ideas.json'):
@@ -29,7 +30,7 @@ def get_ideas():
         data: list = json.load(f)
         
     return data
-        
+    
         
 class Ideas(discord.Cog):
     def __init__(self, bot: discord.Bot) -> None:
@@ -38,33 +39,8 @@ class Ideas(discord.Cog):
         init()
         super().__init__()
         self.logger.info('Initialization successful')
-        
-    @discord.slash_command(guild_ids=[768885442799861821])
-    async def ideas(self, ctx: discord.ApplicationContext) -> None:
-        if ctx.user.id != constants.bot_maintainer:
-            self.logger.warning(f'{ctx.user.id} tried to use the ideas command, but does not have permission to do so!')
-            await ctx.respond('You do not have permission to use this command!', ephemeral=True)
-            return
-        
-        data = get_ideas()
-        if len(data) == 0:
-            self.logger.info('There are no ideas submitted yet!')
-            await ctx.respond('There are no ideas submitted yet!', ephemeral=True)
-            return
-        
-        msg = '# Ideas\n\n'
-        for i in data:
-            self.logger.info(f'Adding idea from {i["user_id"]} to message')
-            msg += f'## {i["type"]}\n\n'
-            msg += f'**User:** {i["user_id"]}\n\n'
-            msg += f'**Idea:** {i["idea"]}\n\n'
-            
-        with open('temp.md', 'w') as f:
-            f.write(msg)
-            
-        await ctx.respond('Here ya go :3', file=discord.File('temp.md', filename='ideas.md'), ephemeral=True)
-        os.remove('temp.md')
     
+temp_lang = 'en'
 
 class MainIdeas(discord.ui.View):
     def __init__(self):
@@ -76,65 +52,29 @@ class MainIdeas(discord.ui.View):
     @discord.ui.button(label='Submit an idea!', custom_id='submit_idea', style=discord.ButtonStyle.primary)
     async def submit_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('Submit an idea button pressed')
-        await interaction.response.send_message('Select a category below and then fill out the form:', view=IdeasCategory(), ephemeral=True)
+        lang = get_user_lang(interaction.user.id)
+        global temp_lang
+        temp_lang = lang
+        await interaction.response.send_message(get_string('ideas_select_category', lang), view=IdeasCategory(), ephemeral=True)
         
 
-class BotIdeaModal(discord.ui.Modal):
-    def __init__(self) -> None:
-        super().__init__(timeout=300, title='Submit a bot idea')
+class IdeaSubmissionModal(discord.ui.Modal):
+    def __init__(self, user: discord.Member, modal_type: str) -> None:
+        lang = get_user_lang(user.id)
+        super().__init__(timeout=300, title=get_string('ideas_category_%s_title' % (modal_type), lang))
         self.logger = logging.getLogger('astolfo.Ideas.BotIdeaModal')
+        self.add_item(InputText(
+            label=get_string('ideas_idea_label', lang),
+            placeholder=get_string('ideas_idea_placeholder', lang), 
+            style=discord.InputTextStyle.paragraph
+            ))
         self.logger.info('BotIdeaModal was initialized')
-        self.add_item(InputText(label='Idea', placeholder='Enter your idea here', style=discord.InputTextStyle.paragraph))
+        self.modal_type = modal_type
         
     async def callback(self, interaction: discord.Interaction) -> None:
         self.logger.info('Callback was called')
         idea = self.children[0].value
-        add_idea('bot', interaction.user.id, idea)
-        await interaction.response.send_message('Idea was successfully submitted!', ephemeral=True)
-        
-    
-class ServerIdeaModal(discord.ui.Modal):
-    def __init__(self) -> None:
-        self.logger = logging.getLogger('astolfo.Ideas.ServerIdeaModal')
-        super().__init__(timeout=300, title='Submit a Discord server idea')
-        
-        self.add_item(InputText(label='Idea', placeholder='Enter your idea here', style=discord.InputTextStyle.paragraph))
-        self.logger.info('ServerIdeaModal was initialized')
-        
-    async def callback(self, interaction: discord.Interaction) -> None:
-        self.logger.info('Callback was called')
-        idea = self.children[0].value
-        add_idea('server', interaction.user.id, idea)
-        await interaction.response.send_message('Idea was successfully submitted!', ephemeral=True)
-        
-        
-class YouTubeIdeasModal(discord.ui.Modal):
-    def __init__(self) -> None:
-        self.logger = logging.getLogger('astolfo.Ideas.YouTubeIdeasModal')
-        super().__init__(timeout=300, title='Submit a YouTube idea')
-        
-        self.add_item(InputText(label='Idea', placeholder='Enter your idea here', style=discord.InputTextStyle.paragraph))
-        self.logger.info('YouTubeIdeasModal was initialized')
-        
-    async def callback(self, interaction: discord.Interaction) -> None:
-        self.logger.info('Callback was called')
-        idea = self.children[0].value
-        add_idea('youtube', interaction.user.id, idea)
-        await interaction.response.send_message('Idea was successfully submitted!', ephemeral=True)
-        
-
-class TikTokIdeasModal(discord.ui.Modal):
-    def __init__(self) -> None:
-        self.logger = logging.getLogger('astolfo.Ideas.TikTokIdeasModal')
-        super().__init__(timeout=300, title='Submit a TikTok idea')
-        
-        self.add_item(InputText(label='Idea', placeholder='Enter your idea here', style=discord.InputTextStyle.paragraph))
-        self.logger.info('TikTokIdeasModal was initialized')
-        
-    async def callback(self, interaction: discord.Interaction) -> None:
-        self.logger.info('Callback was called')
-        idea = self.children[0].value
-        add_idea('tiktok', interaction.user.id, idea)
+        add_idea(self.modal_type, interaction.user.id, idea)
         await interaction.response.send_message('Idea was successfully submitted!', ephemeral=True)
 
 
@@ -144,22 +84,22 @@ class IdeasCategory(discord.ui.View):
         super().__init__(timeout=120)
         self.logger.info('IdeasCategory was initialized')
     
-    @discord.ui.button(label='Bot idea', style=discord.ButtonStyle.primary)
+    @discord.ui.button(label=get_string('ideas_category_bot', temp_lang), style=discord.ButtonStyle.primary)
     async def bot_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('Bot idea button pressed')
-        await interaction.response.send_modal(BotIdeaModal())
+        await interaction.response.send_modal(IdeaSubmissionModal(interaction.user, 'bot'))
     
-    @discord.ui.button(label='Server idea', style=discord.ButtonStyle.primary)
+    @discord.ui.button(label=get_string('ideas_category_server', temp_lang), style=discord.ButtonStyle.primary)
     async def server_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('Server idea button pressed')
-        await interaction.response.send_modal(ServerIdeaModal())
+        await interaction.response.send_modal(IdeaSubmissionModal(interaction.user, 'server'))
         
-    @discord.ui.button(label='YouTube idea', style=discord.ButtonStyle.primary)
+    @discord.ui.button(label=get_string('ideas_category_youtube', temp_lang), style=discord.ButtonStyle.primary)
     async def youtube_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('YouTube idea button pressed')
-        await interaction.response.send_modal(YouTubeIdeasModal())
+        await interaction.response.send_modal(IdeaSubmissionModal(interaction.user, 'youtube'))
         
-    @discord.ui.button(label='TikTok idea', style=discord.ButtonStyle.primary)
+    @discord.ui.button(label=get_string('ideas_category_tiktok', temp_lang), style=discord.ButtonStyle.primary)
     async def tiktok_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
         self.logger.info('TikTok idea button pressed')
-        await interaction.response.send_modal(TikTokIdeasModal())
+        await interaction.response.send_modal(IdeaSubmissionModal(interaction.user, 'tiktok'))

@@ -4,6 +4,7 @@ import json
 import os
 import discord
 import constants
+from utils.language import get_string, get_user_lang
 
 def init():
     if not os.path.exists('data/femboy_of_the_month.json'):
@@ -81,15 +82,16 @@ class FemboyOfTheMonth(discord.Cog):
     
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def vote_femboy_of_the_month(self, ctx: discord.ApplicationContext, femboy: discord.Member):
+        lang = get_user_lang(ctx.user.id)
         if constants.femboy_stage_0_role not in [i.id for i in femboy.roles]:
-            await ctx.respond('The user you tried to vote for is not a femboy', ephemeral=True)
+            await ctx.respond(get_string('femboy_of_the_month_not_a_femboy', lang) % (femboy.display_name), ephemeral=True)
         
         if has_user_voted(ctx.user.id):
-            await ctx.respond('You have already voted for a femboy this month', ephemeral=True)
+            await ctx.respond(get_string('femboy_of_the_month_already_voted', lang), ephemeral=True)
             return
         
         vote_femboy_of_the_month(ctx.user.id, femboy.id)
-        await ctx.respond('Successfully voted for the femboy', ephemeral=True)
+        await ctx.respond(get_string('femboy_of_the_month_vote_success', lang) % (femboy.display_name), ephemeral=True)
         
     async def submit_results(self):
         femboys = get_femboys()
