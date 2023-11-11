@@ -34,7 +34,7 @@ class UnixSocks(discord.Cog):
         
         self.logger.info('[command] Getting unixsocks and sending to message')
         response = requests.get('https://reddit.com/r/unixsocks/random.json', headers={
-            'User-Agent': f'ProgrammerAstolfoBot/{get_version()}'
+            'User-Agent': f'mldkbot/{get_version()}'
         }).json()
         self.logger.info('[command] Got unixsocks')
         first_post = response[0]['data']['children'][0]['data']
@@ -42,7 +42,7 @@ class UnixSocks(discord.Cog):
         self.logger.info('[command] First post URL: %s', first_post['url'])
         # download the image and send it as attachment
         image = requests.get(first_post['url'], headers={
-            'User-Agent': f'ProgrammerAstolfoBot/{get_version()}',
+            'User-Agent': f'mldkbot/{get_version()}',
             'Accept': 'image/png'
         }).content
         self.logger.info('[command] Downloaded image')
@@ -62,7 +62,7 @@ class UnixSocks(discord.Cog):
     async def auto_unixsocks(self):
         self.logger.info('[auto] Getting unixsocks and sending to message')
         response = requests.get('https://reddit.com/r/unixsocks/random.json', headers={
-            'User-Agent': f'ProgrammerAstolfoBot/{get_version()}'
+            'User-Agent': f'mldkbot/{get_version()}'
         }).json()
         self.logger.info('[auto] Got unixsocks')
         first_post = response[0]['data']['children'][0]['data']
@@ -70,7 +70,7 @@ class UnixSocks(discord.Cog):
         self.logger.info('[auto] First post URL: %s', first_post['url'])
         # download the image and send it as attachment
         image = requests.get(first_post['url'], headers={
-            'User-Agent': f'ProgrammerAstolfoBot/{get_version()}',
+            'User-Agent': f'mldkbot/{get_version()}',
             'Accept': 'image/png'
         }).content
         self.logger.info('[auto] Downloaded image')

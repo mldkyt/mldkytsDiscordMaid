@@ -30,7 +30,6 @@ from cogs.ghost_pings import GhostPings
 from cogs.channel_specific.nya_channel_limit import NyaChannelLimit
 from cogs.chat_filters.ban_invite_links import BanInviteLinks
 from views.analytics_from import AnalyticsFrom
-from website.main import run_app
 from cogs.channel_specific.column_3_channel import Column3Chat
 from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
 from cogs.message_reactions import MessageReactions
@@ -41,6 +40,7 @@ from cogs.verification import Verification, VerifyMain
 from cogs.channel_specific.daily_fun_fact_limit import DailyFunFactLimit
 from cogs.commands.language_commands import LanguageCommands
 from views.roles import MainView
+from cogs.commands.brimo_command import BrimoCommand
 
 sentry_sdk.init(
     dsn=constants.sentry_url,
@@ -63,11 +63,6 @@ intents.members = True
 intents.presences = True
 
 bot = discord.Bot(intents=intents)
-
-main_logger.info('Starting website')
-web_thread = threading.Thread(target=lambda: run_app(bot), name='astolfo.Website')
-web_thread.daemon = True
-web_thread.start()
 
 if not os.path.exists('data'):
     os.mkdir('data')
@@ -133,6 +128,8 @@ main_logger.info('Loading module: Femboy of the month')
 bot.add_cog(FemboyOfTheMonth(bot))
 main_logger.info('Loading module: Language Commands')
 bot.add_cog(LanguageCommands(bot))
+main_logger.info('Loading module: Brimo command')
+bot.add_cog(BrimoCommand(bot))
 
 @bot.event
 async def on_ready():
@@ -142,6 +139,16 @@ async def on_ready():
     bot.add_view(VerifyMain())
     bot.add_view(AnalyticsFrom())
 
+# Handle slash command errors, if it's a cooldown error, send a message to the user
+@bot.event
+async def on_slash_command_error(ctx: discord.ApplicationContext, error):
+    if isinstance(error, CommandOnCooldown):
+        embed = Embed(title='You are on cooldown cutie :3',
+                      description=f'Try again in about {int(round(error.retry_after, 0))} seconds :3',
+                      color=Color.red())
+        await ctx.respond(embed=embed, ephemeral=True)
+    else:
+        raise error
 
 @bot.slash_command(guild_ids=[constants.guild_id])
 async def version(ctx: discord.ApplicationContext):

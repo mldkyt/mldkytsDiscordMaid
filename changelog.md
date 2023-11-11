@@ -1,13 +1,4 @@
-# Version 2.3
-- Add misc option to roles
-- Fix the misc roles option
-- Fix the misc roles option finalyl!!!!
-- Get removing role to work
-- Daily and yearly messages now count "owo", ":3" and "nya"
-- Removed banlist, you can ban a member using UserID and mention
-- Added Analytics: From where did you come
-- Add admin commands for abuse:
-  - /add_chatpoints - Add chatpoints to a member
-  - /remove_chatpoints - Remove chatpoints from a member
-  - /add_cutepoints - Add cutepoints to a member
-  - /remove_cutepoints - Remove cutepoints from a member
+# Version 2.5
+- Added /brimo command
+- Better language support (If a translation doesn't exist, it will use English)
+- Replaced references to "mldkyt" with "Programmer Astolfo"
