@@ -126,7 +126,7 @@ class ChatPoints(discord.Cog):
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def chatpoint_leaderboard(self, ctx: discord.ApplicationContext):
         """ChatPoints Leaderboard"""
-        await ctx.respond('ChatPoints have moved here! https://mldkyt.com/discord/chatpoints')
+        await ctx.respond('ChatPoints have moved here! https://programmerastolfo.github.io/discord/chatpoints')
         
         
     @tasks.loop(hours=24)

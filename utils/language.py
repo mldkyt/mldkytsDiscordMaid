@@ -30,6 +30,12 @@ def get_string(key: str, lang: str = 'en') -> str:
 
     if key in file:
         return file[key]
+    else:
+        # try to get the string from the english file
+        with open('languages/language_en.json') as f:
+            file = json.load(f)
+        if key in file:
+            return file[key] + ' (missing {} translation)'.format(lang)
     
     return 'str.%s.%s' % (lang, key)
 

@@ -1,3 +1,7 @@
+# Version 2.4
+- Added languages
+- Added Czech as language
+
 # Version 2.3
 - Add misc option to roles
 - Fix the misc roles option
@@ -51,7 +55,7 @@
 
 
 # Version 1.5.3
-- Bot uses current server name instead of "mldkyt's server"
+- Bot uses current server name instead of "Programmer Astolfo's server"
 - All moderation commands now send response as public by default
 
 # Version 1.5.2

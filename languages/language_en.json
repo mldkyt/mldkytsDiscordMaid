@@ -13,8 +13,8 @@
     "report_error_bot": "You can't report bots",
     "report_error_mod": "You can't report moderators",
     "report_error_self": "You can't report yourself",
-    "time": "UTC Time (Server): %s (%s)\nmldkyt's Time: %s (%s)",
-    "bot_mention": "# Hello there, %s!\n    I am a bot created by [mldkyt](https://mldkyt.com/discord) to help with his server.\n    Use the buttons below to navigate through the pages.",
+    "time": "UTC Time (Server): %s (%s)\nProgrammer Astolfo's Time: %s (%s)",
+    "bot_mention": "# Hello there, %s!\n    I am a bot created by [Programmer Astolfo](https://programmerastolfo.github.io/discord) to help with his server.\n    Use the buttons below to navigate through the pages.",
     "bot_mention_chatpoints": "# ChatPoints\n    ChatPoints are points given to everyone for chatting in the server.\n    You get 1 ChatPoint for every letter you send in a message.\n    You can check your balance with `/chatpoints` in %s.",
     "bot_mention_cutepoints": "# CutePoints\n    CutePoints are points given to everyone who acts cute :3\n    You get 1 CatPoint for every cute thing you send in a message.\n    You can check your balance with `/cutepoints` in %s.",
     "femboy_of_the_month_vote_success": "Successfully voted for %s",
@@ -48,5 +48,6 @@
     "verify_5": "# (4/5)Please pick your top/bottom/switch role or skip this question",
     "verify_5_skip": "I don't want to / Skip",
     "verify_6": "# (5/5) You are done with role setup!\n    ## Rules of this server\n    1. No N-word\n    2. No hate speech on any group of people\n    3. NSFW only in NSFW channels\n\n    ## Click finish to get verified!",
-    "verify_6_finish": "Finish"
+    "verify_6_finish": "Finish",
+    "brimo_command_character_limit": "Limit of 1024 characters exceeded"
 }
