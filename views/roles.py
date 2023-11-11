@@ -53,7 +53,7 @@ class MainView(ui.View):
 - Stage 5: TRAP >:3''', view=FemboyRoleSelectView(),
                 ephemeral=True)
         elif select.values[0] == 'nsfw':
-            await interaction.response.send_message(content='Click below to get NSFW role: ', view=NsfwRoleSelectView(),
+            await interaction.response.send_message(content='The NSFW role has been deprecated on 9/11/2023',
                                                     ephemeral=True)
         elif select.values[0] == 'topbottom':
             await interaction.response.send_message(content='Select top, switch and bottom roles: ',
@@ -219,46 +219,6 @@ class FemboyRoleSelectView(discord.ui.View):
         await interaction.user.remove_roles(stage_0, stage_1, stage_2, stage_3, stage_4, stage_5,
                                             reason='Deselected all stages')
         await interaction.followup.send(content='Removed all stages')
-
-
-class NsfwRoleSelectView(discord.ui.View):
-    def __init__(self):
-        super().__init__()
-
-    @discord.ui.button(label='NSFW role', style=discord.ButtonStyle.danger)
-    async def toggle_nsfw_role(self, button: discord.ui.Button, interaction: discord.Interaction):
-        guild = interaction.guild
-        nsfw_role = guild.get_role(1152684011748077619)
-
-        if nsfw_role not in interaction.user.roles:
-            if has_nsfw_ban(interaction.user):
-                await interaction.response.send_message('You are banned from the NSFW role', ephemeral=True)
-                return
-            await interaction.response.send_message('''# Hold on
-With taking this role, you agree that you're 18+ and I'm not responsible if you get caught by your parents or something.
-*Discard the message using the blue Discard button below the message.*''', view=NsfwRoleConfirmView(), ephemeral=True)
-        else:
-            await interaction.user.remove_roles(nsfw_role, reason='NSFW role deselected')
-            await interaction.response.send_message('Removed NSFW role', ephemeral=True)
-
-
-class NsfwRoleConfirmView(discord.ui.View):
-    def __init__(self):
-        super().__init__()
-
-    @discord.ui.button(label='Confirm', style=discord.ButtonStyle.danger)
-    async def confirm_nsfw_role(self, button: discord.ui.Button, interaction: discord.Interaction):
-        guild = interaction.guild
-        nsfw_role = guild.get_role(1152684011748077619)
-
-        if nsfw_role not in interaction.user.roles:
-            if has_nsfw_ban(interaction.user):
-                await interaction.response.send_message('You are banned from the NSFW role', ephemeral=True)
-                return
-            await interaction.user.add_roles(nsfw_role, reason='NSFW role selected')
-            await interaction.response.send_message('Added NSFW role', ephemeral=True)
-        else:
-            await interaction.response.send_message('You already have the NSFW role', ephemeral=True)
 
 
 # a member can have at most 1 role
