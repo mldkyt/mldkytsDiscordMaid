@@ -14,7 +14,7 @@ class BrimoCommand(discord.Cog):
         self.logger.info('Initialization successful')
 
     @discord.slash_command(guild_ids=[constants.guild_id])
-    @cooldown(1, 10, BucketType.guild)
+    @cooldown(1, 2, BucketType.guild)
     async def brimo(self, ctx: discord.ApplicationContext, amt: int):
         if amt > 1024:
             lang = get_user_lang(ctx.author.id)
