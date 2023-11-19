@@ -14,10 +14,10 @@ class Column3Chat(discord.Cog):
         self.logger = logging.getLogger('astolfo.3ChannelLimit')
         self.bot = bot
         if constants.column_3_channel == 0:
-            self.logger.warning('Skipping column 3 channel because it is not specified')
+
             return
         super().__init__()
-        self.logger.info(':3 channel limit initialization successful')
+
 
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):

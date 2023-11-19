@@ -18,7 +18,7 @@ class EventLogger(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
-        self.logger.info('Initialization successful')
+
 
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):
@@ -30,13 +30,13 @@ class EventLogger(discord.Cog):
             for attachment in msg.attachments:
                 filename = attachment.filename
                 await attachment.save(f'attachments/{msg.id}/{filename}')
-                self.logger.info(f'Attachment from {msg.author} sent in {msg.channel.mention} was successfully saved')
+
 
     @discord.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
         if message.author.bot:
             return
-        self.logger.info(f'Message from {message.author} deleted in {message.channel.mention}')
+
 
         files = []
         attachment_count = 0
@@ -57,7 +57,7 @@ class EventLogger(discord.Cog):
     async def on_message_edit(self, before: discord.Message, after: discord.Message):
         if after.author.bot:
             return
-        self.logger.info(f'Message from {before.author} edited in {before.channel.mention}')
+
         embed = discord.Embed(title='Message Edited',
                               description=f'{before.author} edited a message in {before.channel.mention}\nPrevious content:\n\n{before.content}\n\nAfter content:\n\n{after.content}',
                               color=discord.Color.yellow())
@@ -66,7 +66,7 @@ class EventLogger(discord.Cog):
 
     @discord.Cog.listener()
     async def on_member_remove(self, member: discord.Member):
-        self.logger.info(f'{member} left the server')
+
         channel = self.bot.get_channel(constants.log_channel)
         embed = discord.Embed(title='Member Left', description=f'{member} left the server.', color=discord.Color.red())
         await channel.send(embed=embed)
@@ -74,7 +74,7 @@ class EventLogger(discord.Cog):
     @discord.Cog.listener()
     async def on_member_update(self, before: discord.Member, after: discord.Member):
         if before.nick != after.nick:
-            self.logger.info(f'{before} changed their nickname from {before.nick} to {after.nick}')
+
             channel = self.bot.get_channel(constants.log_channel)
             embed = discord.Embed(title='Nickname Update', description=f'{before} changed their nickname',
                                   color=discord.Color.red())
@@ -84,7 +84,7 @@ class EventLogger(discord.Cog):
 
     @discord.Cog.listener()
     async def on_member_join(self, member: discord.Member):
-        self.logger.info(f'{member} joined the server')
+
         channel = self.bot.get_channel(constants.log_channel)
         embed = discord.Embed(title='Member Joined', description=f'{member} joined the server.',
                               color=discord.Color.red())
@@ -92,7 +92,7 @@ class EventLogger(discord.Cog):
 
     @discord.Cog.listener()
     async def on_member_timeout(self, member: discord.Member):
-        self.logger.info(f'{member} was timed out on the server')
+
         channel = self.bot.get_channel(constants.log_channel)
         embed = discord.Embed(title='Member Timed Out', description=f'{member} was timed out on the server.',
                               color=discord.Color.red())
@@ -100,7 +100,7 @@ class EventLogger(discord.Cog):
 
     @discord.Cog.listener()
     async def on_member_kick(self, guild: discord.Guild, user: discord.User):
-        self.logger.info(f'{user} was kicked from the server')
+
         channel = self.bot.get_channel(constants.log_channel)
         embed = discord.Embed(title='Member Kicked', description=f'{user} was kicked from the server.',
                               color=discord.Color.red())

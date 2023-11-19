@@ -38,7 +38,7 @@ class Ideas(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
-        self.logger.info('Initialization successful')
+
     
 temp_lang = 'en'
 
@@ -46,12 +46,12 @@ class MainIdeas(discord.ui.View):
     def __init__(self):
         self.logger = logging.getLogger('astolfo.Ideas.MainIdeas')
         super().__init__(timeout=None)
-        self.logger.info('MainIdeas was initialized')
+
         
     
     @discord.ui.button(label='Submit an idea!', custom_id='submit_idea', style=discord.ButtonStyle.primary)
     async def submit_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
-        self.logger.info('Submit an idea button pressed')
+
         lang = get_user_lang(interaction.user.id)
         global temp_lang
         temp_lang = lang
@@ -68,11 +68,11 @@ class IdeaSubmissionModal(discord.ui.Modal):
             placeholder=get_string('ideas_idea_placeholder', lang), 
             style=discord.InputTextStyle.paragraph
             ))
-        self.logger.info('BotIdeaModal was initialized')
+
         self.modal_type = modal_type
         
     async def callback(self, interaction: discord.Interaction) -> None:
-        self.logger.info('Callback was called')
+
         idea = self.children[0].value
         add_idea(self.modal_type, interaction.user.id, idea)
         await interaction.response.send_message('Idea was successfully submitted!', ephemeral=True)
@@ -82,24 +82,24 @@ class IdeasCategory(discord.ui.View):
     def __init__(self):
         self.logger = logging.getLogger('astolfo.Ideas.IdeasCategory')
         super().__init__(timeout=120)
-        self.logger.info('IdeasCategory was initialized')
+
     
     @discord.ui.button(label=get_string('ideas_category_bot', temp_lang), style=discord.ButtonStyle.primary)
     async def bot_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
-        self.logger.info('Bot idea button pressed')
+
         await interaction.response.send_modal(IdeaSubmissionModal(interaction.user, 'bot'))
     
     @discord.ui.button(label=get_string('ideas_category_server', temp_lang), style=discord.ButtonStyle.primary)
     async def server_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
-        self.logger.info('Server idea button pressed')
+
         await interaction.response.send_modal(IdeaSubmissionModal(interaction.user, 'server'))
         
     @discord.ui.button(label=get_string('ideas_category_youtube', temp_lang), style=discord.ButtonStyle.primary)
     async def youtube_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
-        self.logger.info('YouTube idea button pressed')
+
         await interaction.response.send_modal(IdeaSubmissionModal(interaction.user, 'youtube'))
         
     @discord.ui.button(label=get_string('ideas_category_tiktok', temp_lang), style=discord.ButtonStyle.primary)
     async def tiktok_idea(self, button: discord.ui.Button, interaction: discord.Interaction) -> None:
-        self.logger.info('TikTok idea button pressed')
+
         await interaction.response.send_modal(IdeaSubmissionModal(interaction.user, 'tiktok'))

@@ -53,7 +53,7 @@ class BotCommandsReminder(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
-        self.logger.info('Initialization successful')
+
 
     @discord.Cog.listener()
     async def on_message(self, message: discord.Message) -> None:
@@ -61,13 +61,13 @@ class BotCommandsReminder(discord.Cog):
             return
 
         if message.channel.id == constants.commands_channel and update_message_time():
-            self.logger.info('Sending message to commands channel')
+
             lang = get_user_lang(message.author.id)
             await message.channel.send(get_string('bot_commands_reminder', lang))
             return
 
         if message.channel.id == constants.nsfw_commands_channel and update_nsfw_message_time():
-            self.logger.info('Sending message to commands channel')
+
             lang = get_user_lang(message.author.id)
             await message.channel.send(get_string('nsfw_bot_commands_reminder', lang))
             return

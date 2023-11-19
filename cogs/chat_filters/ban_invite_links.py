@@ -9,19 +9,19 @@ class BanInviteLinks(discord.Cog):
         self.logger = logging.getLogger('astolfo.BanInviteLinks')
         self.bot = bot
         super().__init__()
-        self.logger.info('BanInviteLinks loaded')
+
         
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):
         if msg.author.bot:
             return
         if msg.channel.id == constants.self_promo:
-            self.logger.info('Ignoring message in self-promo channel')
+
             return
         
         match_1 = re.search(r'(https?://)?(www.)?(discord.(gg|io|me|li)|discordapp.com/invite)/[^\s/]+', msg.content)
         if match_1 is not None:
-            self.logger.info('Invite link detected')
+
             await msg.delete()
             lang = get_user_lang(msg.author.id)
             await msg.channel.send(get_string('invite_links_banned', lang) % (msg.author.mention), delete_after=5)

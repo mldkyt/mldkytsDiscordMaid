@@ -135,7 +135,7 @@ class ModerationCommands(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
-        self.logger.info('Initialization successful')
+
         
     mod_group = discord.SlashCommandGroup('moderation', description='Moderation commands', guild_ids=[constants.guild_id])
     admin_group = discord.SlashCommandGroup('admin', description='Admin commands', guild_ids=[constants.guild_id])
@@ -158,7 +158,7 @@ class ModerationCommands(discord.Cog):
             manual_delete (bool, optional): Manually delete instead of bulk. Defaults to False.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(f'{ctx.user.id} tried to use the clear command, but does not have permission to do so!')
+
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
@@ -177,42 +177,42 @@ class ModerationCommands(discord.Cog):
         # filter messages older than 2 weeks
         messages = [message for message in messages if message.created_at >
                     discord.utils.utcnow() - datetime.timedelta(weeks=2)]
-        self.logger.info(f'Found {len(messages)} messages')
+
         # filter messages from author if author is specified
         if author is not None:
-            self.logger.info(f'Filtering messages from {author}')
+
             messages = [
                 message for message in messages if message.author == author]
             embed.add_field(name='Author filter', value=author.display_name, inline=True)
         if not_author is not None:
-            self.logger.info(f'Filtering messages not from {not_author}')
+
             messages = [
                 message for message in messages if message.author != not_author]
             embed.add_field(name='Author NOT filter', value=not_author.display_name, inline=True)
 
         if starts_with is not None:
-            self.logger.info(f'Filtering messages starting with {starts_with}')
+
             messages = [
                 message for message in messages if message.content.startswith(starts_with)]
             embed.add_field(name='Starts with filter', value=starts_with, inline=True)
         if ends_with is not None:
-            self.logger.info(f'Filtering messages ending with {ends_with}')
+
             messages = [
                 message for message in messages if message.content.endswith(ends_with)]
             embed.add_field(name='Ends with filter', value=ends_with, inline=True)
         if contains is not None:
-            self.logger.info(f'Filtering messages containing {contains}')
+
             messages = [
                 message for message in messages if contains in message.content]
             embed.add_field(name='Contains filter', value=contains, inline=True)
         if manual_delete:
             await ctx.defer()
             for message in messages:
-                self.logger.info(f'Manually deleting message {message.id}')
+
                 await message.delete()
             await ctx.followup.send(f'Deleted {len(messages)} messages')
         else:
-            self.logger.info(f'Bulk deleting {len(messages)} messages')
+
             await ctx.defer()
             for chunk in [messages[i:i+100] for i in range(0, len(messages), 100)]:
                 await ctx.channel.delete_messages(chunk)
@@ -232,28 +232,28 @@ class ModerationCommands(discord.Cog):
             send_dm (bool, optional): Send a DM. Defaults to True.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(f'{ctx.user.id} tried to use the warn command, but does not have permission to do so!')
+
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
         if constants.moderator_role in [r.id for r in target.roles] and \
                 constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
-            self.logger.warning(f'{ctx.user.id} tried to warn another moderator.')
+
             await ctx.respond('Nice try', ephemeral=True)
             return
 
         await ctx.defer()
 
         if send_dm:
-            self.logger.info(f'Sending DM to {target}')
+
             embed = discord.Embed(title=f'You have been warned in {ctx.guild.name}',
                                   description=f'Reason: {reason}\nBy: {ctx.user.display_name}',
                                   color=discord.Color.orange())
             try:
                 await target.send(embed=embed)
             except (discord.Forbidden, discord.HTTPException):
-                self.logger.info(f'Could not send DM to {target}, skipping')
+
                 pass
 
         add_warning(target, reason, ctx.user)
@@ -273,8 +273,6 @@ class ModerationCommands(discord.Cog):
             target (discord.Member): The member to view warnings for.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(
-                f'{ctx.user.id} tried to use the warnings command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
@@ -289,13 +287,13 @@ class ModerationCommands(discord.Cog):
 
         warnings = get_warnings(target)
         if len(warnings) == 0:
-            self.logger.info(f'{target} has no warnings')
+
             await ctx.respond(f'{target} has no warnings')
             return
 
         embed = discord.Embed(title=f'Warnings for {target}', color=discord.Color.orange())
         for warning in warnings:
-            self.logger.info(f'Adding warning {warnings.index(warning) + 1}')
+
             moderator = self.bot.get_user(warning['moderator'])
             embed.add_field(name=f'Warning {warnings.index(warning) + 1}',
                             value=f'Reason: {warning["reason"]}\nModerator: {moderator.mention}',
@@ -314,15 +312,13 @@ class ModerationCommands(discord.Cog):
             target (discord.Member): The member to ban from NSFW.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(
-                f'{ctx.user.id} tried to use the NSFW ban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
         if constants.moderator_role in [r.id for r in target.roles] and \
                 constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
-            self.logger.warning(f'{ctx.user.id} tried to NSFW ban another moderator.')
+
             await ctx.respond('Nice try', ephemeral=True)
             return
 
@@ -337,11 +333,11 @@ class ModerationCommands(discord.Cog):
 
         await ctx.defer()
         add_nsfw_ban(target)
-        self.logger.info(f'Banned {target} from NSFW')
+
 
         nsfw_role = self.bot.get_guild(constants.guild_id).get_role(1152684011748077619)
         if nsfw_role in target.roles:
-            self.logger.info(f'Removing NSFW role from {target}')
+
             await target.remove_roles(nsfw_role, reason='NSFW ban')
 
         embed = discord.Embed(title=f'✅ Banned {target} from NSFW', color=discord.Color.red())
@@ -359,15 +355,13 @@ class ModerationCommands(discord.Cog):
             target (discord.Member): The member to unban from NSFW.
         """
         if constants.moderator_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(
-                f'{ctx.user.id} tried to use the NSFW unban command, but does not have permission to do so!')
             await ctx.respond('You are not allowed to use this command', ephemeral=True)
             return
 
         if constants.moderator_role in [r.id for r in target.roles] and \
                 constants.admin_role not in [r.id for r in ctx.user.roles] and \
                 ctx.user.id != constants.bot_maintainer:
-            self.logger.warning(f'{ctx.user.id} tried to langauge remove NSFW ban from another moderator.')
+
             await ctx.respond('Nice try', ephemeral=True)
             return
 
@@ -382,7 +376,7 @@ class ModerationCommands(discord.Cog):
 
         await ctx.defer()
         remove_nsfw_ban(target)
-        self.logger.info(f'Removed NSFW ban for {target}')
+
 
         embed = discord.Embed(title=f'✅ Removed NSFW ban for {target}', color=discord.Color.green())
         await ctx.followup.send(embed=embed)
@@ -394,8 +388,6 @@ class ModerationCommands(discord.Cog):
     async def add_chatpoints(self, ctx: discord.ApplicationContext, user: discord.Member, chatpoints: int):
         """Add ChatPoints to a user."""
         if constants.admin_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(
-                f'{ctx.user.id} tried to use the add_chatpoints command, but does not have permission to do so!')
             await ctx.respond('You have to be admin or higher to use this command', ephemeral=True)
             return
         
@@ -412,7 +404,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
         
-        self.logger.info(f'Adding {chatpoints} ChatPoints to {user}')
+
         add_chatpoints(user.id, chatpoints)
         await ctx.respond(f'Added {chatpoints} ChatPoints to {user}', ephemeral=True)
         
@@ -420,8 +412,6 @@ class ModerationCommands(discord.Cog):
     async def remove_chatpoints(self, ctx: discord.ApplicationContext, user: discord.Member, chatpoints: int):
         """Remove ChatPoints from a user."""
         if constants.admin_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(
-                f'{ctx.user.id} tried to use the remove_chatpoints command, but does not have permission to do so!')
             await ctx.respond('You have to be admin or higher to use this command', ephemeral=True)
             return
         
@@ -438,7 +428,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
         
-        self.logger.info(f'Removing {chatpoints} ChatPoints from {user}')
+
         remove_chatpoints(user.id, chatpoints)
         await ctx.respond(f'Removed {chatpoints} ChatPoints from {user}', ephemeral=True)
         
@@ -446,8 +436,6 @@ class ModerationCommands(discord.Cog):
     async def add_cutepoints(self, ctx: discord.ApplicationContext, user: discord.Member, cutepoints: int):
         """Add CutePoints to a user."""
         if constants.admin_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(
-                f'{ctx.user.id} tried to use the add_cutepoints command, but does not have permission to do so!')
             await ctx.respond('You have to be admin or higher to use this command', ephemeral=True)
             return
         
@@ -464,7 +452,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
         
-        self.logger.info(f'Adding {cutepoints} CutePoints to {user}')
+
         add_cutepoints(user.id, cutepoints)
         await ctx.respond(f'Added {cutepoints} CutePoints to {user}', ephemeral=True)
         
@@ -472,8 +460,6 @@ class ModerationCommands(discord.Cog):
     async def remove_cutepoints(self, ctx: discord.ApplicationContext, user: discord.Member, cutepoints: int):
         """Remove CutePoints from a user."""
         if constants.admin_role not in [r.id for r in ctx.user.roles]:
-            self.logger.warning(
-                f'{ctx.user.id} tried to use the remove_cutepoints command, but does not have permission to do so!')
             await ctx.respond('You have to be admin or higher to use this command', ephemeral=True)
             return
         
@@ -490,7 +476,7 @@ class ModerationCommands(discord.Cog):
         log_channel = self.bot.get_channel(constants.log_channel)
         await log_channel.send(embed=log_embed)
         
-        self.logger.info(f'Removing {cutepoints} CutePoints from {user}')
+
         remove_cutepoints(user.id, cutepoints)
         await ctx.respond(f'Removed {cutepoints} CutePoints from {user}', ephemeral=True)
         

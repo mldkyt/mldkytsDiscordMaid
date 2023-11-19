@@ -10,11 +10,11 @@ class TimeCommand(discord.Cog):
         self.logger = logging.getLogger('astolfo.TimeCommand')
         self.bot = bot
         super().__init__()
-        self.logger.info('Initialization successful')
+
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def time(self, ctx: discord.ApplicationContext):
-        self.logger.info('Getting time and sending to message')
+
         utc_time = datetime.datetime.now()
         programmer_astolfo_time = utc_time + datetime.timedelta(hours=2)
         lang = get_user_lang(ctx.author.id)

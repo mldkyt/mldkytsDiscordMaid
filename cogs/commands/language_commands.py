@@ -9,7 +9,7 @@ class LanguageCommands(discord.Cog):
         self.bot = bot
         init_lang_prefs()
         super().__init__()
-        self.logger.info('Loaded LanguageCommands cog.')
+
     
     lang_group = discord.SlashCommandGroup('language', description='Commands for changing the language of the bot.', guild_ids=[constants.guild_id])
     

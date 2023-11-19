@@ -9,7 +9,7 @@ class MessageReactions(discord.Cog):
         self.logger = logging.getLogger('astolfo.MessageReactions')
         self.bot = bot
         super().__init__()
-        self.logger.info('MessageReactions initialization successful')
+
 
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):

@@ -116,12 +116,12 @@ class DailyMessages(discord.Cog):
         self.logger = logging.getLogger('astolfo.DailyMessages')
         self.bot = bot
         super().__init__()
-        self.logger.info('Initialization successful')
+
 
     @discord.Cog.listener()
     async def on_ready(self):
         init_messages()
-        self.logger.info('Starting clear_messages loop')
+
         self.clear_messages_task.start()
         pass
 
@@ -153,7 +153,7 @@ class DailyMessages(discord.Cog):
         if time.hour != 0 or time.minute != 0:
             return
         
-        self.logger.info('Clearing messages and sending top 5 chatters')
+
 
         save_messages_to_history()
         messages = get_messages()
@@ -177,7 +177,7 @@ class DailyMessages(discord.Cog):
             else:
                 username = user.display_name
             msg += f'{i + 1}. {username}: {user_data["messages"]} messages\n'
-            self.logger.info(f'Adding {username} with {user_data["messages"]} messages to top 5 chatters')
+
             if i == 4:
                 break
             

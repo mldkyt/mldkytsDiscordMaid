@@ -9,7 +9,6 @@ import constants
 
 def init():
     if os.path.exists('data/catpoints.json') and not os.path.exists('data/cutepoints.json'):
-        logging.getLogger('astolfo.CutePoints').info('Updating catpoints.json to cutepoints.json')
         with open('data/cutepoints.json', 'w') as f1:
             with open('data/catpoints.json') as f2:
                 f1.write(f2.read())
@@ -21,8 +20,6 @@ def init():
             pass
     except FileNotFoundError:
         with open('data/cutepoints.json', 'w') as f:
-            logger = logging.getLogger('astolfo.CutePoints')
-            logger.info('Creating data/cutepoints.json')
             json.dump([], f)
 
 
@@ -66,15 +63,13 @@ class CutePoints(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
-        self.logger.info('Initialization successful')
+
 
     @discord.Cog.listener()
     async def on_ready(self):
         if constants.firebase_url != '':
-            self.logger.info('Starting sync_online loop')
             self.sync_online.start()
-        else:
-            self.logger.info('Not syncing online users because no Firebase was provided')
+            
 
     @discord.slash_command()
     async def cutepoints(self, ctx: discord.ApplicationContext):
@@ -101,8 +96,7 @@ class CutePoints(discord.Cog):
         cutepoints += message.content.count('mrrr')
         cutepoints += message.content.count('~')
         if cutepoints > 0:
-            self.logger.info(f'Adding {cutepoints} CutePoints to {message.author}')
-        add_cutepoints(message.author.id, cutepoints)
+            add_cutepoints(message.author.id, cutepoints)
 
     @discord.slash_command()
     async def cutepoints_leaderboard(self, ctx: discord.ApplicationContext):
@@ -112,7 +106,6 @@ class CutePoints(discord.Cog):
 
     @tasks.loop(hours=24)
     async def sync_online(self):
-        self.logger.info('Uploading CutePoints leaderboard to Firebase')
         data = get_cutepoints_leaderboard()[:50]
         data_2 = []
         for i in data:
@@ -131,5 +124,5 @@ class CutePoints(discord.Cog):
                 i['avatar'] = 'https://cdn.discordapp.com/embed/avatars/5.png'
         requests.put(f'https://{constants.firebase_url}/discordstats/cutepoints.json', \
             json=data_2)
-        self.logger.info('CutePoints leaderboard synced')
+
         

@@ -99,12 +99,12 @@ class YearlyMessages(discord.Cog):
         self.logger = logging.getLogger('astolfo.YearlyMessages')
         self.bot = bot
         super().__init__()
-        self.logger.info('Initialization successful')
+
 
     @discord.Cog.listener()
     async def on_ready(self):
         init_messages()
-        self.logger.info('Starting clear_messages loop')
+
         self.clear_messages_task.start()
         pass
 
@@ -132,7 +132,7 @@ class YearlyMessages(discord.Cog):
         if time.hour != 0 or time.minute != 0 or time.day != 1 or time.month != 1:
             return
         
-        self.logger.info('Sending yearly messages')
+
 
         messages = get_messages()
         message_count = 0
@@ -148,7 +148,7 @@ class YearlyMessages(discord.Cog):
         msg = '# This year, there were %d messages sent, top chatters:\n' % message_count
 
         for i, user_data in enumerate(messages):
-            self.logger.info(f'User {user_data["user_id"]} has {user_data["messages"]} messages')
+
             # try to find the user by id, show their display_name if found, else mention
             user = self.bot.get_user(int(user_data['user_id']))
             if user is None:
@@ -162,7 +162,7 @@ class YearlyMessages(discord.Cog):
         msg += "\nAlso, there were %d owo's, %d meows and %d :3s sent this year. How cute~! :3" % (owo_count, nya_count, catface_count)
         msg += f'# HAPPY NEW YEAR {time.year} EVERYONE!! :3'
 
-        self.logger.info('Sending yearly messages')
+
         await self.bot.get_channel(constants.general_channel).send(msg)
         clear_messages()
 

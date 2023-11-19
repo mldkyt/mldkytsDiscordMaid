@@ -13,10 +13,10 @@ class OwoChannelLimit(discord.Cog):
         self.logger = logging.getLogger('astolfo.OwoChannelLimit')
         self.bot = bot
         if constants.owo_uwu_channel == 0:
-            self.logger.warning('Owo channel limit is disabled because channel is not specified')
+
             return
         super().__init__()
-        self.logger.info('OwO channel limit initialization successful')
+
         
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):

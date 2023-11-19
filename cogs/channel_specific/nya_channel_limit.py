@@ -12,10 +12,10 @@ class NyaChannelLimit(discord.Cog):
         self.logger = logging.getLogger('astolfo.NyaChannelLimit')
         self.bot = bot
         if constants.nya_channel == 0:
-            self.logger.warning('Skipping NyaChannelLimit module because the channel isn\'t specified')
+
             return
         super().__init__()
-        self.logger.info('Nyaa channel limit initialization successful')
+
 
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):

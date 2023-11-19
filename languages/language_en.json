@@ -49,5 +49,5 @@
     "verify_5_skip": "I don't want to / Skip",
     "verify_6": "# (5/5) You are done with role setup!\n    ## Rules of this server\n    1. No N-word\n    2. No hate speech on any group of people\n    3. NSFW only in NSFW channels\n\n    ## Click finish to get verified!",
     "verify_6_finish": "Finish",
-    "brimo_command_character_limit": "Limit of 1024 characters exceeded"
+    "brimo_command_character_limit": "Limit of 8MB exceeded"
 }

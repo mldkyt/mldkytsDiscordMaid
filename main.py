@@ -1,7 +1,6 @@
 import os
 
 import logging
-import threading
 
 import discord
 import sentry_sdk
@@ -34,7 +33,6 @@ from cogs.channel_specific.column_3_channel import Column3Chat
 from cogs.channel_specific.owo_channel_limit import OwoChannelLimit
 from cogs.message_reactions import MessageReactions
 from cogs.commands.report_command import ReportCommand
-from cogs.channel_specific.mc_channel import MCChannel
 from cogs.testing import Testing
 from cogs.verification import Verification, VerifyMain
 from cogs.channel_specific.daily_fun_fact_limit import DailyFunFactLimit
@@ -48,7 +46,6 @@ sentry_sdk.init(
     profiles_sample_rate=1.0
 )
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s :: %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 # add file handler
 logger = logging.getLogger()
 file_handler = logging.FileHandler('logs.log', 'a', 'utf8', delay=True)
@@ -67,73 +64,42 @@ bot = discord.Bot(intents=intents)
 if not os.path.exists('data'):
     os.mkdir('data')
 
-main_logger.info('Loading module: Status')
 bot.add_cog(Status(bot))
-main_logger.info('Loading module: Daily Messages')
 bot.add_cog(DailyMessages(bot))
-main_logger.info('Loading module: Yearly messages')
 bot.add_cog(YearlyMessages(bot))
-main_logger.info('Loading module: Bot ping')
 bot.add_cog(BotPing(bot))
-main_logger.info('Loading module: CutePoints')
 bot.add_cog(CutePoints(bot))
-main_logger.info('Loading module: ChatPoints')
 bot.add_cog(ChatPoints(bot))
-main_logger.info('Loading module: Moderation Commands')
 bot.add_cog(ModerationCommands(bot))
-main_logger.info('Loading module: Website Synchronization')
 bot.add_cog(WebsiteSync(bot))
-main_logger.info('Loading module: Developer Commands')
 bot.add_cog(DevCommands(bot))
-main_logger.info('Loading module: Event Logger')
 bot.add_cog(EventLogger(bot))
-main_logger.info('Loading module: r/UnixSocks')
 bot.add_cog(UnixSocks(bot))
-main_logger.info('Loading module: Time')
 bot.add_cog(TimeCommand(bot))
-main_logger.info('Loading module: Bot Commands Reminder')
 bot.add_cog(BotCommandsReminder(bot))
-main_logger.info('Loading module: Ideas')
 bot.add_cog(Ideas(bot))
-main_logger.info('Loading module: Uptime')
 bot.add_cog(Uptime(bot))
-main_logger.info('Loading module: Welcome & Goodbye')
 bot.add_cog(WelcomeGoodbye(bot))
-main_logger.info('Loading module: Ghost pings')
 bot.add_cog(GhostPings(bot))
-main_logger.info('Loading module: Nya channel limit')
 bot.add_cog(NyaChannelLimit(bot))
-main_logger.info('Loading module: Ban invite links')
 bot.add_cog(BanInviteLinks(bot))
-main_logger.info('Loading module: :3 channel limit')
 bot.add_cog(Column3Chat(bot))
-main_logger.info('Loading module: OwO channel limit')
 bot.add_cog(OwoChannelLimit(bot))
-main_logger.info('Loading module: Message reactions')
 bot.add_cog(MessageReactions(bot))
-main_logger.info('Loading module: Report Command')
 bot.add_cog(ReportCommand(bot))
-main_logger.info('Loading module: Minecraft Channel')
-bot.add_cog(MCChannel(bot))
 
 if constants.dev_mode:
-    main_logger.info('Loading module: Testing')
     bot.add_cog(Testing())
 
-main_logger.info('Loading module: Verification')
 bot.add_cog(Verification(bot))
-main_logger.info('Loading module: Daily Fun Fact Limit')
 bot.add_cog(DailyFunFactLimit(bot))
-main_logger.info('Loading module: Femboy of the month')
 bot.add_cog(FemboyOfTheMonth(bot))
-main_logger.info('Loading module: Language Commands')
 bot.add_cog(LanguageCommands(bot))
-main_logger.info('Loading module: Brimo command')
 bot.add_cog(BrimoCommand(bot))
 
 @bot.event
 async def on_ready():
-    main_logger.info('Logged in and ready to go!')
+
     bot.add_view(MainView())
     bot.add_view(MainIdeas())
     bot.add_view(VerifyMain())

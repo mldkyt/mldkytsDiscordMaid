@@ -46,7 +46,7 @@ def filter_messages():
 
     for m in data:
         if m['created'] < (datetime.datetime.utcnow().timestamp() - 60):
-            logger.info('Removing old ghost ping with message ID {}'.format(m['message_id']))
+
             data.remove(m)
 
     with open('data/ghost_pings.json', 'w') as f:
@@ -59,7 +59,7 @@ class GhostPings(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
-        self.logger.info('GhostPings was initialized')
+
 
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):
@@ -67,14 +67,10 @@ class GhostPings(discord.Cog):
             return
         if msg.channel.type == discord.ChannelType.private:
             return
-
-        self.logger.info(
-            'Message was sent in {} by {} containing {} mentions'.format(msg.channel.name, msg.author.display_name,
-                                                                         len(msg.mentions)))
         if len(msg.mentions) == 0:
             return
 
-        self.logger.info('Adding message to ghost ping list')
+
         add_message_with_mentions(msg)
 
     @discord.Cog.listener()

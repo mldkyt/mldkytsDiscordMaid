@@ -37,7 +37,7 @@ class ReportCommand(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
-        self.logger.info('ReportCommand initialization successful')
+
         
     @discord.slash_command(guild_ids=[constants.guild_id])
     @discord.option(name='type', choices=['dm spam', 'bad language', 'bad images', 'bad word(s) in bio', 'rule violation', 'filter bypass', 'weird behaviour', 'way too silly :3'])

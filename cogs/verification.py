@@ -14,7 +14,7 @@ class Verification(discord.Cog):
         self.logger = logging.getLogger('astolfo.Verification')
         self.bot = bot
         super().__init__()
-        self.logger.info('Loaded cog Verification')
+
 
     @discord.slash_command(guild_ids=[constants.guild_id])
     async def send_verification_message(self, ctx: discord.ApplicationContext):

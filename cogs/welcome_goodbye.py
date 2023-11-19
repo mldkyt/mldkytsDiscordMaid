@@ -86,11 +86,11 @@ class WelcomeGoodbye(discord.Cog):
         init()
         self.send_inouts_in_a_day.start()
         super().__init__()
-        self.logger.info('Initialization successful')
+
 
     @discord.Cog.listener()
     async def on_member_join(self, member: discord.Member):
-        self.logger.info('Member joined: %s', member.display_name)
+
         
         channel = self.bot.get_channel(constants.welcome_channel)
         await channel.send(f':green_circle: Welcome {member.display_name} to {member.guild.name}!')
@@ -101,7 +101,7 @@ class WelcomeGoodbye(discord.Cog):
         kicked = False
         banned = False
 
-        self.logger.info('Member left: %s', member.display_name)
+
 
         async for entry in member.guild.audit_logs(limit=10, action=discord.AuditLogAction.kick):
             if entry.target == member:
@@ -111,14 +111,14 @@ class WelcomeGoodbye(discord.Cog):
             if entry.target == member:
                 banned = True
 
-        goodbye_message = f':red_circle: Goodbye {member.display_name}!'
+        goodbye_message = f':red_circle: Goodbye {member.name}!'
         if kicked:
-            goodbye_message = f'⚠️ {member.display_name} was kicked!'
+            goodbye_message = f'⚠️ {member.name} was kicked!'
         if banned:
-            goodbye_message = f'❌ {member.display_name} was banned!'
-        self.logger.info('Cleaned up data for member: %s', member.display_name)
+            goodbye_message = f'❌ {member.name} was banned!'
+
         channel = self.bot.get_channel(constants.welcome_channel)
-        self.logger.info('Sending goodbye/warning/ban message for member: %s', member.display_name)
+
         await channel.send(goodbye_message)
         increment_leaves_in_a_day()
 
@@ -128,28 +128,28 @@ class WelcomeGoodbye(discord.Cog):
         if now.hour != 0 or now.minute != 0:
             return
 
-        self.logger.info('Sending inouts in a day')
+
         joins, leaves = get_inouts_today()
         set_inouts_to_today()
         msg_content = ''
         joins_leaves = ''
         if joins != 0:
-            self.logger.info('Sending joins message')
+
             msg_content = f'Today, we saw {joins} {"person" if joins == 1 else "people"} join.'
             joins_leaves = 'Joins'
         if leaves != 0:
-            self.logger.info('Sending leaves message')
+
             msg_content = f'Today, we saw {leaves} {"person" if leaves == 1 else "people"} leave.'
             joins_leaves = 'Leaves'
         if joins != 0 and leaves != 0:
-            self.logger.info('Sending joins and leaves message')
+
             msg_content = f'Today, we saw {joins} {"person" if joins == 1 else "people"} join and {leaves} {"person" if leaves == 1 else "people"} leave.'
             joins_leaves = 'Joins/Leaves'
 
         if msg_content == '':
             return
 
-        self.logger.info('Sending embed')
+
         embed = discord.Embed(title=f'Today\'s Total {joins_leaves}', description=msg_content,
                               color=discord.Colour.green())
         channel = self.bot.get_channel(constants.welcome_channel)

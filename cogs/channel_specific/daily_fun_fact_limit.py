@@ -36,7 +36,7 @@ class DailyFunFactLimit(discord.Cog):
         self.bot = bot
         init()
         super().__init__()
-        self.logger.info('Loaded DailyFunFactLimit')
+
         
     @discord.Cog.listener()
     async def on_message(self, msg: discord.Message):
