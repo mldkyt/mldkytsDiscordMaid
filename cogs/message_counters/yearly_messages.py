@@ -86,7 +86,16 @@ def get_messages():
     """Get all messages and sort them by messages sent"""
     with open('data/yearlymsg.json', 'r') as f:
         data: list = json.load(f)
-    return sorted(data, key=lambda x: x['messages'], reverse=True)
+    new_data = []
+    for i in data:
+        if 'owos' not in i:
+            i['owos'] = 0
+        if 'nyas' not in i:
+            i['nyas'] = 0
+        if 'catfaces' not in i:
+            i['catfaces'] = 0
+        new_data.append(i)
+    return sorted(new_data, key=lambda x: x['messages'], reverse=True)
 
 
 def clear_messages():
