@@ -26,8 +26,6 @@ class MainView(ui.View):
                              description='Pronoun roles and trans role'),
         discord.SelectOption(label='Femboy Role', value='femboy',
                              description='5 femboy stage roles'),
-        discord.SelectOption(label='NSFW role', value='nsfw',
-                             description='NSFW role'),
         discord.SelectOption(label='Top or Bottom', value='topbottom',
                              description='Top, Switch and Bottom roles'),
         discord.SelectOption(label='Miscellaneous',
@@ -52,9 +50,6 @@ class MainView(ui.View):
 - Stage 4: Makeup
 - Stage 5: TRAP >:3''', view=FemboyRoleSelectView(),
                 ephemeral=True)
-        elif select.values[0] == 'nsfw':
-            await interaction.response.send_message(content='The NSFW role has been deprecated on 9/11/2023',
-                                                    ephemeral=True)
         elif select.values[0] == 'topbottom':
             await interaction.response.send_message(content='Select top, switch and bottom roles: ',
                                                     view=TopBottomSelect(), ephemeral=True)

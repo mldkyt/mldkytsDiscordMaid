@@ -101,7 +101,7 @@ class CutePoints(discord.Cog):
     @discord.slash_command()
     async def cutepoints_leaderboard(self, ctx: discord.ApplicationContext):
         """Get the CutePoints leaderboard"""
-        await ctx.respond('CutePoints have moved here! https://programmerastolfo.github.io/discord/cutepoints')
+        await ctx.respond('CutePoints have moved here! https://mldkyt.com/discord/cutepoints')
 
 
     @tasks.loop(hours=24)
